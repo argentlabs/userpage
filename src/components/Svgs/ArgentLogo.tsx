@@ -3,10 +3,9 @@ import React, { SVGProps } from "react"
 function ArgentLogo(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      width={188}
-      height={55}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 188 55"
       {...props}
     >
       <path

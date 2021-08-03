@@ -1,8 +1,9 @@
 import { FC } from "react"
 import styled, { css } from "styled-components/macro"
+
 import ArgentLogo from "../../components/Svgs/ArgentLogo"
+import Avatar from "../../components/Svgs/Avatar"
 import Sent from "../../components/Svgs/Sent"
-import User from "../../components/Svgs/User"
 
 const centerMixin = css`
   display: flex;
@@ -26,7 +27,7 @@ const HomeWrapper = styled.div`
   }
 
   @media only screen and (min-width: 480px) {
-    padding: 8rem 0;
+    padding: 6rem 0;
     > svg {
       margin-bottom: 8rem;
     }
@@ -54,15 +55,22 @@ const Box = styled.div`
 
   ${centerMixin}
 
-  h1+h2 {
+  h1 + h2 {
     margin-top: 16px;
   }
 `
 
-const ProfilePicture = styled(User)`
+const ProfilePicture = styled(Avatar)`
+  max-width: 120px;
+  max-height: 120px;
   border-radius: 50%;
   border: 30px solid white;
   z-index: 2;
+  background: linear-gradient(#0078a4 81.25%, white 81.25%);
+  @media only screen and (min-width: 480px) {
+    max-width: 160px;
+    max-height: 160px;
+  }
 `
 
 const H1 = styled.h1`
@@ -76,10 +84,10 @@ const H2 = styled.h2`
   color: #333332;
 `
 
-const SendBtn = styled.button`
+const SentBtn = styled.button`
   margin-top: -41px;
-  height: 82px;
-  width: 82px;
+  height: 64px;
+  width: 64px;
 
   ${centerMixin}
 
@@ -88,21 +96,48 @@ const SendBtn = styled.button`
   border: 5px solid white;
 
   cursor: pointer;
+
+  > svg {
+    max-width: 28px;
+    max-height: 28px;
+  }
+
+  /* In the future we need to scale these down when adding more actions */
+  /* @media only screen and (min-width: 480px) { */
+  height: 80px;
+  width: 80px;
+  > svg {
+    max-width: 36px;
+    max-height: 36px;
+  }
+  /* } */
+`
+
+const SArgentLogo = styled(ArgentLogo)`
+  max-height: 42px;
+
+  @media only screen and (min-height: 666px) {
+    max-height: 44px;
+  }
+
+  @media only screen and (min-width: 480px) {
+    max-height: 48px;
+  }
 `
 
 export const HomePage: FC = () => {
   return (
     <HomeWrapper>
-      <ArgentLogo />
+      <SArgentLogo />
       <BoxWrapper>
         <ProfilePicture />
         <Box>
           <H1>@graeme</H1>
           <H2>graeme.argent.xyz</H2>
         </Box>
-        <SendBtn>
+        <SentBtn>
           <Sent />
-        </SendBtn>
+        </SentBtn>
       </BoxWrapper>
     </HomeWrapper>
   )
