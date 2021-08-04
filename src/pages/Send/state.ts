@@ -1,9 +1,11 @@
-import { createMachine } from "xstate"
+import { assign, createMachine } from "xstate"
+
+import { onboard } from "../../libs/web3"
 
 type SendEvent =
   | { type: "START_PAIR" }
   | { type: "PAIR_SUCCESS" }
-  | { type: "CHANGE_AMOUNT"; amount: number; contract: string }
+  | ({ type: "CHANGE_AMOUNT" } & SendContext)
   | { type: "PAIR_ERROR" }
   | { type: "SEND_APPROVE" }
   | { type: "APPROVE_DENIED" }
@@ -14,7 +16,7 @@ type SendEvent =
   | { type: "SEND_ERROR" }
 
 interface SendContext {
-  amount: number
+  amount: string
   contract: string
 }
 
@@ -38,40 +40,65 @@ export const sendMaschine = createMachine<
   SendContext,
   SendEvent,
   SendTypestate
->({
-  id: "send",
-  initial: "readyToPair",
-  context: {
-    amount: 0,
-    contract: "0x0",
+>(
+  {
+    id: "send",
+    initial: "readyToPair",
+    context: {
+      amount: "0",
+      contract: "0x0",
+    },
+    states: {
+      readyToPair: {
+        on: { START_PAIR: "pairing" },
+      },
+      pairing: {
+        invoke: {
+          id: "pair",
+          src: async () => {
+            await onboard.walletSelect()
+            await onboard.walletCheck()
+          },
+          onDone: "paired",
+          onError: "readyToPair",
+        },
+      },
+      paired: {
+        on: { CHANGE_AMOUNT: { target: "approve", actions: ["setContext"] } },
+      },
+      approve: {
+        on: { SEND_APPROVE: "approving", APPROVE_DENIED: "paired" },
+      },
+      approving: {
+        on: { APPROVED: "send", APPROVE_ERROR: "error" },
+      },
+      send: {
+        on: {
+          SEND_TRANSACTION: "sending",
+          CHANGE_AMOUNT: { target: "approve", actions: ["setContext"] },
+        },
+      },
+      sending: {
+        on: { SEND_SUCCESS: "success", SEND_ERROR: "error" },
+      },
+      success: {
+        type: "final",
+      },
+      error: {
+        type: "final",
+      },
+    },
   },
-  states: {
-    readyToPair: {
-      on: { START_PAIR: "pairing" },
-    },
-    pairing: {
-      on: { PAIR_SUCCESS: "paired", PAIR_ERROR: "readyToPair" },
-    },
-    paired: {
-      on: { CHANGE_AMOUNT: "approve" },
-    },
-    approve: {
-      on: { SEND_APPROVE: "approving", APPROVE_DENIED: "paired" },
-    },
-    approving: {
-      on: { APPROVED: "send", APPROVE_ERROR: "error" },
-    },
-    send: {
-      on: { SEND_TRANSACTION: "sending", CHANGE_AMOUNT: "approve" },
-    },
-    sending: {
-      on: { SEND_SUCCESS: "success", SEND_ERROR: "error" },
-    },
-    success: {
-      type: "final",
-    },
-    error: {
-      type: "final",
+  {
+    actions: {
+      setContext: (_context, event) => {
+        if (event.type === "CHANGE_AMOUNT") {
+          assign({
+            amount: event.amount,
+            contract: event.contract,
+          })
+        }
+      },
     },
   },
-})
+)

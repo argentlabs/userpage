@@ -1,4 +1,5 @@
 import { useMachine } from "@xstate/react"
+import { ethers } from "ethers"
 import { FC, useState } from "react"
 import { State } from "xstate"
 
@@ -9,8 +10,8 @@ import Button from "../../components/Button"
 import Center from "../../components/Center"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
-import SelectInput from "../../components/SelectInput"
-import { onboard } from "../../libs/web3"
+import TokenSelect from "../../containers/TokenSelect"
+import { web3 } from "../../libs/web3"
 import { ButtonWrapper, InputWrapper } from "./Send.style"
 import { ValueType, sendMaschine } from "./state"
 
@@ -30,17 +31,10 @@ const showAmountScreen = (state: State<any, any>) =>
 export const SendPage: FC = () => {
   const [state, send] = useMachine(sendMaschine)
 
-  const [val, setVal] = useState("")
+  const [amount, setAmount] = useState("")
 
   const pair = async () => {
     send("START_PAIR")
-    try {
-      await onboard.walletSelect()
-      await onboard.walletCheck()
-      send("PAIR_SUCCESS")
-    } catch {
-      send("PAIR_ERROR")
-    }
   }
 
   console.log(state.value)
@@ -67,13 +61,13 @@ export const SendPage: FC = () => {
             <InputWrapper>
               <AmountInput
                 placeholder="0.00"
-                value={val}
-                onChange={(value) => setVal(value)}
+                value={amount}
+                onChange={(value) => setAmount(value)}
               />
-              <SelectInput />
+              <TokenSelect />
               <Button
-                onClick={() => {
-                  send({ type: "CHANGE_AMOUNT", amount: 0, contract: "0x0" })
+                onClick={async () => {
+                  send({ type: "CHANGE_AMOUNT", amount, contract: "0x0" })
                   send("SEND_APPROVE")
                   send("APPROVED")
                 }}
