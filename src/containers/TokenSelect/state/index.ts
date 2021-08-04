@@ -2,25 +2,34 @@ import { BigNumber, ethers } from "ethers"
 import { atom } from "jotai"
 
 import { web3 } from "../../../libs/web3"
-import { getERC20Balances } from "./erc20"
-import { fetchTokenList } from "./zksyncApi"
+import { getERC20BalancesAndAllowances } from "./erc20"
+import { fetchConfig, fetchTokenList } from "./zksyncApi"
 
 export const tokensAtom = atom(async () => {
-  const zksyncRes = await fetchTokenList()
+  const [zksyncTokenRes, zksyncConfigRes] = await Promise.all([
+    fetchTokenList(),
+    fetchConfig(),
+  ])
   const signer = web3.getSigner(0)
+  const zksyncTokens = zksyncTokenRes.filter(
+    (token) => token.address !== ethers.constants.AddressZero,
+  )
 
-  const balances = await getERC20Balances(
+  const balances = await getERC20BalancesAndAllowances(
     web3,
     await signer.getAddress(),
-    zksyncRes.map((token) => token.address),
+    zksyncTokens.map((token) => token.address),
+    zksyncConfigRes.contract,
   )
-  console.log(balances)
-  const tokens = zksyncRes
-    .filter((token) => token.address !== ethers.constants.AddressZero)
+
+  const tokens = zksyncTokens
     .map((token) => ({
       address: token.address,
       decimals: token.decimals,
       symbol: token.symbol,
+      allowance:
+        balances.find((x) => x.address === token.address)?.allowance ||
+        BigNumber.from(0),
       balance:
         balances.find((x) => x.address === token.address)?.balance ||
         BigNumber.from(0),
@@ -33,6 +42,7 @@ export const tokensAtom = atom(async () => {
     address: ethers.constants.AddressZero,
     balance: await signer.getBalance(),
     decimals: 18,
+    allowance: BigNumber.from(-1),
     symbol: "ETH",
   })
 
