@@ -9,6 +9,7 @@ import Button from "../../components/Button"
 import Center from "../../components/Center"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
+import SelectInput from "../../components/SelectInput"
 import { onboard } from "../../libs/web3"
 import { ButtonWrapper, InputWrapper } from "./Send.style"
 import { ValueType, sendMaschine } from "./state"
@@ -17,7 +18,12 @@ const showConnectScreenValues: Array<ValueType> = ["readyToPair", "pairing"]
 const showConnectScreen = (state: State<any, any>) =>
   showConnectScreenValues.some(state.matches)
 
-const showAmountScreenValues: Array<ValueType> = ["paired"]
+const showAmountScreenValues: Array<ValueType> = [
+  "paired",
+  "approve",
+  "approving",
+  "send",
+]
 const showAmountScreen = (state: State<any, any>) =>
   showAmountScreenValues.some(state.matches)
 
@@ -64,6 +70,23 @@ export const SendPage: FC = () => {
                 value={val}
                 onChange={(value) => setVal(value)}
               />
+              <SelectInput />
+              <Button
+                onClick={() => {
+                  send({ type: "CHANGE_AMOUNT", amount: 0, contract: "0x0" })
+                  send("SEND_APPROVE")
+                  send("APPROVED")
+                }}
+              >
+                {state.matches("approving")
+                  ? "Approving..."
+                  : state.matches("sending")
+                  ? "Sending..."
+                  : state.matches("send")
+                  ? "Send"
+                  : // "paired" and "approve" left
+                    "Pre-authorize tokens"}
+              </Button>
             </InputWrapper>
           )}
         </Box>

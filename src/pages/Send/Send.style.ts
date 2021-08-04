@@ -10,4 +10,8 @@ export const ButtonWrapper = styled(Center)`
   }
 `
 
-export const InputWrapper = styled(Center)``
+export const InputWrapper = styled(Center)`
+  > select {
+    margin: 48px 0 24px;
+  }
+`

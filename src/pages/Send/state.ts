@@ -3,14 +3,13 @@ import { createMachine } from "xstate"
 type SendEvent =
   | { type: "START_PAIR" }
   | { type: "PAIR_SUCCESS" }
-  | { type: "AMOUNT_SELECTED"; amount: number; contract: string }
+  | { type: "CHANGE_AMOUNT"; amount: number; contract: string }
   | { type: "PAIR_ERROR" }
   | { type: "SEND_APPROVE" }
   | { type: "APPROVE_DENIED" }
   | { type: "APPROVED" }
   | { type: "APPROVE_ERROR" }
   | { type: "SEND_TRANSACTION" }
-  | { type: "CHANGE_AMOUNT" }
   | { type: "SEND_SUCCESS" }
   | { type: "SEND_ERROR" }
 
@@ -54,7 +53,7 @@ export const sendMaschine = createMachine<
       on: { PAIR_SUCCESS: "paired", PAIR_ERROR: "readyToPair" },
     },
     paired: {
-      on: { AMOUNT_SELECTED: "approve" },
+      on: { CHANGE_AMOUNT: "approve" },
     },
     approve: {
       on: { SEND_APPROVE: "approving", APPROVE_DENIED: "paired" },
@@ -63,7 +62,7 @@ export const sendMaschine = createMachine<
       on: { APPROVED: "send", APPROVE_ERROR: "error" },
     },
     send: {
-      on: { SEND_TRANSACTION: "sending", CHANGE_AMOUNT: "paired" },
+      on: { SEND_TRANSACTION: "sending", CHANGE_AMOUNT: "approve" },
     },
     sending: {
       on: { SEND_SUCCESS: "success", SEND_ERROR: "error" },

@@ -8,6 +8,7 @@ export const AmountInputBare = styled.input<{ length: number }>`
   border: none;
   outline: none;
   font-size: 64px;
+  font-weight: bold;
   text-align: center;
   padding: 8px;
   margin: 8px;
