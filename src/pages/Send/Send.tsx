@@ -1,7 +1,8 @@
 import { useMachine } from "@xstate/react"
-import { FC } from "react"
+import { FC, useState } from "react"
 import { State } from "xstate"
 
+import AmountInput from "../../components/AmountInput"
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
 import Button from "../../components/Button"
@@ -22,6 +23,8 @@ const showAmountScreen = (state: State<any, any>) =>
 
 export const SendPage: FC = () => {
   const [state, send] = useMachine(sendMaschine)
+
+  const [val, setVal] = useState("")
 
   const pair = async () => {
     send("START_PAIR")
@@ -54,7 +57,15 @@ export const SendPage: FC = () => {
               <Button fullWidth>Pay with card/bank</Button>
             </ButtonWrapper>
           )}
-          {showAmountScreen(state) && <InputWrapper>Amount</InputWrapper>}
+          {showAmountScreen(state) && (
+            <InputWrapper>
+              <AmountInput
+                placeholder="0.00"
+                value={val}
+                onChange={(value) => setVal(value)}
+              />
+            </InputWrapper>
+          )}
         </Box>
       </Center>
     </PageWrapper>
