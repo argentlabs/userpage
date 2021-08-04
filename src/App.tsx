@@ -5,6 +5,7 @@ import { createGlobalStyle } from "styled-components/macro"
 import reset from "styled-reset"
 
 import Home from "./pages/Home"
+import Send from "./pages/Send"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -12,6 +13,10 @@ const GlobalStyle = createGlobalStyle`
   body {
     background-color: #FBFBFB;
     font-family: 'Barlow', sans-serif;
+  }
+
+  .bn-onboard-custom.bn-onboard-modal {
+    z-index: 99;
   }
 `
 
@@ -35,6 +40,9 @@ function App() {
         <Links />
         <GlobalStyle />
         <Switch>
+          <Route path="/send">
+            <Send />
+          </Route>
           <Route path="/*">
             <Home />
           </Route>

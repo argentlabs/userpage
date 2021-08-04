@@ -10,6 +10,9 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@xstate/react": "^1.5.1",
+    "bnc-onboard": "^1.32.0",
+    "ethers": "^5.4.3",
     "jotai": "^1.2.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -17,8 +20,10 @@
     "react-scripts": "4.0.3",
     "styled-components": "^5.3.0",
     "styled-reset": "^4.3.4",
+    "styled-tools": "^1.7.2",
     "typescript": "^4.1.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "xstate": "^4.23.1"
   },
   "scripts": {
     "start": "react-scripts start",
