@@ -1,5 +1,4 @@
 import { useMachine } from "@xstate/react"
-import { ethers } from "ethers"
 import { FC, useState } from "react"
 import { State } from "xstate"
 
@@ -11,7 +10,6 @@ import Center from "../../components/Center"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import TokenSelect from "../../containers/TokenSelect"
-import { web3 } from "../../libs/web3"
 import { ButtonWrapper, InputWrapper } from "./Send.style"
 import { ValueType, sendMaschine } from "./state"
 

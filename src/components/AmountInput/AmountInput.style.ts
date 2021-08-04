@@ -5,6 +5,7 @@ export const AmountInputBare = styled.input<{ length: number }>`
   min-width: 4em;
   max-width: calc(100vw - 6em);
   width: ${prop("length")}em;
+  transition: width 200ms ease-out;
   border: none;
   outline: none;
   font-size: 64px;
