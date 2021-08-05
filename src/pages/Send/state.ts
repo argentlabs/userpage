@@ -5,6 +5,7 @@ import create from "zustand"
 
 import type { Token } from "../../containers/TokenSelect/state"
 import { ERC20__factory, ZkSync__factory } from "../../generated"
+import { ansStore } from "../../libs/ans"
 import { onboard, web3 } from "../../libs/web3"
 
 export const useTxStore = create<{ hash: string; chainId: number }>(() => ({
@@ -55,6 +56,7 @@ type SendTypestate = {
   context: SendContext
 }
 
+// viz: https://xstate.js.org/viz/?gist=9c7db6c5acd719f81bde32c219592593
 export const sendMaschine = createMachine<
   SendContext,
   SendEvent,
@@ -175,14 +177,16 @@ export const sendMaschine = createMachine<
               signer,
             )
 
+            const { walletAddress } = ansStore.getState()
+
             const sendTx = await (contract === ethers.constants.AddressZero
-              ? zkSync.depositETH(await signer.getAddress(), {
+              ? zkSync.depositETH(walletAddress, {
                   value: ethers.utils.parseEther(amount),
                 })
               : zkSync.functions.depositERC20(
                   contract,
                   amountBn,
-                  await signer.getAddress(),
+                  walletAddress,
                 ))
 
             useTxStore.setState({

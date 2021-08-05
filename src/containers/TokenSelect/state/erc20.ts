@@ -32,11 +32,6 @@ export const getERC20BalancesAndAllowances = async (
   return chunk(result.returnData, operations().length)
     .map((data: any[], index: number) => {
       try {
-        console.log({
-          address: tokens[index],
-          balance: decode("balanceOf", data[0]).toString(),
-          allowance: decode("allowance", data[1]).toString(),
-        })
         return {
           address: tokens[index],
           balance: decode("balanceOf", data[0]),

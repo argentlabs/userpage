@@ -7,14 +7,19 @@ import IconButton from "../../components/IconButton"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import Send from "../../components/Svgs/Send"
+import { useAnsStore } from "../../libs/ans"
 
 export const HomePage: FC = () => {
+  const ans = useAnsStore()
   return (
     <PageWrapper>
       <ArgentLogo />
       <Center>
         <Avatar />
-        <Box title="@graeme" subtitle="graeme.argent.xyz" />
+        <Box
+          title={`@${ans.ens.replace(".argent.xyz", "")}`}
+          subtitle={ans.ens}
+        />
         <Center direction="row">
           <IconButton Icon={<Send />} text="Send" href="/send" />
         </Center>

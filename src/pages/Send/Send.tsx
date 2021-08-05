@@ -11,6 +11,7 @@ import Center from "../../components/Center"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import TokenSelect from "../../containers/TokenSelect"
+import { useAnsStore } from "../../libs/ans"
 import { getTransactionExplorerUrl } from "../../libs/web3"
 import { ButtonWrapper, InputWrapper } from "./Send.style"
 import { ValueType, sendMaschine, useTxStore } from "./state"
@@ -38,8 +39,9 @@ const showErrorScreen = (state: State<any, any>) =>
 export const SendPage: FC = () => {
   const [state, send] = useMachine(sendMaschine)
   const tx = useTxStore()
+  const ans = useAnsStore()
   const explorerUrl = useMemo(() => getTransactionExplorerUrl(tx), [tx])
-  console.log(state.context)
+
   const { amount, contract, tokens } = state.context
 
   const selectedToken = tokens.find((x) => x.address === contract)
@@ -61,7 +63,7 @@ export const SendPage: FC = () => {
         <Box
           lean
           title={showConnectScreen(state) ? "Sent to" : undefined}
-          subtitle="graeme.argent.xyz"
+          subtitle={ans.ens}
         >
           {showConnectScreen(state) && (
             <ButtonWrapper>

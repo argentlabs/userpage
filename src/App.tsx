@@ -1,9 +1,10 @@
 import { Provider as JotaiProvider } from "jotai"
-import React from "react"
+import React, { useEffect } from "react"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 import { createGlobalStyle } from "styled-components/macro"
 import reset from "styled-reset"
 
+import { useAnsStore } from "./libs/ans"
 import Home from "./pages/Home"
 import Send from "./pages/Send"
 
@@ -34,6 +35,25 @@ function Links() {
 }
 
 function App() {
+  const { fetch } = useAnsStore()
+
+  useEffect(() => {
+    const overwriteName = new URLSearchParams(window.location.search).get(
+      "__overwriteName",
+    )
+    const name =
+      new URLSearchParams(window.location.search).get("__overwriteName") ||
+      window.location.hostname.split(".")[0]
+
+    fetch(name)
+
+    // remove overwrite param
+    if (overwriteName) {
+      window.history.replaceState("", "", window.location.pathname)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <JotaiProvider>
       <Router>
