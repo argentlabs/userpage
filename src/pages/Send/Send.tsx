@@ -1,4 +1,5 @@
 import { useMachine } from "@xstate/react"
+import { ethers } from "ethers"
 import { FC, useMemo } from "react"
 import { State } from "xstate"
 
@@ -39,9 +40,14 @@ export const SendPage: FC = () => {
   const tx = useTxStore()
   const explorerUrl = useMemo(() => getTransactionExplorerUrl(tx), [tx])
   console.log(state.context)
-  const { amount, contract } = state.context
+  const { amount, contract, tokens } = state.context
 
-  const disableButton = !amount
+  const selectedToken = tokens.find((x) => x.address === contract)
+  const disableButton =
+    !amount ||
+    selectedToken?.balance.lt(
+      ethers.utils.parseUnits(amount, selectedToken?.decimals),
+    )
   const textButton = state.matches("send")
     ? "Send"
     : // "approve" left
