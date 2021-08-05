@@ -32,6 +32,7 @@ export const AmountInput: FC<AmountInputProps> = ({
       autoFocus
       autoComplete="off"
       pattern="[0-9]+"
+      inputMode="decimal"
       {...props}
     />
   )

@@ -3,7 +3,7 @@ import { prop } from "styled-tools"
 
 export const AmountInputBare = styled.input<{ length: number }>`
   min-width: calc(2em - 4px);
-  max-width: calc(100vw - 6em);
+  max-width: calc(100vw - 30px);
   width: ${prop("length")}em;
   transition: width 200ms ease-out;
   border: none;
