@@ -1,12 +1,21 @@
 import { ethers } from "ethers"
 import { useAtom } from "jotai"
-import { FC, Suspense } from "react"
+import { FC, Suspense, useEffect } from "react"
 
 import SelectInput from "../../components/SelectInput"
-import { tokensAtom } from "./state"
+import { Token, tokensAtom } from "./state"
 
-const TokenSelectLoaded: FC = () => {
+interface TokenSelectProps {
+  onResponse?: (tokens: Token[]) => any
+  onChange?: (token: Token) => any
+}
+
+const TokenSelectLoaded: FC<TokenSelectProps> = ({ onResponse, onChange }) => {
   const [tokens] = useAtom(tokensAtom)
+  useEffect(() => {
+    onResponse?.(tokens)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokens])
   return (
     <SelectInput
       options={tokens.map(({ address, symbol, balance, decimals }) => ({
@@ -14,11 +23,14 @@ const TokenSelectLoaded: FC = () => {
         value: address,
         disabled: balance.eq(0) && address !== ethers.constants.AddressZero,
       }))}
+      onChange={(e) => {
+        onChange?.(tokens.find((x) => x.address === e.target.value)!)
+      }}
     />
   )
 }
 
-export const TokenSelect: FC = () => {
+export const TokenSelect: FC<TokenSelectProps> = ({ ...props }) => {
   return (
     <Suspense
       fallback={
@@ -33,7 +45,7 @@ export const TokenSelect: FC = () => {
         />
       }
     >
-      <TokenSelectLoaded />
+      <TokenSelectLoaded {...props} />
     </Suspense>
   )
 }

@@ -1,5 +1,5 @@
 import { useMachine } from "@xstate/react"
-import { FC, useState } from "react"
+import { FC } from "react"
 import { State } from "xstate"
 
 import AmountInput from "../../components/AmountInput"
@@ -18,7 +18,6 @@ const showConnectScreen = (state: State<any, any>) =>
   showConnectScreenValues.some(state.matches)
 
 const showAmountScreenValues: Array<ValueType> = [
-  "paired",
   "approve",
   "approving",
   "send",
@@ -29,13 +28,24 @@ const showAmountScreen = (state: State<any, any>) =>
 export const SendPage: FC = () => {
   const [state, send] = useMachine(sendMaschine)
 
-  const [amount, setAmount] = useState("")
-
   const pair = async () => {
     send("START_PAIR")
   }
 
+  const { amount } = state.context
+
+  const disableButton = !amount
+  const textButton = state.matches("approving")
+    ? "Approving..."
+    : state.matches("sending")
+    ? "Sending..."
+    : state.matches("send")
+    ? "Send"
+    : // "approve" left
+      "Pre-authorize tokens"
+
   console.log(state.value)
+  console.log(state.context)
 
   return (
     <PageWrapper>
@@ -60,24 +70,31 @@ export const SendPage: FC = () => {
               <AmountInput
                 placeholder="0.00"
                 value={amount}
-                onChange={(value) => setAmount(value)}
+                onChange={(value) =>
+                  send({ type: "CHANGE_CONTEXT", amount: value })
+                }
               />
-              <TokenSelect />
+              <TokenSelect
+                onResponse={(tokens) =>
+                  // {}
+                  send({ type: "CHANGE_CONTEXT", tokens })
+                }
+                onChange={(token) =>
+                  send({ type: "CHANGE_CONTEXT", contract: token.address })
+                }
+              />
               <Button
+                disabled={disableButton}
                 onClick={async () => {
-                  send({ type: "CHANGE_AMOUNT", amount, contract: "0x0" })
-                  send("SEND_APPROVE")
-                  send("APPROVED")
+                  if (state.matches("approve")) {
+                    send("SEND_APPROVE")
+                  }
+                  if (state.matches("send")) {
+                    send("SEND_TRANSACTION")
+                  }
                 }}
               >
-                {state.matches("approving")
-                  ? "Approving..."
-                  : state.matches("sending")
-                  ? "Sending..."
-                  : state.matches("send")
-                  ? "Send"
-                  : // "paired" and "approve" left
-                    "Pre-authorize tokens"}
+                {textButton}
               </Button>
             </InputWrapper>
           )}

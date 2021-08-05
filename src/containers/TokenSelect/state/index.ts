@@ -5,7 +5,15 @@ import { web3 } from "../../../libs/web3"
 import { getERC20BalancesAndAllowances } from "./erc20"
 import { fetchConfig, fetchTokenList } from "./zksyncApi"
 
-export const tokensAtom = atom(async () => {
+export interface Token {
+  address: string
+  decimals: number
+  symbol: string
+  allowance: BigNumber
+  balance: BigNumber
+}
+
+export const tokensAtom = atom(async (): Promise<Token[]> => {
   const [zksyncTokenRes, zksyncConfigRes] = await Promise.all([
     fetchTokenList(),
     fetchConfig(),
@@ -42,7 +50,7 @@ export const tokensAtom = atom(async () => {
     address: ethers.constants.AddressZero,
     balance: await signer.getBalance(),
     decimals: 18,
-    allowance: BigNumber.from(-1),
+    allowance: BigNumber.from(0),
     symbol: "ETH",
   })
 

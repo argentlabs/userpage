@@ -14,6 +14,11 @@ export const Button = styled.button<ButtonProps>`
   outline: none;
   cursor: pointer;
   font-size: 17px;
+  transition: all 200ms ease-in-out;
 
   width: ${ifProp("fullWidth", "100%", "auto")};
+
+  :disabled {
+    background-color: lightgrey;
+  }
 `
