@@ -80,7 +80,7 @@ export const sendMaschine = createMachine<
             await onboard.walletSelect()
             await onboard.walletCheck()
           },
-          onDone: "approve",
+          onDone: "send",
           onError: "readyToPair",
         },
       },
