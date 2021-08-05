@@ -6,11 +6,16 @@ import SelectInput from "../../components/SelectInput"
 import { Token, tokensAtom } from "./state"
 
 interface TokenSelectProps {
+  value: string
   onResponse?: (tokens: Token[]) => any
-  onChange?: (token: Token) => any
+  onChange: (token: Token) => any
 }
 
-const TokenSelectLoaded: FC<TokenSelectProps> = ({ onResponse, onChange }) => {
+const TokenSelectLoaded: FC<TokenSelectProps> = ({
+  value,
+  onResponse,
+  onChange,
+}) => {
   const [tokens] = useAtom(tokensAtom)
   useEffect(() => {
     onResponse?.(tokens)
@@ -18,6 +23,7 @@ const TokenSelectLoaded: FC<TokenSelectProps> = ({ onResponse, onChange }) => {
   }, [tokens])
   return (
     <SelectInput
+      value={value}
       options={tokens.map(({ address, symbol, balance, decimals }) => ({
         display: `${symbol} (${ethers.utils.formatUnits(balance, decimals)})`,
         value: address,
@@ -38,7 +44,7 @@ export const TokenSelect: FC<TokenSelectProps> = ({ ...props }) => {
           options={[
             {
               display: "ETH",
-              value: "",
+              value: ethers.constants.AddressZero,
             },
           ]}
           disabled

@@ -24,7 +24,8 @@
     "styled-tools": "^1.7.2",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1",
-    "xstate": "^4.23.1"
+    "xstate": "^4.23.1",
+    "zustand": "^3.5.7"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -36,7 +37,9 @@
     "eject": "react-scripts eject",
     "format": "prettier --loglevel warn --write \"**/*.{js,jsx,ts,tsx,css,md,yml,yaml,json}\"",
     "lint": "eslint . --cache --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "typechain": "typechain --target ethers-v5 --out-dir ./src/generated './src/abis/**/*.json'",
+    "postinstall": "yarn typechain"
   },
   "eslintConfig": {
     "extends": [
@@ -58,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@typechain/ethers-v5": "^7.0.1",
     "@types/lodash.chunk": "^4.2.6",
     "@types/react-router-dom": "^5.1.8",
     "@types/styled-components": "^5.1.11",
@@ -67,7 +71,8 @@
     "lint-staged": ">=10",
     "prettier": ">=2",
     "prettier-plugin-import-sort": "^0.0.7",
-    "type-fest": "^1.3.0"
+    "type-fest": "^1.3.0",
+    "typechain": "^5.1.2"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --fix",

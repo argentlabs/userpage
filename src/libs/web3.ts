@@ -8,6 +8,21 @@ export const rpcUrl = `https://rinkeby.infura.io/v3/${infuraKey}`
 
 export let web3: ethers.providers.Web3Provider
 
+const chainIdExplorerMapping: { [chainId: number]: string } = {
+  1: "https://etherscan.io/tx",
+  3: "https://ropsten.etherscan.io/tx",
+}
+export const getTransactionExplorerUrl = ({
+  chainId,
+  hash,
+}: {
+  chainId: number
+  hash: string
+}) =>
+  chainIdExplorerMapping[chainId]
+    ? `${chainIdExplorerMapping[chainId]}/${hash}`
+    : ""
+
 export const onboard = Onboard({
   networkId: 3,
   hideBranding: true,

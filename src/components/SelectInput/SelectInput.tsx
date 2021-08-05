@@ -3,6 +3,7 @@ import { ChangeEventHandler, FC } from "react"
 import { Select } from "./SelectInput.style"
 
 interface SelectInputProps {
+  value?: string
   onChange?: ChangeEventHandler<HTMLSelectElement>
   disabled?: boolean
   options: Array<{

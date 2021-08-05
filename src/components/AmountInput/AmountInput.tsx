@@ -22,7 +22,9 @@ export const AmountInput: FC<AmountInputProps> = ({
       value={value}
       placeholder={placeholder}
       onChange={(e) => {
-        const value = e.target.value.replace(",", ".")
+        let value = e.target.value.replace(",", ".")
+        if (value === ".") value = "0."
+        if (value === "0") value = ""
         if (value === "" || /^[0-9\b]+\.?[0-9\b]*$/.test(value)) {
           onChange(value)
         }

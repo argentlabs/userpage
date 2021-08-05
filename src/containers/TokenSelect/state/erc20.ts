@@ -1,8 +1,7 @@
 import { BigNumber, ethers } from "ethers"
 import chunk from "lodash.chunk"
 
-import ERC20_ABI from "./abis/ERC20.json"
-import MULTICALL_ABI from "./abis/Multicall.json"
+import { ERC20__factory, Multicall__factory } from "../../../generated"
 
 export const getERC20BalancesAndAllowances = async (
   provider: ethers.providers.JsonRpcProvider,
@@ -10,12 +9,11 @@ export const getERC20BalancesAndAllowances = async (
   tokens: string[],
   spender: string,
 ): Promise<{ address: string; balance: BigNumber; allowance: BigNumber }[]> => {
-  const contract = new ethers.Contract(
+  const contract = Multicall__factory.connect(
     "0x604D19Ba889A223693B0E78bC1269760B291b9Df",
-    MULTICALL_ABI,
     provider,
   )
-  const erc20Interface = new ethers.utils.Interface(ERC20_ABI)
+  const erc20Interface = ERC20__factory.createInterface()
 
   const operations = (token?: string) => [
     [token, erc20Interface.encodeFunctionData("balanceOf", [address])],
@@ -23,12 +21,12 @@ export const getERC20BalancesAndAllowances = async (
   ]
   const data = tokens.map(operations).reduce((acc, val) => acc.concat(val), [])
 
-  const result = await contract.aggregate(data)
+  const result = await contract.aggregate(data as any)
 
   const MULTICALL_FAIL = ethers.utils.id("MULTICALL_FAIL")
-  const decode = (method: string, data: any) => {
+  const decode = (method: "balanceOf" | "allowance", data: any) => {
     if (data === MULTICALL_FAIL) throw new Error()
-    return erc20Interface.decodeFunctionResult(method, data)[0]
+    return erc20Interface.decodeFunctionResult(method as any, data)[0]
   }
 
   return chunk(result.returnData, operations().length)
