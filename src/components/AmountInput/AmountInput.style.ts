@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { prop } from "styled-tools"
 
 export const AmountInputBare = styled.input<{ length: number }>`
-  min-width: 4em;
+  min-width: calc(2em - 4px);
   max-width: calc(100vw - 6em);
   width: ${prop("length")}em;
   transition: width 200ms ease-out;
@@ -18,5 +18,8 @@ export const AmountInputBare = styled.input<{ length: number }>`
   caret-color: #333332;
   ::placeholder {
     color: #333332;
+  }
+  :placeholder-shown {
+    text-align: right;
   }
 `
