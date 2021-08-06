@@ -8,6 +8,7 @@ import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import Add from "../../components/Svgs/Add"
 import { useAnsStore } from "../../libs/ans"
+import { IconBar } from "./Home.style"
 
 export const HomePage: FC = () => {
   const ans = useAnsStore()
@@ -20,9 +21,9 @@ export const HomePage: FC = () => {
           title={`@${ans.ens.replace(".argent.xyz", "")}`}
           subtitle={ans.ens}
         />
-        <Center direction="row">
+        <IconBar direction="row">
           <IconButton Icon={<Add />} text="Add funds" href="/send" />
-        </Center>
+        </IconBar>
       </Center>
     </PageWrapper>
   )

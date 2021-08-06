@@ -12,14 +12,14 @@ export const PageWrapper = styled.div`
 
   @media only screen and (min-height: 666px) {
     > svg {
-      margin-bottom: 4rem;
+      margin-bottom: 3rem;
     }
   }
 
   @media only screen and (min-width: 480px) {
     padding: 6rem 0;
     > svg {
-      margin-bottom: 8rem;
+      margin-bottom: 5rem;
     }
   }
 `

@@ -1,12 +1,13 @@
 import { useMachine } from "@xstate/react"
 import { ethers } from "ethers"
 import { FC, useEffect, useMemo, useState } from "react"
+import { Link } from "react-router-dom"
 import { State } from "xstate"
 
 import AmountInput from "../../components/AmountInput"
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
-import Button from "../../components/Button"
+import Button, { SecondaryButton } from "../../components/Button"
 import Center from "../../components/Center"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
@@ -17,8 +18,10 @@ import loadingAnimation from "./animations/spinner.json"
 import successAnimation from "./animations/success.json"
 import {
   ButtonWrapper,
-  EtherscanLink,
+  ExternalLink,
   InputWrapper,
+  LottieWrapper,
+  MetaText,
   SLottie,
 } from "./Send.style"
 import { ValueType, sendMaschine, useTxStore } from "./state"
@@ -38,6 +41,13 @@ const showLoadingOrSuccessScreenValues: Array<ValueType> = [
 ]
 const showLoadingOrSuccessScreen = (state: State<any, any>) =>
   showLoadingOrSuccessScreenValues.some(state.matches)
+
+const overwriteableScreenValues: Array<ValueType> = [
+  ...showAmountScreenValues,
+  ...showLoadingOrSuccessScreenValues,
+]
+const overwriteableScreens = (state: State<any, any>) =>
+  overwriteableScreenValues.some(state.matches)
 
 const showInFlightScreenValues: Array<ValueType> = ["sending", "approving"]
 const showInFlightScreen = (state: State<any, any>) =>
@@ -86,8 +96,9 @@ export const SendPage: FC = () => {
         <Avatar />
         <Box
           lean
+          goBackButtonTo={showLoadingState === "init" ? "/" : undefined}
           title={showConnectScreen(state) ? "Add funds to" : undefined}
-          subtitle={
+          tinyTitle={
             showLoadingState === "loading" || showLoadingState === "success"
               ? showLoadingState === "success"
                 ? state.matches("success")
@@ -96,11 +107,17 @@ export const SendPage: FC = () => {
                 : explorerUrl
                 ? "Pending..."
                 : "Waiting for signature..."
+              : undefined
+          }
+          subtitle={
+            showLoadingState === "loading" || showLoadingState === "success"
+              ? undefined
               : ans.ens
           }
         >
-          {showLoadingState === "loading" || showLoadingState === "success" ? (
-            <>
+          {overwriteableScreens(state) &&
+          (showLoadingState === "loading" || showLoadingState === "success") ? (
+            <LottieWrapper>
               <SLottie
                 onLoopComplete={() => {
                   if (
@@ -137,11 +154,16 @@ export const SendPage: FC = () => {
                 }
               />
               {explorerUrl && (
-                <EtherscanLink href={explorerUrl} target="_blank">
+                <ExternalLink href={explorerUrl} target="_blank">
                   View on Etherscan
-                </EtherscanLink>
+                </ExternalLink>
               )}
-            </>
+              {showLoadingState === "success" && state.matches("success") && (
+                <SecondaryButton as={Link} to="/">
+                  Start over
+                </SecondaryButton>
+              )}
+            </LottieWrapper>
           ) : (
             <>
               {showConnectScreen(state) && (
@@ -150,6 +172,7 @@ export const SendPage: FC = () => {
                     Connect a wallet
                   </Button>
                   <Button fullWidth>Pay with card/bank</Button>
+                  <MetaText>Funds are sent to their zkSync account</MetaText>
                 </ButtonWrapper>
               )}
               {showAmountScreen(state) && (
@@ -183,6 +206,9 @@ export const SendPage: FC = () => {
                   >
                     {textButton}
                   </Button>
+                  <MetaText invisible={state.matches("send")}>
+                    You need to pre-authorize these tokens before sending
+                  </MetaText>
                 </InputWrapper>
               )}
             </>

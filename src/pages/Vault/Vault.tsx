@@ -27,8 +27,8 @@ export const VaultPage: FC = () => {
             <QRCode size={280} data={ans.walletAddress} />
             <Address>{formatAddress(ans.walletAddress)}</Address>
             <ErrorText>
-              Only send to this address on Ethereum mainnet. You will lose your
-              funds if you use any other chain.
+              Only send to this address on Ethereum mainnet. <br />
+              You will lose funds if you use any other chain.
             </ErrorText>
           </SCenter>
         </Box>
