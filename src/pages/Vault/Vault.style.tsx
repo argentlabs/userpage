@@ -11,7 +11,7 @@ export const ErrorText = styled.p`
 
 export const Address = styled.p`
   text-align: center;
-  max-width: 200px;
+  max-width: 220px;
   line-height: 1.3em;
   font-size: 16px;
 `

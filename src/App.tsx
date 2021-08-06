@@ -36,7 +36,7 @@ function Links() {
 }
 
 function App() {
-  const { fetch } = useAnsStore()
+  const { fetch, hasZkSync } = useAnsStore()
 
   useEffect(() => {
     const overwriteName = new URLSearchParams(window.location.search).get(
@@ -54,6 +54,12 @@ function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (hasZkSync === false && window.location.pathname !== "/vault") {
+      window.location.replace("/vault")
+    }
+  }, [hasZkSync])
 
   return (
     <JotaiProvider>
