@@ -75,7 +75,7 @@ export const SendPage: FC = () => {
   const explorerUrl = useMemo(() => getTransactionExplorerUrl(tx), [tx])
   console.log(state.value)
   console.log(showLoadingState)
-  const { amount, contract, tokens } = state.context
+  const { amount, contract, tokens, errored } = state.context
 
   const selectedToken = tokens.find((x) => x.address === contract)
   const disableButton =
@@ -127,7 +127,10 @@ export const SendPage: FC = () => {
                     setShowLoadingState("success")
                   }
                   if (!showLoadingOrSuccessScreen(state)) {
-                    if (showLoadingState === "success") {
+                    if (
+                      showLoadingState === "success" ||
+                      errored // meta mask denied
+                    ) {
                       setShowLoadingState("init")
                     } else if (showLoadingState === "loading") {
                       setShowLoadingState("success")

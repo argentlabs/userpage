@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers"
 import type { RequireAtLeastOne } from "type-fest"
-import { assign, createMachine, send } from "xstate"
+import { ErrorPlatformEvent, assign, createMachine, send } from "xstate"
 import create from "zustand"
 
 import type { Token } from "../../containers/TokenSelect/state"
@@ -12,6 +12,8 @@ export const useTxStore = create<{ hash: string; chainId: number }>(() => ({
   hash: "",
   chainId: 0,
 }))
+
+const zkSyncProxyAddress = "0x3a49f0f4cf80992976625e1af168f31a12ab5004"
 
 type SendEvent =
   | { type: "START_PAIR" }
@@ -36,6 +38,7 @@ interface SendContext {
   amount: string
   contract: string
   tokens: Token[]
+  errored: boolean
   approved: {
     [address: string]: BigNumber
   }
@@ -70,6 +73,7 @@ export const sendMaschine = createMachine<
       contract: ethers.constants.AddressZero,
       tokens: [],
       approved: {},
+      errored: false,
     },
     states: {
       readyToPair: {
@@ -118,10 +122,11 @@ export const sendMaschine = createMachine<
             const signer = web3.getSigner(0)
             const erc20token = ERC20__factory.connect(contract, signer)
 
-            const approveTx = await erc20token.approve(
-              "0x3a49f0f4cf80992976625e1af168f31a12ab5004",
-              amountBn,
-            )
+            const approveTx = await erc20token
+              .approve(zkSyncProxyAddress, amountBn)
+              .catch((_e) => {
+                throw Error("transaction_rejected")
+              })
 
             useTxStore.setState({
               hash: approveTx.hash,
@@ -137,14 +142,24 @@ export const sendMaschine = createMachine<
           },
           onDone: {
             target: "send",
-            actions: assign((context, { data }) => ({
-              approved: {
-                ...context.approved,
-                [data.address]: data.amount,
-              },
-            })),
+            actions: [
+              "setErrorFalse",
+              assign((context, { data }) => ({
+                approved: {
+                  ...context.approved,
+                  [data.address]: data.amount,
+                },
+              })),
+            ],
           },
-          onError: "error",
+          onError: [
+            {
+              target: "approve",
+              cond: "noTransactionError",
+              actions: ["setErrorTrue"],
+            },
+            { target: "error", actions: ["setErrorFalse"] },
+          ],
         },
       },
       send: {
@@ -175,10 +190,7 @@ export const sendMaschine = createMachine<
               decimals || 0,
             )
 
-            const zkSync = ZkSync__factory.connect(
-              "0x3a49f0f4cf80992976625e1af168f31a12ab5004",
-              signer,
-            )
+            const zkSync = ZkSync__factory.connect(zkSyncProxyAddress, signer)
 
             const { walletAddress } = ansStore.getState()
 
@@ -186,11 +198,10 @@ export const sendMaschine = createMachine<
               ? zkSync.depositETH(walletAddress, {
                   value: ethers.utils.parseEther(amount),
                 })
-              : zkSync.functions.depositERC20(
-                  contract,
-                  amountBn,
-                  walletAddress,
-                ))
+              : zkSync.depositERC20(contract, amountBn, walletAddress)
+            ).catch((_e) => {
+              throw Error("transaction_rejected")
+            })
 
             useTxStore.setState({
               hash: sendTx.hash,
@@ -199,8 +210,15 @@ export const sendMaschine = createMachine<
 
             await sendTx.wait()
           },
-          onDone: "success",
-          onError: "error",
+          onDone: { target: "success", actions: ["setErrorFalse"] },
+          onError: [
+            {
+              target: "send",
+              cond: "noTransactionError",
+              actions: ["setErrorTrue"],
+            },
+            { target: "error", actions: ["setErrorFalse"] },
+          ],
         },
       },
       success: {
@@ -213,6 +231,8 @@ export const sendMaschine = createMachine<
   },
   {
     actions: {
+      setErrorTrue: assign(() => ({ errored: true } as SendContext)),
+      setErrorFalse: assign(() => ({ errored: false } as SendContext)),
       setContext: assign((_context, event) => {
         const { type, ...newContext } = event
         if (["CHANGE_CONTEXT", "CHANGE_TOKENS"].includes(type)) {
@@ -220,7 +240,7 @@ export const sendMaschine = createMachine<
         }
         return {}
       }),
-      checkApproveSkip: send((context, _event) => {
+      checkApproveSkip: send((context) => {
         const { amount, contract, tokens, approved } = context
         const token = tokens.find((x) => x.address === contract)
         if (!token) return { type: "APPROVE_STAY" }
@@ -237,6 +257,17 @@ export const sendMaschine = createMachine<
         }
         return { type: "APPROVE_STAY" }
       }),
+    },
+    guards: {
+      noTransactionError: (_context, event) => {
+        if (
+          (event as ErrorPlatformEvent)?.data?.message ===
+          "transaction_rejected"
+        ) {
+          return true
+        }
+        return false
+      },
     },
   },
 )
