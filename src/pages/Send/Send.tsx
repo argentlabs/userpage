@@ -70,6 +70,7 @@ export const SendPage: FC = () => {
   const selectedToken = tokens.find((x) => x.address === contract)
   const disableButton =
     !amount ||
+    amount === "0" ||
     selectedToken?.balance.lt(
       ethers.utils.parseUnits(amount, selectedToken?.decimals),
     )

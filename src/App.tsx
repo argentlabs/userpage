@@ -7,6 +7,7 @@ import reset from "styled-reset"
 import { useAnsStore } from "./libs/ans"
 import Home from "./pages/Home"
 import Send from "./pages/Send"
+import Vault from "./pages/Vault"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -62,6 +63,9 @@ function App() {
         <Switch>
           <Route path="/send">
             <Send />
+          </Route>
+          <Route path="/vault">
+            <Vault />
           </Route>
           <Route path="/*">
             <Home />
