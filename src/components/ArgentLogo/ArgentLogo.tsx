@@ -1,15 +1,11 @@
-import styled from "styled-components"
+import { FC } from "react"
 
-import ArgentLogoSvg from "../Svgs/ArgentLogo"
+import { Anchor, ArgentLogo as ArgentLogoBare } from "./ArgentLogo.styles"
 
-export const ArgentLogo = styled(ArgentLogoSvg)`
-  max-height: 42px;
-
-  @media only screen and (min-height: 666px) {
-    max-height: 44px;
-  }
-
-  @media only screen and (min-width: 480px) {
-    max-height: 48px;
-  }
-`
+export const ArgentLogo: FC = () => {
+  return (
+    <Anchor href="https://argent.xyz" target="_blank" rel="noreferrer">
+      <ArgentLogoBare />
+    </Anchor>
+  )
+}
