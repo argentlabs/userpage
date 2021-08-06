@@ -210,7 +210,7 @@ export const SendPage: FC = () => {
                     {textButton}
                   </Button>
                   <MetaText invisible={state.matches("send")}>
-                    You need to pre-authorize these tokens before sending
+                    Pre-authorization required before sending
                   </MetaText>
                 </InputWrapper>
               )}
