@@ -1,5 +1,6 @@
 import chunk from "lodash.chunk"
 import { FC } from "react"
+import CopyToClipboard from "react-copy-to-clipboard"
 
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
@@ -25,7 +26,9 @@ export const VaultPage: FC = () => {
         <Box lean title={ans.ens}>
           <SCenter>
             <QRCode size={280} data={ans.walletAddress} />
-            <Address>{formatAddress(ans.walletAddress)}</Address>
+            <CopyToClipboard text={ans.walletAddress}>
+              <Address>{formatAddress(ans.walletAddress)}</Address>
+            </CopyToClipboard>
             <ErrorText>
               Only send to this address on Ethereum mainnet. <br />
               You will lose funds if you use any other chain.

@@ -14,6 +14,7 @@ export const Address = styled.p`
   max-width: 220px;
   line-height: 1.3em;
   font-size: 16px;
+  cursor: pointer;
 `
 
 export const SCenter = styled(Center)`
