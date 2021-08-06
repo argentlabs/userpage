@@ -102,6 +102,10 @@ export const sendMaschine = createMachine<
         invoke: {
           id: "approving",
           src: async (context) => {
+            // hide ui element
+            useTxStore.setState({
+              chainId: -1,
+            })
             const { amount, contract, tokens } = context
             const token = tokens.find((x) => x.address === contract)
             if (!token) throw Error("Token not found")
@@ -125,11 +129,6 @@ export const sendMaschine = createMachine<
             })
 
             await approveTx.wait()
-
-            // hide ui element
-            useTxStore.setState({
-              chainId: -1,
-            })
 
             return {
               address: contract,
@@ -162,6 +161,10 @@ export const sendMaschine = createMachine<
         invoke: {
           id: "sending",
           src: async (context) => {
+            // hide ui element
+            useTxStore.setState({
+              chainId: -1,
+            })
             const { amount, contract, tokens } = context
             const token = tokens.find((x) => x.address === contract)
             if (!token) throw Error("Token not found")
@@ -195,11 +198,6 @@ export const sendMaschine = createMachine<
             })
 
             await sendTx.wait()
-
-            // hide ui element
-            useTxStore.setState({
-              chainId: -1,
-            })
           },
           onDone: "success",
           onError: "error",

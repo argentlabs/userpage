@@ -24,7 +24,7 @@ export const ansStore = create<AnsStore>((set) => ({
       set(json)
     } catch (e) {
       set({
-        ens: "404.argent.xyz",
+        ens: "404",
         walletAddress: ethers.constants.AddressZero,
         walletDeployed: false,
       })

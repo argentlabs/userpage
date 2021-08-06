@@ -1,6 +1,6 @@
 import { useMachine } from "@xstate/react"
 import { ethers } from "ethers"
-import { FC, useMemo } from "react"
+import { FC, useEffect, useMemo, useState } from "react"
 import { State } from "xstate"
 
 import AmountInput from "../../components/AmountInput"
@@ -13,7 +13,14 @@ import Box from "../../components/ProfileBox"
 import TokenSelect from "../../containers/TokenSelect"
 import { useAnsStore } from "../../libs/ans"
 import { getTransactionExplorerUrl } from "../../libs/web3"
-import { ButtonWrapper, InputWrapper } from "./Send.style"
+import loadingAnimation from "./animations/spinner.json"
+import successAnimation from "./animations/success.json"
+import {
+  ButtonWrapper,
+  EtherscanLink,
+  InputWrapper,
+  SLottie,
+} from "./Send.style"
 import { ValueType, sendMaschine, useTxStore } from "./state"
 
 const showConnectScreenValues: Array<ValueType> = ["readyToPair", "pairing"]
@@ -24,13 +31,17 @@ const showAmountScreenValues: Array<ValueType> = ["approve", "send"]
 const showAmountScreen = (state: State<any, any>) =>
   showAmountScreenValues.some(state.matches)
 
-const showLoadingScreenValues: Array<ValueType> = ["sending", "approving"]
-const showLoadingScreen = (state: State<any, any>) =>
-  showLoadingScreenValues.some(state.matches)
+const showLoadingOrSuccessScreenValues: Array<ValueType> = [
+  "sending",
+  "approving",
+  "success",
+]
+const showLoadingOrSuccessScreen = (state: State<any, any>) =>
+  showLoadingOrSuccessScreenValues.some(state.matches)
 
-const showSuccessScreenValues: Array<ValueType> = ["success"]
-const showSuccessScreen = (state: State<any, any>) =>
-  showSuccessScreenValues.some(state.matches)
+const showInFlightScreenValues: Array<ValueType> = ["sending", "approving"]
+const showInFlightScreen = (state: State<any, any>) =>
+  showInFlightScreenValues.some(state.matches)
 
 const showErrorScreenValues: Array<ValueType> = ["error"]
 const showErrorScreen = (state: State<any, any>) =>
@@ -40,8 +51,20 @@ export const SendPage: FC = () => {
   const [state, send] = useMachine(sendMaschine)
   const tx = useTxStore()
   const ans = useAnsStore()
-  const explorerUrl = useMemo(() => getTransactionExplorerUrl(tx), [tx])
+  const [showLoadingState, setShowLoadingState] = useState<
+    "init" | "loading" | "success"
+  >("init")
 
+  useEffect(() => {
+    if (showInFlightScreen(state) && showLoadingState === "init") {
+      setShowLoadingState("loading")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.value])
+
+  const explorerUrl = useMemo(() => getTransactionExplorerUrl(tx), [tx])
+  console.log(state.value)
+  console.log(showLoadingState)
   const { amount, contract, tokens } = state.context
 
   const selectedToken = tokens.find((x) => x.address === contract)
@@ -63,50 +86,107 @@ export const SendPage: FC = () => {
         <Box
           lean
           title={showConnectScreen(state) ? "Sent to" : undefined}
-          subtitle={ans.ens}
+          subtitle={
+            showLoadingState === "loading" || showLoadingState === "success"
+              ? showLoadingState === "success"
+                ? state.matches("success")
+                  ? "Sent!"
+                  : "Approved!"
+                : explorerUrl
+                ? "Pending..."
+                : "Waiting for signature..."
+              : ans.ens
+          }
         >
-          {showConnectScreen(state) && (
-            <ButtonWrapper>
-              <Button fullWidth onClick={() => send("START_PAIR")}>
-                Connect a wallet
-              </Button>
-              <Button fullWidth>Pay with card/bank</Button>
-            </ButtonWrapper>
-          )}
-          {showAmountScreen(state) && (
-            <InputWrapper>
-              <AmountInput
-                placeholder="0.00"
-                value={amount}
-                onChange={(value) =>
-                  send({ type: "CHANGE_CONTEXT", amount: value })
-                }
-              />
-              <TokenSelect
-                value={contract}
-                onResponse={(tokens) => send({ type: "CHANGE_TOKENS", tokens })}
-                onChange={(token) =>
-                  send({ type: "CHANGE_CONTEXT", contract: token.address })
-                }
-              />
-              <Button
-                disabled={disableButton}
-                onClick={async () => {
-                  if (state.matches("approve")) {
-                    send("SEND_APPROVE")
+          {showLoadingState === "loading" || showLoadingState === "success" ? (
+            <>
+              <SLottie
+                onLoopComplete={() => {
+                  if (
+                    state.matches("success") &&
+                    showLoadingState !== "success"
+                  ) {
+                    setShowLoadingState("success")
                   }
-                  if (state.matches("send")) {
-                    send("SEND_TRANSACTION")
+                  if (!showLoadingOrSuccessScreen(state)) {
+                    if (showLoadingState === "success") {
+                      setShowLoadingState("init")
+                    } else if (showLoadingState === "loading") {
+                      setShowLoadingState("success")
+                    }
                   }
                 }}
-              >
-                {textButton}
-              </Button>
-            </InputWrapper>
+                onComplete={() => {
+                  if (!showLoadingOrSuccessScreen(state)) {
+                    if (showLoadingState === "success") {
+                      setShowLoadingState("init")
+                    } else if (showLoadingState === "loading") {
+                      setShowLoadingState("success")
+                    }
+                  }
+                }}
+                animationData={
+                  showLoadingState === "success"
+                    ? successAnimation
+                    : loadingAnimation
+                }
+                loop={showLoadingState !== "success"}
+                initialSegment={
+                  showLoadingState === "success" ? [0, 95] : undefined
+                }
+              />
+              {explorerUrl && (
+                <EtherscanLink href={explorerUrl} target="_blank">
+                  View on Etherscan
+                </EtherscanLink>
+              )}
+            </>
+          ) : (
+            <>
+              {showConnectScreen(state) && (
+                <ButtonWrapper>
+                  <Button fullWidth onClick={() => send("START_PAIR")}>
+                    Connect a wallet
+                  </Button>
+                  <Button fullWidth>Pay with card/bank</Button>
+                </ButtonWrapper>
+              )}
+              {showAmountScreen(state) && (
+                <InputWrapper>
+                  <AmountInput
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(value) =>
+                      send({ type: "CHANGE_CONTEXT", amount: value })
+                    }
+                  />
+                  <TokenSelect
+                    value={contract}
+                    onResponse={(tokens) =>
+                      send({ type: "CHANGE_TOKENS", tokens })
+                    }
+                    onChange={(token) =>
+                      send({ type: "CHANGE_CONTEXT", contract: token.address })
+                    }
+                  />
+                  <Button
+                    disabled={disableButton}
+                    onClick={async () => {
+                      if (state.matches("approve")) {
+                        send("SEND_APPROVE")
+                      }
+                      if (state.matches("send")) {
+                        send("SEND_TRANSACTION")
+                      }
+                    }}
+                  >
+                    {textButton}
+                  </Button>
+                </InputWrapper>
+              )}
+            </>
           )}
-          {showLoadingScreen(state) && <p>{explorerUrl}</p>}
           {showErrorScreen(state) && <p>error</p>}
-          {showSuccessScreen(state) && <p>success</p>}
         </Box>
       </Center>
     </PageWrapper>
