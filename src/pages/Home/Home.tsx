@@ -6,7 +6,7 @@ import Center from "../../components/Center"
 import IconButton from "../../components/IconButton"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
-import Send from "../../components/Svgs/Send"
+import Add from "../../components/Svgs/Add"
 import { useAnsStore } from "../../libs/ans"
 
 export const HomePage: FC = () => {
@@ -21,7 +21,7 @@ export const HomePage: FC = () => {
           subtitle={ans.ens}
         />
         <Center direction="row">
-          <IconButton Icon={<Send />} text="Send" href="/send" />
+          <IconButton Icon={<Add />} text="Add funds" href="/send" />
         </Center>
       </Center>
     </PageWrapper>

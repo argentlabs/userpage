@@ -85,7 +85,7 @@ export const SendPage: FC = () => {
         <Avatar />
         <Box
           lean
-          title={showConnectScreen(state) ? "Sent to" : undefined}
+          title={showConnectScreen(state) ? "Add funds to" : undefined}
           subtitle={
             showLoadingState === "loading" || showLoadingState === "success"
               ? showLoadingState === "success"
