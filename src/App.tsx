@@ -2,6 +2,7 @@ import { Provider as JotaiProvider } from "jotai"
 import React, { useEffect } from "react"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 import { createGlobalStyle } from "styled-components/macro"
+import { normalize } from "styled-normalize"
 import reset from "styled-reset"
 
 import { useAnsStore } from "./libs/ans"
@@ -10,6 +11,7 @@ import Send from "./pages/Send"
 import Vault from "./pages/Vault"
 
 const GlobalStyle = createGlobalStyle`
+  ${normalize}
   ${reset}
   /* other styles */
   body {
