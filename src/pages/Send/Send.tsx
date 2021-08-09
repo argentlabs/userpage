@@ -4,6 +4,8 @@ import { FC, useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import { State } from "xstate"
 
+import loadingAnimation from "../../animations/spinner.json"
+import successAnimation from "../../animations/success.json"
 import AmountInput from "../../components/AmountInput"
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
@@ -14,8 +16,6 @@ import Box from "../../components/ProfileBox"
 import TokenSelect from "../../containers/TokenSelect"
 import { useAnsStore } from "../../libs/ans"
 import { getTransactionExplorerUrl } from "../../libs/web3"
-import loadingAnimation from "./animations/spinner.json"
-import successAnimation from "./animations/success.json"
 import {
   ButtonWrapper,
   ExternalLink,

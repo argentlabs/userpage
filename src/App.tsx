@@ -1,5 +1,5 @@
 import { Provider as JotaiProvider } from "jotai"
-import React, { useEffect } from "react"
+import React, { Suspense, useEffect } from "react"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 import { createGlobalStyle } from "styled-components/macro"
 import { normalize } from "styled-normalize"
@@ -7,7 +7,9 @@ import reset from "styled-reset"
 
 import { useAnsStore } from "./libs/ans"
 import Claim from "./pages/Claim"
+import NotFound from "./pages/Error"
 import Home from "./pages/Home"
+import Loading from "./pages/Loading"
 import Send from "./pages/Send"
 import Vault from "./pages/Vault"
 
@@ -72,10 +74,12 @@ function App() {
   }, [hasZkSync])
 
   useEffect(() => {
-    if (isError && !["/claim", "/404"].includes(window.location.pathname)) {
+    if (isError) {
       if (isClaimable(name)) {
-        window.location.replace("/claim")
-      } else {
+        if (window.location.pathname !== "/claim") {
+          window.location.replace("/claim")
+        }
+      } else if (window.location.pathname !== "/404") {
         window.location.replace("/404")
       }
     }
@@ -92,23 +96,28 @@ function App() {
       <Router>
         <Links />
         <GlobalStyle />
-        <Switch>
-          <Route path="/send">
-            <Send />
-          </Route>
-          <Route path="/vault">
-            <Vault />
-          </Route>
-          <Route path="/claim">
-            <Claim />
-          </Route>
-          <Route path="/404">
-            <Claim />
-          </Route>
-          <Route path="/*">
-            <Home />
-          </Route>
-        </Switch>
+        <Suspense fallback={<Loading />}>
+          <Switch>
+            <Route path="/send">
+              <Send />
+            </Route>
+            <Route path="/vault">
+              <Vault />
+            </Route>
+            <Route path="/claim">
+              <Claim />
+            </Route>
+            <Route path="/404">
+              <NotFound />
+            </Route>
+            <Route path="/loading">
+              <Loading />
+            </Route>
+            <Route path="/*">
+              <Home />
+            </Route>
+          </Switch>
+        </Suspense>
       </Router>
     </JotaiProvider>
   )

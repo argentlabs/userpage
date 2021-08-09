@@ -12,6 +12,9 @@ export const ClaimWrapper = styled(Center)`
   > p:last-of-type {
     margin-bottom: 64px;
   }
+  > p {
+    font-size: 24px;
+  }
 `
 
 export const InvisibleLink = styled.a`

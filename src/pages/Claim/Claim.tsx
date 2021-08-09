@@ -17,7 +17,7 @@ export const ClaimPage: FC = () => {
       <ArgentLogo />
       <Center>
         <Avatar />
-        <Box lean title={`${ans.name}.argent.xyz`} subtitle={ans.ens}>
+        <Box lean title={`${ans.name}.argent.xyz`}>
           <ClaimWrapper direction="column">
             <p>This address is not yet registered.</p>
 
