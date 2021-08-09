@@ -45,6 +45,7 @@ const showLoadingOrSuccessScreen = (state: State<any, any>) =>
 const overwriteableScreenValues: Array<ValueType> = [
   ...showAmountScreenValues,
   ...showLoadingOrSuccessScreenValues,
+  "error",
 ]
 const overwriteableScreens = (state: State<any, any>) =>
   overwriteableScreenValues.some(state.matches)
@@ -53,16 +54,12 @@ const showInFlightScreenValues: Array<ValueType> = ["sending", "approving"]
 const showInFlightScreen = (state: State<any, any>) =>
   showInFlightScreenValues.some(state.matches)
 
-const showErrorScreenValues: Array<ValueType> = ["error"]
-const showErrorScreen = (state: State<any, any>) =>
-  showErrorScreenValues.some(state.matches)
-
 export const SendPage: FC = () => {
   const [state, send] = useMachine(sendMaschine)
   const tx = useTxStore()
   const ans = useAnsStore()
   const [showLoadingState, setShowLoadingState] = useState<
-    "init" | "loading" | "success"
+    "init" | "loading" | "success" | "error"
   >("init")
 
   useEffect(() => {
@@ -99,24 +96,21 @@ export const SendPage: FC = () => {
           goBackButtonTo={showLoadingState === "init" ? "/" : undefined}
           title={showConnectScreen(state) ? "Add funds to" : undefined}
           tinyTitle={
-            showLoadingState === "loading" || showLoadingState === "success"
+            showLoadingState !== "init"
               ? showLoadingState === "success"
                 ? state.matches("success")
                   ? "Sent!"
                   : "Approved!"
+                : showLoadingState === "error"
+                ? "Something went wrong"
                 : explorerUrl
                 ? "Pending..."
                 : "Waiting for signature..."
               : undefined
           }
-          subtitle={
-            showLoadingState === "loading" || showLoadingState === "success"
-              ? undefined
-              : ans.ens
-          }
+          subtitle={showLoadingState !== "init" ? undefined : ans.ens}
         >
-          {overwriteableScreens(state) &&
-          (showLoadingState === "loading" || showLoadingState === "success") ? (
+          {overwriteableScreens(state) && showLoadingState !== "init" ? (
             <LottieWrapper>
               <SLottie
                 onLoopComplete={() => {
@@ -125,6 +119,9 @@ export const SendPage: FC = () => {
                     showLoadingState !== "success"
                   ) {
                     setShowLoadingState("success")
+                  }
+                  if (state.matches("error") && showLoadingState !== "error") {
+                    setShowLoadingState("error")
                   }
                   if (!showLoadingOrSuccessScreen(state)) {
                     if (
@@ -146,12 +143,13 @@ export const SendPage: FC = () => {
                     }
                   }
                 }}
+                // TODO: add error animation
                 animationData={
                   showLoadingState === "success"
                     ? successAnimation
                     : loadingAnimation
                 }
-                loop={showLoadingState !== "success"}
+                loop={showLoadingState === "loading"}
                 initialSegment={
                   showLoadingState === "success" ? [0, 95] : undefined
                 }
@@ -161,7 +159,8 @@ export const SendPage: FC = () => {
                   View on Etherscan
                 </ExternalLink>
               )}
-              {showLoadingState === "success" && state.matches("success") && (
+              {((showLoadingState === "success" && state.matches("success")) ||
+                (showLoadingState === "error" && state.matches("error"))) && (
                 <SecondaryButton as={Link} to="/">
                   Start over
                 </SecondaryButton>
@@ -216,7 +215,6 @@ export const SendPage: FC = () => {
               )}
             </>
           )}
-          {showErrorScreen(state) && <p>error</p>}
         </Box>
       </Center>
     </PageWrapper>
