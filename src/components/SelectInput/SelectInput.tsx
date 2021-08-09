@@ -1,6 +1,6 @@
 import { ChangeEventHandler, FC } from "react"
 
-import { Select } from "./SelectInput.style"
+import { SExpand, Select, SelectInputWrapper } from "./SelectInput.style"
 
 interface SelectInputProps {
   value?: string
@@ -18,12 +18,15 @@ export const SelectInput: FC<SelectInputProps> = ({
   ...props
 }) => {
   return (
-    <Select {...props}>
-      {options.map(({ value, display, disabled }) => (
-        <option disabled={disabled} key={value} value={value}>
-          {display}
-        </option>
-      ))}
-    </Select>
+    <SelectInputWrapper>
+      <Select {...props}>
+        {options.map(({ value, display, disabled }) => (
+          <option disabled={disabled} key={value} value={value}>
+            {display}
+          </option>
+        ))}
+      </Select>
+      <SExpand />
+    </SelectInputWrapper>
   )
 }

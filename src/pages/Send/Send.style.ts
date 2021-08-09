@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { ifProp } from "styled-tools"
 
 import Center from "../../components/Center"
+import { SelectInputWrapper } from "../../components/SelectInput/SelectInput.style"
 import { centerMixin } from "../../mixins.style"
 
 export const ButtonWrapper = styled(Center)`
@@ -18,7 +19,7 @@ export const ButtonWrapper = styled(Center)`
 `
 
 export const InputWrapper = styled(Center)`
-  > select {
+  > ${SelectInputWrapper} {
     margin: 16px 0 24px;
   }
   > p {
