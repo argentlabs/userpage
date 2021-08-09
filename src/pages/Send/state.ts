@@ -8,9 +8,8 @@ import { ERC20__factory, ZkSync__factory } from "../../generated"
 import { ansStore } from "../../libs/ans"
 import { onboard, web3 } from "../../libs/web3"
 
-export const useTxStore = create<{ hash: string; chainId: number }>(() => ({
+export const useTxStore = create<{ hash: string }>(() => ({
   hash: "",
-  chainId: 0,
 }))
 
 const zkSyncProxyAddress = "0x3a49f0f4cf80992976625e1af168f31a12ab5004"
@@ -108,7 +107,7 @@ export const sendMaschine = createMachine<
           src: async (context) => {
             // hide ui element
             useTxStore.setState({
-              chainId: -1,
+              hash: "",
             })
             const { amount, contract, tokens } = context
             const token = tokens.find((x) => x.address === contract)
@@ -130,7 +129,6 @@ export const sendMaschine = createMachine<
 
             useTxStore.setState({
               hash: approveTx.hash,
-              chainId: approveTx.chainId,
             })
 
             await approveTx.wait()
@@ -178,7 +176,7 @@ export const sendMaschine = createMachine<
           src: async (context) => {
             // hide ui element
             useTxStore.setState({
-              chainId: -1,
+              hash: "",
             })
             const { amount, contract, tokens } = context
             const token = tokens.find((x) => x.address === contract)
@@ -205,7 +203,6 @@ export const sendMaschine = createMachine<
 
             useTxStore.setState({
               hash: sendTx.hash,
-              chainId: sendTx.chainId,
             })
 
             await sendTx.wait()

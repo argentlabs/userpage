@@ -6,6 +6,7 @@ import { normalize } from "styled-normalize"
 import reset from "styled-reset"
 
 import { useAnsStore } from "./libs/ans"
+import Claim from "./pages/Claim"
 import Home from "./pages/Home"
 import Send from "./pages/Send"
 import Vault from "./pages/Vault"
@@ -37,16 +38,23 @@ function Links() {
   )
 }
 
+const isClaimable = (name: string): boolean => {
+  return name.length >= 5 && name.length <= 30
+}
+
 function App() {
-  const { fetch, hasZkSync } = useAnsStore()
+  const { fetch, hasZkSync, isError, name } = useAnsStore()
 
   useEffect(() => {
     const overwriteName = new URLSearchParams(window.location.search).get(
       "__overwriteName",
     )
+    const domainSplitByDot = window.location.hostname.split(".")
     const name =
       new URLSearchParams(window.location.search).get("__overwriteName") ||
-      window.location.hostname.split(".")[0]
+      (domainSplitByDot.length > 2
+        ? window.location.hostname.split(".")[0]
+        : "")
 
     fetch(name)
 
@@ -63,6 +71,22 @@ function App() {
     }
   }, [hasZkSync])
 
+  useEffect(() => {
+    if (isError && !["/claim", "/404"].includes(window.location.pathname)) {
+      if (isClaimable(name)) {
+        window.location.replace("/claim")
+      } else {
+        window.location.replace("/404")
+      }
+    }
+    if (
+      ["/claim", "/404"].includes(window.location.pathname) &&
+      isError === false
+    ) {
+      window.location.replace("/")
+    }
+  }, [isError, name])
+
   return (
     <JotaiProvider>
       <Router>
@@ -74,6 +98,12 @@ function App() {
           </Route>
           <Route path="/vault">
             <Vault />
+          </Route>
+          <Route path="/claim">
+            <Claim />
+          </Route>
+          <Route path="/404">
+            <Claim />
           </Route>
           <Route path="/*">
             <Home />

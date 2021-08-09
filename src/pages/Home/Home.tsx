@@ -17,10 +17,7 @@ export const HomePage: FC = () => {
       <ArgentLogo />
       <Center>
         <Avatar />
-        <Box
-          title={`@${ans.ens.replace(".argent.xyz", "")}`}
-          subtitle={ans.ens}
-        />
+        <Box title={`@${ans.name}`} subtitle={ans.ens} />
         <IconBar direction="row">
           <IconButton Icon={<Add />} text="Add funds" href="/send" />
         </IconBar>

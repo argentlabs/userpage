@@ -1,34 +1,34 @@
 import Onboard from "bnc-onboard"
-import { ethers } from "ethers"
+import { ethers, providers } from "ethers"
 
-const appName = "Argent Userpage"
-const infuraKey = "1ed4fc296a89420099d446758abd5bee"
+const DESIRED_NETWORK_ID = 3
+const APP_NAME = "Argent Userpage"
+const APP_URL = "https://userpage.vercel.app"
+const CONTACT_EMAIL = "janek@argent.xyz"
+const INFURA_KEY = "1ed4fc296a89420099d446758abd5bee"
 
-export const rpcUrl = `https://rinkeby.infura.io/v3/${infuraKey}`
+const network = providers.getNetwork(DESIRED_NETWORK_ID)
+const networkName = network.chainId === 1 ? "mainnet" : network.name
+const subdomainEtherscan = networkName === "mainnet" ? "" : `${networkName}.`
+
+export const rpcUrl = `https://${networkName}.infura.io/v3/${INFURA_KEY}`
+
+export const getTransactionExplorerUrl = ({ hash }: { hash: string }) =>
+  hash ? `https://${subdomainEtherscan}etherscan.io/tx/${hash}` : ""
 
 export let web3: ethers.providers.Web3Provider
 
-const chainIdExplorerMapping: { [chainId: number]: string } = {
-  1: "https://etherscan.io/tx",
-  3: "https://ropsten.etherscan.io/tx",
-}
-export const getTransactionExplorerUrl = ({
-  chainId,
-  hash,
-}: {
-  chainId: number
-  hash: string
-}) =>
-  chainIdExplorerMapping[chainId]
-    ? `${chainIdExplorerMapping[chainId]}/${hash}`
-    : ""
-
+let gWallet: any
 export const onboard = Onboard({
-  networkId: 3,
+  networkId: DESIRED_NETWORK_ID,
   hideBranding: true,
   subscriptions: {
     wallet: (wallet: any) => {
+      gWallet = wallet
       web3 = new ethers.providers.Web3Provider(wallet.provider)
+    },
+    network: () => {
+      web3 = new ethers.providers.Web3Provider(gWallet.provider)
     },
   },
   walletSelect: {
@@ -36,8 +36,8 @@ export const onboard = Onboard({
       { walletName: "metamask" },
       {
         walletName: "trezor",
-        appUrl: "https://reactdemo.blocknative.com",
-        email: "janek@argent.xyz",
+        appUrl: APP_URL,
+        email: CONTACT_EMAIL,
         rpcUrl,
       },
       {
@@ -46,12 +46,12 @@ export const onboard = Onboard({
       },
       {
         walletName: "walletConnect",
-        infuraKey,
+        infuraKey: INFURA_KEY,
       },
-      { walletName: "cobovault", appName, rpcUrl },
+      { walletName: "cobovault", appName: APP_NAME, rpcUrl },
       {
         walletName: "lattice",
-        appName,
+        appName: APP_NAME,
         rpcUrl,
       },
       { walletName: "coinbase" },
@@ -90,6 +90,22 @@ export const onboard = Onboard({
     { checkName: "derivationPath" },
     { checkName: "connect" },
     { checkName: "accounts" },
+    // allow Metamask users to switch network using api
+    async (stateAndHelpers) => {
+      const ethereumWindow = (window as any)?.ethereum
+      if (
+        stateAndHelpers.network !== stateAndHelpers.appNetworkId &&
+        ethereumWindow?.isMetaMask
+      ) {
+        await ethereumWindow.request({
+          method: "wallet_switchEthereumChain",
+          params: [
+            { chainId: `0x${stateAndHelpers.appNetworkId.toString(16)}` },
+          ],
+        })
+        return undefined
+      }
+    },
     { checkName: "network" },
   ],
 })
