@@ -7,17 +7,18 @@ import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import AppStore from "../../components/Svgs/AppStore"
 import PlayStore from "../../components/Svgs/PlayStore"
-import { useAnsStore } from "../../libs/ans"
+import { useRouterContextSelector } from "../../states/router"
 import { ClaimWrapper, InvisibleLink } from "./Claim.style"
 
 export const ClaimPage: FC = () => {
-  const ans = useAnsStore()
+  const { name } = useRouterContextSelector()
+
   return (
     <PageWrapper>
       <ArgentLogo />
       <Center>
         <Avatar />
-        <Box lean title={`${ans.name}.argent.xyz`}>
+        <Box lean title={`${name}.argent.xyz`}>
           <ClaimWrapper direction="column">
             <p>This address is not yet registered.</p>
 

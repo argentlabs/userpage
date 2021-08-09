@@ -5,7 +5,6 @@ import create from "zustand"
 
 import type { Token } from "../../containers/TokenSelect/state"
 import { ERC20__factory, ZkSync__factory } from "../../generated"
-import { ansStore } from "../../libs/ans"
 import { onboard, web3 } from "../../libs/web3"
 
 export const useTxStore = create<{ hash: string }>(() => ({
@@ -38,6 +37,7 @@ interface SendContext {
   contract: string
   tokens: Token[]
   errored: boolean
+  walletAddress: string
   approved: {
     [address: string]: BigNumber
   }
@@ -73,6 +73,7 @@ export const sendMaschine = createMachine<
       tokens: [],
       approved: {},
       errored: false,
+      walletAddress: "",
     },
     states: {
       readyToPair: {
@@ -123,7 +124,8 @@ export const sendMaschine = createMachine<
 
             const approveTx = await erc20token
               .approve(zkSyncProxyAddress, amountBn)
-              .catch((_e) => {
+              .catch((e) => {
+                console.error(e)
                 throw Error("transaction_rejected")
               })
 
@@ -178,7 +180,7 @@ export const sendMaschine = createMachine<
             useTxStore.setState({
               hash: "",
             })
-            const { amount, contract, tokens } = context
+            const { amount, contract, tokens, walletAddress } = context
             const token = tokens.find((x) => x.address === contract)
             if (!token) throw Error("Token not found")
             const { decimals } = token
@@ -190,14 +192,14 @@ export const sendMaschine = createMachine<
 
             const zkSync = ZkSync__factory.connect(zkSyncProxyAddress, signer)
 
-            const { walletAddress } = ansStore.getState()
-
             const sendTx = await (contract === ethers.constants.AddressZero
               ? zkSync.depositETH(walletAddress, {
                   value: ethers.utils.parseEther(amount),
                 })
               : zkSync.depositERC20(contract, amountBn, walletAddress)
-            ).catch((_e) => {
+            ).catch((e) => {
+              console.error(e)
+
               throw Error("transaction_rejected")
             })
 
@@ -257,6 +259,7 @@ export const sendMaschine = createMachine<
     },
     guards: {
       noTransactionError: (_context, event) => {
+        console.log((event as any).data)
         if (
           (event as ErrorPlatformEvent)?.data?.message ===
           "transaction_rejected"

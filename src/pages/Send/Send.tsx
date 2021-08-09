@@ -14,8 +14,8 @@ import Center from "../../components/Center"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import TokenSelect from "../../containers/TokenSelect"
-import { useAnsStore } from "../../libs/ans"
 import { getTransactionExplorerUrl } from "../../libs/web3"
+import { useRouterContextSelector } from "../../states/router"
 import {
   ButtonWrapper,
   ExternalLink,
@@ -57,7 +57,7 @@ const showInFlightScreen = (state: State<any, any>) =>
 export const SendPage: FC = () => {
   const [state, send] = useMachine(sendMaschine)
   const tx = useTxStore()
-  const ans = useAnsStore()
+  const { ens, walletAddress } = useRouterContextSelector()
   const [showLoadingState, setShowLoadingState] = useState<
     "init" | "loading" | "success" | "error"
   >("init")
@@ -108,7 +108,7 @@ export const SendPage: FC = () => {
                 : "Waiting for signature..."
               : undefined
           }
-          subtitle={showLoadingState !== "init" ? undefined : ans.ens}
+          subtitle={showLoadingState !== "init" ? undefined : ens}
         >
           {overwriteableScreens(state) && showLoadingState !== "init" ? (
             <LottieWrapper>
@@ -189,7 +189,7 @@ export const SendPage: FC = () => {
                   <TokenSelect
                     value={contract}
                     onResponse={(tokens) =>
-                      send({ type: "CHANGE_TOKENS", tokens })
+                      send({ type: "CHANGE_TOKENS", tokens, walletAddress })
                     }
                     onChange={(token) =>
                       send({ type: "CHANGE_CONTEXT", contract: token.address })

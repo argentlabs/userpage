@@ -7,17 +7,18 @@ import IconButton from "../../components/IconButton"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import Add from "../../components/Svgs/Add"
-import { useAnsStore } from "../../libs/ans"
+import { useRouterContextSelector } from "../../states/router"
 import { IconBar } from "./Home.style"
 
 export const HomePage: FC = () => {
-  const ans = useAnsStore()
+  const { name, ens } = useRouterContextSelector()
+
   return (
     <PageWrapper>
       <ArgentLogo />
       <Center>
         <Avatar />
-        <Box title={`@${ans.name}`} subtitle={ans.ens} />
+        <Box title={`@${name}`} subtitle={ens} />
         <IconBar direction="row">
           <IconButton Icon={<Add />} text="Add funds" href="/send" />
         </IconBar>

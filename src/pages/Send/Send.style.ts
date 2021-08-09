@@ -2,6 +2,7 @@ import Lottie from "lottie-react"
 import styled from "styled-components"
 import { ifProp } from "styled-tools"
 
+import { SecondaryButton } from "../../components/Button"
 import Center from "../../components/Center"
 import { SelectInputWrapper } from "../../components/SelectInput/SelectInput.style"
 import { centerMixin } from "../../mixins.style"
@@ -43,7 +44,7 @@ export const SLottie = styled(Lottie)`
 export const LottieWrapper = styled.div`
   ${centerMixin}
 
-  > a:last-child,button:last-child {
+  > ${SecondaryButton} {
     margin-top: 32px;
   }
 `

@@ -8,7 +8,7 @@ import Center from "../../components/Center"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import QRCode from "../../components/QRCode"
-import { useAnsStore } from "../../libs/ans"
+import { useRouterContextSelector } from "../../states/router"
 import { Address, ErrorText, SCenter } from "./Vault.style"
 
 const formatAddress = (address: string) =>
@@ -17,17 +17,17 @@ const formatAddress = (address: string) =>
     .join(" ")}`
 
 export const VaultPage: FC = () => {
-  const ans = useAnsStore()
+  const { ens, walletAddress } = useRouterContextSelector()
   return (
     <PageWrapper>
       <ArgentLogo />
       <Center>
         <Avatar />
-        <Box lean title={ans.ens}>
+        <Box lean title={ens}>
           <SCenter>
-            <QRCode size={280} data={ans.walletAddress} />
-            <CopyToClipboard text={ans.walletAddress}>
-              <Address>{formatAddress(ans.walletAddress)}</Address>
+            <QRCode size={280} data={walletAddress} />
+            <CopyToClipboard text={walletAddress}>
+              <Address>{formatAddress(walletAddress)}</Address>
             </CopyToClipboard>
             <ErrorText>
               Only send to this address on Ethereum mainnet. <br />

@@ -27,6 +27,16 @@ interface WalletStatus {
   hasWallet: boolean
 }
 
+export const fetchAns = async (name: string): Promise<AnsResponse> => {
+  const ansRes = await fetch(
+    `https://cloud-test.argent-api.com/v1/wallet?ens=${name}.argent.xyz`,
+  )
+  if (ansRes.status === 404) throw Error("Not found")
+  if (ansRes.status >= 400) throw Error("Request failed")
+
+  return ansRes.json()
+}
+
 export const ansStore = create<AnsStore>((set) => ({
   name: "",
   walletAddress: "0x0",
@@ -36,20 +46,16 @@ export const ansStore = create<AnsStore>((set) => ({
   isError: null,
   fetch: async (name: string) => {
     try {
-      const ansRes = await fetch(
-        `https://cloud-test.argent-api.com/v1/wallet?ens=${name}.argent.xyz`,
-      )
-      if (ansRes.status >= 400) throw Error("Request failed")
-      const json = (await ansRes.json()) as AnsResponse
-      console.log(json.walletAddress)
+      const ans = await fetchAns(name)
+      console.log(ans.walletAddress)
       set({
         name,
-        walletAddress: json.walletAddress,
-        ens: json.ens,
-        walletDeployed: json.walletDeployed,
+        walletAddress: ans.walletAddress,
+        ens: ans.ens,
+        walletDeployed: ans.walletDeployed,
         isError: false,
         hasZkSync:
-          json.l2?.walletStatus?.find?.((w) => w.type === "ZK_SYNC")
+          ans.l2?.walletStatus?.find?.((w) => w.type === "ZK_SYNC")
             ?.hasWallet ?? false,
       })
     } catch (e) {
