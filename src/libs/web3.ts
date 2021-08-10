@@ -35,6 +35,10 @@ export const onboard = Onboard({
     wallets: [
       { walletName: "metamask" },
       {
+        walletName: "walletConnect",
+        infuraKey: INFURA_KEY,
+      },
+      {
         walletName: "trezor",
         appUrl: APP_URL,
         email: CONTACT_EMAIL,
@@ -44,19 +48,16 @@ export const onboard = Onboard({
         walletName: "ledger",
         rpcUrl,
       },
-      {
-        walletName: "walletConnect",
-        infuraKey: INFURA_KEY,
-      },
+      { walletName: "coinbase" },
+      { walletName: "walletLink", rpcUrl },
+      { walletName: "authereum", disableNotifications: true },
       { walletName: "cobovault", appName: APP_NAME, rpcUrl },
       {
         walletName: "lattice",
         appName: APP_NAME,
         rpcUrl,
       },
-      { walletName: "coinbase" },
       { walletName: "status" },
-      { walletName: "walletLink", rpcUrl },
       //   {
       //     walletName: "portis",
       //     apiKey: "b2b7586f-2b1e-4c30-a7fb-c2d1533b153b",
@@ -77,7 +78,6 @@ export const onboard = Onboard({
       { walletName: "liquality" },
       { walletName: "frame" },
       { walletName: "tokenpocket", rpcUrl },
-      { walletName: "authereum", disableNotifications: true },
       { walletName: "ownbit" },
       { walletName: "gnosis" },
       { walletName: "dcent" },
