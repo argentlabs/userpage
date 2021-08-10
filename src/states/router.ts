@@ -1,24 +1,21 @@
-import { useActor, useInterpret, useSelector } from "@xstate/react"
-import { FC, createContext, useContext, useMemo } from "react"
-import { useHistory } from "react-router-dom"
 import {
   DoneInvokeEvent,
   ErrorPlatformEvent,
-  Interpreter,
   assign,
   createMachine,
   send,
 } from "xstate"
 
 import { fetchAns } from "../libs/ans"
+import { SendContext, sendMachineDefaultContext, sendMaschine } from "./send"
 
-type SendEvent =
+export type RouterEvent =
   | { type: "NOOP" }
   | { type: "PUSH_SEND" }
   | { type: "PUSH_HOME" }
   | { type: "PUSH_VAULT" }
 
-interface SendContext {
+export interface RouterContext {
   name: string
   walletAddress: string
   ens: string
@@ -26,11 +23,17 @@ interface SendContext {
   hasZkSync: boolean
 }
 
-type ValueType = "loading" | "home" | "vault" | "claim" | "send" | "404"
+export type RouterValueType =
+  | "loading"
+  | "home"
+  | "vault"
+  | "claim"
+  | "send"
+  | "404"
 
-type SendTypestate = {
-  value: ValueType
-  context: SendContext
+export type RouterTypestate = {
+  value: RouterValueType
+  context: RouterContext
 }
 
 const getNameFromGlobal = () => {
@@ -60,7 +63,7 @@ export const createRouterMachine = (history: {
     search: string
   }
 }) =>
-  createMachine<SendContext, SendEvent, SendTypestate>(
+  createMachine<RouterContext, RouterEvent, RouterTypestate>(
     {
       id: "router",
       initial: "loading",
@@ -76,7 +79,7 @@ export const createRouterMachine = (history: {
           entry: ["setName"],
           invoke: {
             id: "getWallet",
-            src: async (context): Promise<SendContext> => {
+            src: async (context): Promise<RouterContext> => {
               const { ens, l2, walletAddress, walletDeployed } = await fetchAns(
                 context.name,
               )
@@ -122,34 +125,49 @@ export const createRouterMachine = (history: {
             PUSH_SEND: "send",
             PUSH_VAULT: "vault",
           },
+          meta: {
+            path: "/",
+          },
         },
         vault: {
           entry: ["navigateVault"],
           type: "final",
+          meta: {
+            path: "/vault",
+          },
         },
         claim: {
           entry: ["navigateClaim"],
           type: "final",
+          meta: {
+            path: "/claim",
+          },
         },
         "404": {
           entry: ["navigate404"],
           type: "final",
+          meta: {
+            path: "/404",
+          },
         },
         error: {
           type: "final",
         },
         send: {
           entry: ["navigateSend"],
-          // invoke: {
-          //   src: async () => {
-          //     //   await new Promise((res) => {
-          //     //     setTimeout(res, 2000)
-          //     //   })
-          //   },
-          //   onDone: "home",
-          // },
+          invoke: {
+            id: "sendMachine",
+            src: sendMaschine,
+            data: (context): SendContext => ({
+              ...sendMachineDefaultContext,
+              walletAddress: context.walletAddress,
+            }),
+          },
           on: {
             PUSH_HOME: "home",
+          },
+          meta: {
+            path: "/send",
           },
         },
       },
@@ -157,7 +175,7 @@ export const createRouterMachine = (history: {
     {
       actions: {
         assignContext: assign((_context, event) => {
-          const promiseEvent = event as DoneInvokeEvent<SendContext>
+          const promiseEvent = event as DoneInvokeEvent<RouterContext>
           if (promiseEvent?.data) {
             return {
               ...promiseEvent.data,
@@ -200,7 +218,7 @@ export const createRouterMachine = (history: {
       },
       guards: {
         hasZkSyncWallet: (_context, event) => {
-          const promiseEvent = event as DoneInvokeEvent<SendContext>
+          const promiseEvent = event as DoneInvokeEvent<RouterContext>
           return Boolean(promiseEvent?.data?.hasZkSync)
         },
         canVisitClaim: (_context, event) => {
@@ -226,32 +244,3 @@ export const createRouterMachine = (history: {
       },
     },
   )
-
-const GlobalRouterStateContext = createContext<
-  Interpreter<SendContext, any, SendEvent, SendTypestate>
->(null as any)
-
-export const GlobalRouterStateProvider: FC = (props) => {
-  const history = useHistory()
-  const routerMachine = useMemo(() => {
-    console.log("ROUTER MACHINE INIT")
-    return createRouterMachine(history)
-  }, [history])
-  const routerService = useInterpret(routerMachine)
-
-  return (
-    <GlobalRouterStateContext.Provider value={routerService}>
-      {props.children}
-    </GlobalRouterStateContext.Provider>
-  )
-}
-
-export const useRouterMachine = () => {
-  const globalRouterService = useContext(GlobalRouterStateContext)
-  return useActor(globalRouterService)
-}
-
-export const useRouterContextSelector = () => {
-  const globalRouterService = useContext(GlobalRouterStateContext)
-  return useSelector(globalRouterService, (state) => state.context)
-}

@@ -13,7 +13,6 @@
     "@xstate/react": "^1.5.1",
     "bnc-onboard": "^1.32.0",
     "ethers": "^5.4.3",
-    "jotai": "^1.2.2",
     "lodash.chunk": "^4.2.0",
     "lottie-react": "^2.1.0",
     "qr-code-styling": "^1.6.0-rc.1",
@@ -28,8 +27,7 @@
     "styled-tools": "^1.7.2",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1",
-    "xstate": "^4.23.1",
-    "zustand": "^3.5.7"
+    "xstate": "^4.23.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -50,7 +48,10 @@
       "react-app",
       "react-app/jest",
       "prettier"
-    ]
+    ],
+    "rules": {
+      "react-hooks/exhaustive-deps": "off"
+    }
   },
   "browserslist": {
     "production": [

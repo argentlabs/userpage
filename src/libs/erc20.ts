@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from "ethers"
 import chunk from "lodash.chunk"
 
-import { ERC20__factory, Multicall__factory } from "../../../generated"
+import { ERC20__factory, Multicall__factory } from "../generated"
 
 export const getERC20BalancesAndAllowances = async (
   provider: ethers.providers.JsonRpcProvider,

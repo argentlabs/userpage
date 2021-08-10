@@ -97,12 +97,14 @@ export const onboard = Onboard({
         stateAndHelpers.network !== stateAndHelpers.appNetworkId &&
         ethereumWindow?.isMetaMask
       ) {
-        await ethereumWindow.request({
-          method: "wallet_switchEthereumChain",
-          params: [
-            { chainId: `0x${stateAndHelpers.appNetworkId.toString(16)}` },
-          ],
-        })
+        try {
+          await ethereumWindow.request({
+            method: "wallet_switchEthereumChain",
+            params: [
+              { chainId: `0x${stateAndHelpers.appNetworkId.toString(16)}` },
+            ],
+          })
+        } catch {}
         return undefined
       }
     },

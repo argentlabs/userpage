@@ -7,7 +7,7 @@ import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import AppStore from "../../components/Svgs/AppStore"
 import PlayStore from "../../components/Svgs/PlayStore"
-import { useRouterContextSelector } from "../../states/router"
+import { useRouterContextSelector } from "../../states/hooks"
 import { ClaimWrapper, InvisibleLink } from "./Claim.style"
 
 export const ClaimPage: FC = () => {

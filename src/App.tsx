@@ -1,17 +1,18 @@
-import { Provider as JotaiProvider } from "jotai"
-import React from "react"
+import React, { Suspense } from "react"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 import { createGlobalStyle } from "styled-components/macro"
 import { normalize } from "styled-normalize"
 import reset from "styled-reset"
 
+import ErrorBoundary from "./components/ErrorBoundary"
 import Claim from "./pages/Claim"
-import NotFound from "./pages/Error"
+import NotFound from "./pages/Errors/404"
+import Error500Page from "./pages/Errors/500"
 import Home from "./pages/Home"
 import Loading from "./pages/Loading"
 import Send from "./pages/Send"
 import Vault from "./pages/Vault"
-import { GlobalRouterStateProvider, useRouterMachine } from "./states/router"
+import { GlobalRouterStateProvider, useRouterMachine } from "./states/hooks"
 
 const GlobalStyle = createGlobalStyle`
   ${normalize}
@@ -70,15 +71,17 @@ function RouterComponent() {
 
 function App() {
   return (
-    <Router>
-      <JotaiProvider>
-        <GlobalRouterStateProvider>
-          <Links />
-          <GlobalStyle />
-          <RouterComponent />
-        </GlobalRouterStateProvider>
-      </JotaiProvider>
-    </Router>
+    <ErrorBoundary fallback={<Error500Page />}>
+      <Suspense fallback={<Loading />}>
+        <Router>
+          <GlobalRouterStateProvider>
+            <Links />
+            <GlobalStyle />
+            <RouterComponent />
+          </GlobalRouterStateProvider>
+        </Router>
+      </Suspense>
+    </ErrorBoundary>
   )
 }
 

@@ -1,8 +1,5 @@
-import { useMachine } from "@xstate/react"
 import { ethers } from "ethers"
 import { FC, useEffect, useMemo, useState } from "react"
-import { Link } from "react-router-dom"
-import { State } from "xstate"
 
 import loadingAnimation from "../../animations/spinner.json"
 import successAnimation from "../../animations/success.json"
@@ -15,7 +12,13 @@ import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import TokenSelect from "../../containers/TokenSelect"
 import { getTransactionExplorerUrl } from "../../libs/web3"
-import { useRouterContextSelector } from "../../states/router"
+import { useRouterMachine, useSendMachine } from "../../states/hooks"
+import {
+  amountScreens,
+  connectScreens,
+  inFlightScreens,
+  stateMatchesFactory,
+} from "./helper"
 import {
   ButtonWrapper,
   ExternalLink,
@@ -24,67 +27,85 @@ import {
   MetaText,
   SLottie,
 } from "./Send.style"
-import { ValueType, sendMaschine, useTxStore } from "./state"
 
-const showConnectScreenValues: Array<ValueType> = ["readyToPair", "pairing"]
-const showConnectScreen = (state: State<any, any>) =>
-  showConnectScreenValues.some(state.matches)
-
-const showAmountScreenValues: Array<ValueType> = ["approve", "send"]
-const showAmountScreen = (state: State<any, any>) =>
-  showAmountScreenValues.some(state.matches)
-
-const showLoadingOrSuccessScreenValues: Array<ValueType> = [
-  "sending",
-  "approving",
-  "success",
-]
-const showLoadingOrSuccessScreen = (state: State<any, any>) =>
-  showLoadingOrSuccessScreenValues.some(state.matches)
-
-const overwriteableScreenValues: Array<ValueType> = [
-  ...showAmountScreenValues,
-  ...showLoadingOrSuccessScreenValues,
-  "error",
-]
-const overwriteableScreens = (state: State<any, any>) =>
-  overwriteableScreenValues.some(state.matches)
-
-const showInFlightScreenValues: Array<ValueType> = ["sending", "approving"]
-const showInFlightScreen = (state: State<any, any>) =>
-  showInFlightScreenValues.some(state.matches)
+type AnimationState = "idle" | "loading" | "error" | "success"
 
 export const SendPage: FC = () => {
-  const [state, send] = useMachine(sendMaschine)
-  const tx = useTxStore()
-  const { ens, walletAddress } = useRouterContextSelector()
-  const [showLoadingState, setShowLoadingState] = useState<
-    "init" | "loading" | "success" | "error"
-  >("init")
+  /** STATE MACHINES */
+  // Router Machine
+  const [stateRouter, sendRouter] = useRouterMachine()
+  const { ens } = stateRouter.context
+  // Send Machine
+  const [state, send] = useSendMachine()
+  const { amount, contract, tokens, transactionHash } = state.context
 
+  /** HELPER */
+  // Animation helper hook
+  const [loadingState, setLoadingState] = useState<AnimationState>("idle")
   useEffect(() => {
-    if (showInFlightScreen(state) && showLoadingState === "init") {
-      setShowLoadingState("loading")
+    // get loading animation running when required
+    if (stateMatches(inFlightScreens) && loadingState === "idle") {
+      setLoadingState("loading")
+    } else if (state.matches("error") && loadingState === "idle") {
+      setLoadingState("error")
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.value])
+  // get explorerUrl when transactionHash is provided
+  const explorerUrl = useMemo(
+    () => getTransactionExplorerUrl({ hash: transactionHash || "" }),
+    [transactionHash],
+  )
+  // helper function to check state matches
+  const stateMatches = stateMatchesFactory(state)
 
-  const explorerUrl = useMemo(() => getTransactionExplorerUrl(tx), [tx])
-  console.log(state.value)
-  console.log(showLoadingState)
-  const { amount, contract, tokens, errored } = state.context
-
+  /** UI CONTROL */
   const selectedToken = tokens.find((x) => x.address === contract)
+  // disable approve/send button if invalid amount or not enough balance
   const disableButton =
+    // invalid input
     !amount ||
     amount === "0" ||
+    // check balance is gte amount
     selectedToken?.balance.lt(
       ethers.utils.parseUnits(amount, selectedToken?.decimals),
     )
-  const textButton = state.matches("send")
-    ? "Send"
-    : // "approve" left
-      "Pre-authorize tokens"
+
+  // button can ether be used for approval or to send
+  const textButton = state.matches("approve") ? "Pre-authorize tokens" : "Send"
+
+  // title is shown when connecting the wallet
+  const title = stateMatches(connectScreens) ? "Add funds to" : undefined
+
+  // subtitle and backButton are shown when there is no animation on screen
+  const subTitle = loadingState === "idle" ? ens : undefined
+  const onBackButtonClick =
+    loadingState === "idle" ? () => sendRouter("PUSH_HOME") : undefined
+
+  // tiny title, used in animation screens
+  const tinyTitle =
+    loadingState !== "idle" // if loading screen isnt shown, dont show tinyTitle
+      ? loadingState === "success" //animation shows success
+        ? state.matches("success") // actual state is success
+          ? "Sent!"
+          : "Approved!" // animation shows success and actual state isnt success yet = approved
+        : loadingState === "error" //check if animation shows error
+        ? "Something went wrong"
+        : explorerUrl //if tx hash is there, show explorer tx url
+        ? "Pending..."
+        : "Waiting for signature..." // last case left is that we're waiting for metamask to approve
+      : undefined
+
+  // swap animations based on loading state
+  // TODO: add error animation
+  const animationData =
+    loadingState === "success" ? successAnimation : loadingAnimation
+
+  // determines if the animation should loop
+  const isLooping = loadingState === "loading"
+
+  //determines which frames of the animation get played (default: all)
+  const initialSegment: [number, number] | undefined =
+    loadingState === "success" ? [0, 95] : undefined
 
   return (
     <PageWrapper>
@@ -93,128 +114,130 @@ export const SendPage: FC = () => {
         <Avatar />
         <Box
           lean
-          goBackButtonTo={showLoadingState === "init" ? "/" : undefined}
-          title={showConnectScreen(state) ? "Add funds to" : undefined}
-          tinyTitle={
-            showLoadingState !== "init"
-              ? showLoadingState === "success"
-                ? state.matches("success")
-                  ? "Sent!"
-                  : "Approved!"
-                : showLoadingState === "error"
-                ? "Something went wrong"
-                : explorerUrl
-                ? "Pending..."
-                : "Waiting for signature..."
-              : undefined
-          }
-          subtitle={showLoadingState !== "init" ? undefined : ens}
+          onBackButtonClick={onBackButtonClick}
+          title={title}
+          tinyTitle={tinyTitle}
+          subtitle={subTitle}
         >
-          {overwriteableScreens(state) && showLoadingState !== "init" ? (
-            <LottieWrapper>
-              <SLottie
-                onLoopComplete={() => {
-                  if (
-                    state.matches("success") &&
-                    showLoadingState !== "success"
-                  ) {
-                    setShowLoadingState("success")
-                  }
-                  if (state.matches("error") && showLoadingState !== "error") {
-                    setShowLoadingState("error")
-                  }
-                  if (!showLoadingOrSuccessScreen(state)) {
+          {
+            // when animations are running, show them
+            loadingState !== "idle" ? (
+              <LottieWrapper>
+                <SLottie
+                  onLoopComplete={() => {
                     if (
-                      showLoadingState === "success" ||
-                      errored // meta mask denied
+                      state.matches("success") &&
+                      loadingState !== "success"
                     ) {
-                      setShowLoadingState("init")
-                    } else if (showLoadingState === "loading") {
-                      setShowLoadingState("success")
+                      setLoadingState("success")
                     }
-                  }
-                }}
-                onComplete={() => {
-                  if (!showLoadingOrSuccessScreen(state)) {
-                    if (showLoadingState === "success") {
-                      setShowLoadingState("init")
-                    } else if (showLoadingState === "loading") {
-                      setShowLoadingState("success")
+                    if (state.matches("error") && loadingState !== "error") {
+                      return setLoadingState("error")
                     }
-                  }
-                }}
-                // TODO: add error animation
-                animationData={
-                  showLoadingState === "success"
-                    ? successAnimation
-                    : loadingAnimation
-                }
-                loop={showLoadingState === "loading"}
-                initialSegment={
-                  showLoadingState === "success" ? [0, 95] : undefined
-                }
-              />
-              {explorerUrl && (
-                <ExternalLink href={explorerUrl} target="_blank">
-                  View on Etherscan
-                </ExternalLink>
-              )}
-              {((showLoadingState === "success" && state.matches("success")) ||
-                (showLoadingState === "error" && state.matches("error"))) && (
-                <SecondaryButton as={Link} to="/">
-                  Start over
-                </SecondaryButton>
-              )}
-            </LottieWrapper>
-          ) : (
-            <>
-              {showConnectScreen(state) && (
-                <ButtonWrapper>
-                  <Button fullWidth onClick={() => send("START_PAIR")}>
-                    Connect a wallet
-                  </Button>
-                  <Button fullWidth>Pay with card/bank</Button>
-                  <MetaText>Funds are sent to their zkSync account</MetaText>
-                </ButtonWrapper>
-              )}
-              {showAmountScreen(state) && (
-                <InputWrapper>
-                  <AmountInput
-                    placeholder="0.00"
-                    value={amount}
-                    onChange={(value) =>
-                      send({ type: "CHANGE_CONTEXT", amount: value })
-                    }
-                  />
-                  <TokenSelect
-                    value={contract}
-                    onResponse={(tokens) =>
-                      send({ type: "CHANGE_TOKENS", tokens, walletAddress })
-                    }
-                    onChange={(token) =>
-                      send({ type: "CHANGE_CONTEXT", contract: token.address })
-                    }
-                  />
-                  <Button
-                    disabled={disableButton}
-                    onClick={async () => {
-                      if (state.matches("approve")) {
-                        send("SEND_APPROVE")
+                    if (stateMatches(amountScreens)) {
+                      if (loadingState === "success") {
+                        setLoadingState("idle")
+                      } else if (loadingState === "loading") {
+                        if (state.event?.type?.includes?.("error")) {
+                          // metamask denied
+                          setLoadingState("idle")
+                        } else {
+                          setLoadingState("success")
+                        }
                       }
-                      if (state.matches("send")) {
-                        send("SEND_TRANSACTION")
+                    }
+                  }}
+                  onComplete={() => {
+                    if (stateMatches(amountScreens)) {
+                      if (loadingState === "success") {
+                        setLoadingState("idle")
+                      } else if (loadingState === "loading") {
+                        setLoadingState("success")
                       }
-                    }}
-                  >
-                    {textButton}
-                  </Button>
-                  <MetaText invisible={state.matches("send")}>
-                    Pre-authorization required before sending
-                  </MetaText>
-                </InputWrapper>
-              )}
-            </>
-          )}
+                    }
+                  }}
+                  // TODO: add error animation
+                  animationData={animationData}
+                  loop={isLooping}
+                  initialSegment={initialSegment}
+                />
+                {
+                  // if explorerUrl exists, show it
+                  explorerUrl && (
+                    <ExternalLink href={explorerUrl} target="_blank">
+                      View on Etherscan
+                    </ExternalLink>
+                  )
+                }
+                {
+                  // on error or success state, show "Start over" button
+                  ((loadingState === "success" && state.matches("success")) ||
+                    (loadingState === "error" && state.matches("error"))) && (
+                    <SecondaryButton onClick={() => sendRouter("PUSH_HOME")}>
+                      Start over
+                    </SecondaryButton>
+                  )
+                }
+              </LottieWrapper>
+            ) : (
+              // if no animation is running, show another screen
+              <>
+                {
+                  // Connect you Wallet
+                  stateMatches(connectScreens) && (
+                    <ButtonWrapper>
+                      <Button fullWidth onClick={() => send("START_PAIR")}>
+                        Connect a wallet
+                      </Button>
+                      <Button fullWidth>Pay with card/bank</Button>
+                      <MetaText>
+                        Funds are sent to their zkSync account
+                      </MetaText>
+                    </ButtonWrapper>
+                  )
+                }
+                {
+                  //Put in some amount and the token/coin you want to send
+                  stateMatches(amountScreens) && (
+                    <InputWrapper>
+                      <AmountInput
+                        placeholder="0.00"
+                        value={amount}
+                        onChange={(value) =>
+                          send({ type: "CHANGE_CONTEXT", amount: value })
+                        }
+                      />
+                      <TokenSelect
+                        value={contract}
+                        onChange={(token) =>
+                          send({
+                            type: "CHANGE_CONTEXT",
+                            contract: token.address,
+                          })
+                        }
+                      />
+                      <Button
+                        disabled={disableButton}
+                        onClick={async () => {
+                          if (state.matches("approve")) {
+                            send("SEND_APPROVE")
+                          }
+                          if (state.matches("send")) {
+                            send("SEND_TRANSACTION")
+                          }
+                        }}
+                      >
+                        {textButton}
+                      </Button>
+                      <MetaText invisible={!state.matches("approve")}>
+                        Pre-authorization required before sending
+                      </MetaText>
+                    </InputWrapper>
+                  )
+                }
+              </>
+            )
+          }
         </Box>
       </Center>
     </PageWrapper>

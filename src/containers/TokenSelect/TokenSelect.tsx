@@ -1,26 +1,35 @@
 import { ethers } from "ethers"
-import { useAtom } from "jotai"
-import { FC, Suspense, useEffect } from "react"
+import { FC } from "react"
 
 import SelectInput from "../../components/SelectInput"
-import { Token, tokensAtom } from "./state"
+import { useSendContextSelector } from "../../states/hooks"
+import { Token } from "../../states/send"
 
 interface TokenSelectProps {
   value: string
-  onResponse?: (tokens: Token[]) => any
   onChange: (token: Token) => any
 }
 
-const TokenSelectLoaded: FC<TokenSelectProps> = ({
+export const TokenSelect: FC<TokenSelectProps> = ({
   value,
-  onResponse,
   onChange,
+  ...props
 }) => {
-  const [tokens] = useAtom(tokensAtom)
-  useEffect(() => {
-    onResponse?.(tokens)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokens])
+  const { tokens } = useSendContextSelector()
+
+  if (!tokens.length)
+    return (
+      <SelectInput
+        options={[
+          {
+            display: "ETH",
+            value: ethers.constants.AddressZero,
+          },
+        ]}
+        disabled
+      />
+    )
+
   return (
     <SelectInput
       value={value}
@@ -32,26 +41,7 @@ const TokenSelectLoaded: FC<TokenSelectProps> = ({
       onChange={(e) => {
         onChange?.(tokens.find((x) => x.address === e.target.value)!)
       }}
+      {...props}
     />
-  )
-}
-
-export const TokenSelect: FC<TokenSelectProps> = ({ ...props }) => {
-  return (
-    <Suspense
-      fallback={
-        <SelectInput
-          options={[
-            {
-              display: "ETH",
-              value: ethers.constants.AddressZero,
-            },
-          ]}
-          disabled
-        />
-      }
-    >
-      <TokenSelectLoaded {...props} />
-    </Suspense>
   )
 }

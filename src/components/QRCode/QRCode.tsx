@@ -24,14 +24,12 @@ export const QRCode: FC<QRCodeProps> = ({ size, data, ...props }) => {
   )
   useEffect(() => {
     qrCode.append(ref.current ?? undefined)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     qrCode.update({
       data,
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   return <div ref={ref} className="qrcode" {...props} />

@@ -7,11 +7,16 @@ import IconButton from "../../components/IconButton"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import Add from "../../components/Svgs/Add"
-import { useRouterContextSelector } from "../../states/router"
+import { useRouterMachine } from "../../states/hooks"
 import { IconBar } from "./Home.style"
 
 export const HomePage: FC = () => {
-  const { name, ens } = useRouterContextSelector()
+  const [
+    {
+      context: { name, ens },
+    },
+    send,
+  ] = useRouterMachine()
 
   return (
     <PageWrapper>
@@ -20,7 +25,11 @@ export const HomePage: FC = () => {
         <Avatar />
         <Box title={`@${name}`} subtitle={ens} />
         <IconBar direction="row">
-          <IconButton Icon={<Add />} text="Add funds" href="/send" />
+          <IconButton
+            Icon={<Add />}
+            text="Add funds"
+            onClick={() => send("PUSH_SEND")}
+          />
         </IconBar>
       </Center>
     </PageWrapper>

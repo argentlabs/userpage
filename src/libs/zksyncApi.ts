@@ -1,4 +1,4 @@
-export interface Tokens {
+export interface TokensZkSync {
   request: Request
   status: string
   error: any
@@ -20,11 +20,11 @@ export interface Request {
 }
 
 export interface Result {
-  list: List[]
+  list: TokenZkSync[]
   pagination: Pagination
 }
 
-export interface List {
+export interface TokenZkSync {
   id: number
   address: string
   symbol: string
@@ -58,9 +58,9 @@ const ZKSYNC_API_BASE = "https://ropsten-beta-api.zksync.io/api/v0.2"
 const ZKSYNC_API_TOKENS_ENDPOINT = `${ZKSYNC_API_BASE}/tokens?limit=100&from=latest&direction=older`
 const ZKSYNC_API_CONFIG_ENDPOINT = `${ZKSYNC_API_BASE}/config`
 
-export const fetchTokenList = async (): Promise<List[]> => {
+export const fetchTokenList = async (): Promise<TokenZkSync[]> => {
   const response = await fetch(ZKSYNC_API_TOKENS_ENDPOINT)
-  const tokens = (await response.json()) as Tokens
+  const tokens = (await response.json()) as TokensZkSync
 
   return tokens?.result?.list?.sort?.((a, b) => a.id - b.id)
 }

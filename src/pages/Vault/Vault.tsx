@@ -8,7 +8,7 @@ import Center from "../../components/Center"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import QRCode from "../../components/QRCode"
-import { useRouterContextSelector } from "../../states/router"
+import { useRouterContextSelector } from "../../states/hooks"
 import { Address, ErrorText, SCenter } from "./Vault.style"
 
 const formatAddress = (address: string) =>
