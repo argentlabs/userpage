@@ -18,9 +18,11 @@ export const Select = styled.select`
   border-radius: 0;
 
   color: #8f8e8c;
+  background-color: white;
   padding: 8px;
   min-width: 180px;
   appearance: none;
+  transition: all 200ms ease-in-out;
 
   :focus-within {
     outline: none;
