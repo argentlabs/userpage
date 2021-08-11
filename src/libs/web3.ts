@@ -24,8 +24,12 @@ export const onboard = Onboard({
   hideBranding: true,
   subscriptions: {
     wallet: (wallet: any) => {
-      gWallet = wallet
-      web3 = new ethers.providers.Web3Provider(wallet.provider)
+      if (wallet?.provider) {
+        gWallet = wallet
+        web3 = new ethers.providers.Web3Provider(wallet.provider)
+      } else {
+        window.location.reload()
+      }
     },
     network: () => {
       web3 = new ethers.providers.Web3Provider(gWallet.provider)

@@ -111,7 +111,7 @@ export const SendPage: FC = () => {
   return (
     <PageWrapper>
       <Helmet>
-        <title>Send - {ens}</title>
+        <title>{state.matches("pairing") ? ens : `Send - ${ens}`}</title>
       </Helmet>
       <ArgentLogo />
       <Center>

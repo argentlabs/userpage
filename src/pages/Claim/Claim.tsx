@@ -17,7 +17,7 @@ export const ClaimPage: FC = () => {
   return (
     <PageWrapper>
       <Helmet>
-        <title>Claim {name}.argent.xyz</title>
+        <title>Claim - {name}.argent.xyz</title>
       </Helmet>
       <ArgentLogo />
       <Center>
@@ -29,14 +29,14 @@ export const ClaimPage: FC = () => {
             <p>Download Argent to reserve it now!</p>
             <Center direction="row" gap="24px">
               <InvisibleLink
-                href="https://apple.com"
+                href="https://argent.link/claim-username"
                 target="_blank"
                 rel="noreferrer"
               >
                 <AppStore height={48} width={160} />
               </InvisibleLink>
               <InvisibleLink
-                href="https://google.com"
+                href="https://argent.link/claim-username"
                 target="_blank"
                 rel="noreferrer"
               >
