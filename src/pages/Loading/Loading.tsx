@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react"
+import { Helmet } from "react-helmet"
 
 import loadingAnimation from "../../animations/spinner.json"
 import ArgentLogo from "../../components/ArgentLogo"
@@ -18,6 +19,9 @@ export const LoadingPage: FC = () => {
   }, [])
   return (
     <PageWrapper>
+      <Helmet>
+        <title>Loading...</title>
+      </Helmet>
       <ArgentLogo />
       <Center>
         {showLoading && <SLottie animationData={loadingAnimation} />}

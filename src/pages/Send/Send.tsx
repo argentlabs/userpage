@@ -1,5 +1,6 @@
 import { ethers } from "ethers"
 import { FC, useEffect, useMemo, useState } from "react"
+import { Helmet } from "react-helmet"
 
 import loadingAnimation from "../../animations/spinner.json"
 import successAnimation from "../../animations/success.json"
@@ -109,6 +110,9 @@ export const SendPage: FC = () => {
 
   return (
     <PageWrapper>
+      <Helmet>
+        <title>Send - {ens}</title>
+      </Helmet>
       <ArgentLogo />
       <Center>
         <Avatar />

@@ -1,4 +1,5 @@
 import { FC } from "react"
+import { Helmet } from "react-helmet"
 
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
@@ -15,6 +16,9 @@ export const ClaimPage: FC = () => {
 
   return (
     <PageWrapper>
+      <Helmet>
+        <title>Claim {name}.argent.xyz</title>
+      </Helmet>
       <ArgentLogo />
       <Center>
         <Avatar />

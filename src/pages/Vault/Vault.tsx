@@ -1,6 +1,7 @@
 import chunk from "lodash.chunk"
 import { FC } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
+import { Helmet } from "react-helmet"
 
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
@@ -20,6 +21,9 @@ export const VaultPage: FC = () => {
   const { ens, walletAddress } = useRouterContextSelector()
   return (
     <PageWrapper>
+      <Helmet>
+        <title>Vault - {ens}</title>
+      </Helmet>
       <ArgentLogo />
       <Center>
         <Avatar />

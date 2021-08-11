@@ -1,4 +1,5 @@
 import { FC } from "react"
+import { Helmet } from "react-helmet"
 
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
@@ -20,6 +21,9 @@ export const HomePage: FC = () => {
 
   return (
     <PageWrapper>
+      <Helmet>
+        <title>Home - {ens}</title>
+      </Helmet>
       <ArgentLogo />
       <Center>
         <Avatar />
