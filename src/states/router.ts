@@ -1,3 +1,5 @@
+/** Visualization: https://xstate.js.org/viz/?gist=b8e9ec176bcdfb673d6e3d19d237803e */
+
 import {
   DoneInvokeEvent,
   ErrorPlatformEvent,

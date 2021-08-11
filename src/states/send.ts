@@ -1,3 +1,5 @@
+/** Visualization: https://xstate.js.org/viz/?gist=5158cd1138aaab449b556375906456ac */
+
 import { BigNumber, ContractReceipt, ContractTransaction, ethers } from "ethers"
 import type { RequireAtLeastOne } from "type-fest"
 import {

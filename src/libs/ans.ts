@@ -16,6 +16,7 @@ interface WalletStatus {
 
 export const fetchAns = async (name: string): Promise<AnsResponse> => {
   const ansRes = await fetch(
+    // `https://deelay.me/5000/https://cloud-test.argent-api.com/v1/wallet?ens=${name}.argent.xyz`, // for testing purposes, 5s delay added
     `https://cloud-test.argent-api.com/v1/wallet?ens=${name}.argent.xyz`,
   )
   if (ansRes.status === 404) throw Error("Not found")
