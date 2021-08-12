@@ -26,10 +26,6 @@ export const GlobalRouterStateProvider: FC = (props) => {
   useEffect(
     () =>
       history.listen((location) => {
-        console.log(
-          routerService.state.meta["router." + routerService.state.value]
-            .path !== location.pathname,
-        )
         if (
           routerService.state.meta["router." + routerService.state.value]
             .path !== location.pathname

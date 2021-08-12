@@ -130,6 +130,8 @@ export const sendMaschine = createMachine<
 
             const isArgentWallet = await argentDetector.isArgentWallet(address)
 
+            console.log("Connected", address, "isArgentWallet:", isArgentWallet)
+
             return { isArgentWallet }
           },
           onDone: {
