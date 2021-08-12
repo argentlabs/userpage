@@ -10,7 +10,12 @@ import {
   send,
 } from "xstate"
 
-import { ERC20__factory, ZkSync__factory } from "../generated"
+import {
+  ArgentWalletContract__factory,
+  ArgentWalletDetector__factory,
+  ERC20__factory,
+  ZkSync__factory,
+} from "../generated"
 import { getERC20BalancesAndAllowances } from "../libs/erc20"
 import { onboard, web3 } from "../libs/web3"
 import {
@@ -51,6 +56,7 @@ export interface SendContext {
   amount: string
   contract: string
   walletAddress: string
+  isArgentWallet: boolean
   transactionHash: string | null
   zkSyncTokens: ZkSyncToken[]
   zkSyncConfig: ZkSyncConfig | null
@@ -80,10 +86,11 @@ type FetchTokensRes = {
   zkSyncConfig: ZkSyncConfig
 }
 
-export const sendMachineDefaultContext = {
+export const sendMachineDefaultContext: SendContext = {
   amount: "",
   contract: ethers.constants.AddressZero,
   walletAddress: "",
+  isArgentWallet: false,
   transactionHash: null,
   tokens: [],
   zkSyncTokens: [],
@@ -113,8 +120,25 @@ export const sendMaschine = createMachine<
             if (!check) {
               throw Error("WalletCheck failed")
             }
+
+            const signer = web3.getSigner(0)
+            const address = await signer.getAddress()
+            const argentDetector = ArgentWalletDetector__factory.connect(
+              "0xF230cF8980BaDA094720C01308319eF192F0F311",
+              web3,
+            )
+
+            const isArgentWallet = await argentDetector.isArgentWallet(address)
+
+            return { isArgentWallet }
           },
-          onDone: "fetchTokens",
+          onDone: {
+            target: "fetchTokens",
+            actions: assign({
+              isArgentWallet: (context, event) =>
+                event.data?.isArgentWallet ?? false,
+            }),
+          },
           onError: "readyToPair",
         },
       },
@@ -257,7 +281,10 @@ export const sendMaschine = createMachine<
           id: "waitForTx",
           src: async (_context, event) => {
             const promiseEvent = event as DoneInvokeEvent<ContractTransaction>
-            return promiseEvent.data.wait()
+            return {
+              prevEventType: event.type,
+              txReceipt: await promiseEvent.data.wait(),
+            }
           },
           onDone: [
             {
@@ -300,6 +327,47 @@ export const sendMaschine = createMachine<
               zkSyncConfig!.contract,
               signer,
             )
+
+            // if argent wallet is not sending ETH and allowance is too small, do multicall
+            if (
+              context.isArgentWallet &&
+              contract !== ethers.constants.AddressZero &&
+              token.allowance.lt(amountBn)
+            ) {
+              const argentWallet = ArgentWalletContract__factory.connect(
+                await signer.getAddress(),
+                signer,
+              )
+              const erc20Interface = ERC20__factory.createInterface()
+
+              const mcTx = argentWallet
+                .wc_multiCall([
+                  {
+                    to: contract,
+                    value: 0,
+                    data: erc20Interface.encodeFunctionData("approve", [
+                      zkSyncConfig!.contract,
+                      amountBn,
+                    ]),
+                  },
+                  {
+                    to: zkSyncConfig!.contract,
+                    value: 0,
+                    data: zkSync.interface.encodeFunctionData("depositERC20", [
+                      contract,
+                      amountBn,
+                      walletAddress,
+                    ]),
+                  },
+                ])
+                .catch((e) => {
+                  console.error(e)
+
+                  throw Error("transaction_rejected")
+                })
+
+              return mcTx
+            }
 
             const sendTx = await (contract === ethers.constants.AddressZero
               ? zkSync.depositETH(walletAddress, {
@@ -345,6 +413,7 @@ export const sendMaschine = createMachine<
         const amountBn = ethers.utils.parseUnits(amount || "0", decimals || 0)
 
         if (
+          context.isArgentWallet ||
           contract === ethers.constants.AddressZero ||
           allowance.gte(amountBn)
         ) {
@@ -371,10 +440,11 @@ export const sendMaschine = createMachine<
         return false
       },
       txWasApproval: (context, event) => {
-        const { data } = event as DoneInvokeEvent<ContractReceipt>
-        return (
-          data.to.toLowerCase() !== context.zkSyncConfig?.contract.toLowerCase()
-        )
+        const { data } = event as DoneInvokeEvent<{
+          prevEventType: string
+          txReceipt: ContractReceipt
+        }>
+        return data.prevEventType.includes("done.invoke.approving")
       },
     },
   },
