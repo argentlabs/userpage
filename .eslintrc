@@ -1,0 +1,13 @@
+{
+  "extends": ["react-app", "react-app/jest", "prettier"],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off",
+    "jest/valid-title": [
+      "error",
+      {
+        "mustMatch": { "describe": "^\\[(unit|int)\\]" }
+      }
+    ],
+    "jest/no-mocks-import": "off"
+  }
+}

@@ -1,18 +1,18 @@
-import { BigNumber, ethers } from "ethers"
+import { BigNumber, providers, utils } from "ethers"
 import chunk from "lodash.chunk"
 
 import { ERC20__factory, Multicall__factory } from "../generated"
 
+const { MULTICALL_ADDRESS = "0x604D19Ba889A223693B0E78bC1269760B291b9Df" } =
+  process.env
+
 export const getERC20BalancesAndAllowances = async (
-  provider: ethers.providers.JsonRpcProvider,
+  provider: providers.JsonRpcProvider,
   address: string,
   tokens: string[],
   spender: string,
 ): Promise<{ address: string; balance: BigNumber; allowance: BigNumber }[]> => {
-  const contract = Multicall__factory.connect(
-    "0x604D19Ba889A223693B0E78bC1269760B291b9Df",
-    provider,
-  )
+  const contract = Multicall__factory.connect(MULTICALL_ADDRESS, provider)
   const erc20Interface = ERC20__factory.createInterface()
 
   const operations = (token?: string) => [
@@ -23,7 +23,7 @@ export const getERC20BalancesAndAllowances = async (
 
   const result = await contract.aggregate(data as any)
 
-  const MULTICALL_FAIL = ethers.utils.id("MULTICALL_FAIL")
+  const MULTICALL_FAIL = utils.id("MULTICALL_FAIL")
   const decode = (method: "balanceOf" | "allowance", data: any) => {
     if (data === MULTICALL_FAIL) throw new Error()
     return erc20Interface.decodeFunctionResult(method as any, data)[0]
@@ -42,5 +42,5 @@ export const getERC20BalancesAndAllowances = async (
         return null
       }
     })
-    .filter((x: any) => !!x) as any
+    .filter(Boolean) as any
 }

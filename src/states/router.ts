@@ -82,17 +82,10 @@ export const createRouterMachine = (history: {
           invoke: {
             id: "getWallet",
             src: async (context): Promise<RouterContext> => {
-              const { ens, l2, walletAddress, walletDeployed } = await fetchAns(
-                context.name,
-              )
+              const ans = await fetchAns(context.name)
               return {
                 name: context.name,
-                ens,
-                walletAddress,
-                walletDeployed,
-                hasZkSync:
-                  l2?.walletStatus?.find?.((w) => w.type === "ZK_SYNC")
-                    ?.hasWallet ?? false,
+                ...ans,
               }
             },
             onDone: [

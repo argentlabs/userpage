@@ -1,13 +1,16 @@
 import Onboard from "bnc-onboard"
 import { ethers, providers } from "ethers"
 
-const DESIRED_NETWORK_ID = 3
-const APP_NAME = "Argent Userpage"
-const APP_URL = "https://userpage.vercel.app"
-const CONTACT_EMAIL = "janek@argent.xyz"
-const INFURA_KEY = "1ed4fc296a89420099d446758abd5bee"
+const {
+  DESIRED_NETWORK_ID = "3",
+  APP_NAME = "Argent Userpage",
+  APP_URL = "https://userpage.vercel.app",
+  CONTACT_EMAIL = "janek@argent.xyz",
+  INFURA_KEY = "1ed4fc296a89420099d446758abd5bee",
+} = process.env
 
-const network = providers.getNetwork(DESIRED_NETWORK_ID)
+const networkId = parseInt(DESIRED_NETWORK_ID, 10)
+const network = providers.getNetwork(networkId)
 const networkName = network.chainId === 1 ? "mainnet" : network.name
 const subdomainEtherscan = networkName === "mainnet" ? "" : `${networkName}.`
 
@@ -17,10 +20,9 @@ export const getTransactionExplorerUrl = ({ hash }: { hash: string }) =>
   hash ? `https://${subdomainEtherscan}etherscan.io/tx/${hash}` : ""
 
 export let web3: ethers.providers.Web3Provider
-
 let gWallet: any
 export const onboard = Onboard({
-  networkId: DESIRED_NETWORK_ID,
+  networkId,
   hideBranding: true,
   subscriptions: {
     wallet: (wallet: any) => {

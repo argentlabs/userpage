@@ -1,3 +1,11 @@
+import joinUrl from "url-join"
+
+const {
+  ZKSYNC_API_BASE = "https://ropsten-beta-api.zksync.io/api/v0.2",
+  ZKSYNC_API_TOKENS_PATH = "tokens?limit=100&from=latest&direction=older",
+  ZKSYNC_API_CONFIG_PATH = "config",
+} = process.env
+
 export interface TokensZkSync {
   request: Request
   status: string
@@ -16,7 +24,7 @@ export interface Request {
         direction: string
       }
     | {}
-  timestamp: Date
+  timestamp: string
 }
 
 export interface Result {
@@ -54,19 +62,18 @@ export interface ResultConfig {
   zksyncVersion: string
 }
 
-const ZKSYNC_API_BASE = "https://ropsten-beta-api.zksync.io/api/v0.2"
-const ZKSYNC_API_TOKENS_ENDPOINT = `${ZKSYNC_API_BASE}/tokens?limit=100&from=latest&direction=older`
-const ZKSYNC_API_CONFIG_ENDPOINT = `${ZKSYNC_API_BASE}/config`
+const zkSyncApiTokensEndpoint = joinUrl(ZKSYNC_API_BASE, ZKSYNC_API_TOKENS_PATH)
+const zkSyncApiConfigEndpoint = joinUrl(ZKSYNC_API_BASE, ZKSYNC_API_CONFIG_PATH)
 
 export const fetchTokenList = async (): Promise<TokenZkSync[]> => {
-  const response = await fetch(ZKSYNC_API_TOKENS_ENDPOINT)
+  const response = await fetch(zkSyncApiTokensEndpoint)
   const tokens = (await response.json()) as TokensZkSync
 
   return tokens?.result?.list?.sort?.((a, b) => a.id - b.id)
 }
 
 export const fetchConfig = async (): Promise<ResultConfig> => {
-  const response = await fetch(ZKSYNC_API_CONFIG_ENDPOINT)
+  const response = await fetch(zkSyncApiConfigEndpoint)
   const tokens = (await response.json()) as Config
 
   return tokens?.result
