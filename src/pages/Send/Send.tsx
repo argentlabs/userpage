@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet"
 
 import loadingAnimation from "../../animations/spinner.json"
 import successAnimation from "../../animations/success.json"
+import errorAnimation from "../../animations/transaction-fail.json"
 import AmountInput from "../../components/AmountInput"
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
@@ -97,16 +98,19 @@ export const SendPage: FC = () => {
       : undefined
 
   // swap animations based on loading state
-  // TODO: add error animation
   const animationData =
-    loadingState === "success" ? successAnimation : loadingAnimation
+    loadingState === "success"
+      ? successAnimation
+      : loadingState === "error"
+      ? errorAnimation
+      : loadingAnimation
 
   // determines if the animation should loop
   const isLooping = loadingState === "loading"
 
   //determines which frames of the animation get played (default: all)
   const initialSegment: [number, number] | undefined =
-    loadingState === "success" ? [0, 95] : undefined
+    loadingState === "loading" ? undefined : [0, 95]
 
   return (
     <PageWrapper>
@@ -160,7 +164,6 @@ export const SendPage: FC = () => {
                       }
                     }
                   }}
-                  // TODO: add error animation
                   animationData={animationData}
                   loop={isLooping}
                   initialSegment={initialSegment}
