@@ -1,18 +1,19 @@
-import React, { Suspense } from "react"
+import React, { Suspense, lazy } from "react"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 import { createGlobalStyle } from "styled-components/macro"
 import { normalize } from "styled-normalize"
 import reset from "styled-reset"
 
 import ErrorBoundary from "./components/ErrorBoundary"
-import Claim from "./pages/Claim"
-import NotFound from "./pages/Errors/404"
-import Error500Page from "./pages/Errors/500"
-import Home from "./pages/Home"
 import Loading from "./pages/Loading"
-import Send from "./pages/Send"
-import Vault from "./pages/Vault"
 import { GlobalRouterStateProvider, useRouterMachine } from "./states/hooks"
+
+const Claim = lazy(() => import("./pages/Claim"))
+const NotFound = lazy(() => import("./pages/Errors/404"))
+const Error500Page = lazy(() => import("./pages/Errors/500"))
+const Home = lazy(() => import("./pages/Home"))
+const Send = lazy(() => import("./pages/Send"))
+const Vault = lazy(() => import("./pages/Vault"))
 
 const GlobalStyle = createGlobalStyle`
   ${normalize}

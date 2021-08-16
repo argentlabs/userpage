@@ -19,6 +19,14 @@ export const rpcUrl = `https://${networkName}.infura.io/v3/${INFURA_KEY}`
 export const getTransactionExplorerUrl = ({ hash }: { hash: string }) =>
   hash ? `https://${subdomainEtherscan}etherscan.io/tx/${hash}` : ""
 
+export const selectAndCheckWallet = async () => {
+  await onboard.walletSelect()
+  const check = await onboard.walletCheck()
+  if (!check) {
+    throw Error("WalletCheck failed")
+  }
+}
+
 export let web3: ethers.providers.Web3Provider
 let gWallet: any
 export const onboard = Onboard({

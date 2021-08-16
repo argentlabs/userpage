@@ -12,12 +12,12 @@ import {
 
 import {
   ArgentWalletContract__factory,
-  ArgentWalletDetector__factory,
   ERC20__factory,
   ZkSync__factory,
 } from "../generated"
+import { isArgentWallet } from "../libs/argent"
 import { getERC20BalancesAndAllowances } from "../libs/erc20"
-import { onboard, web3 } from "../libs/web3"
+import { selectAndCheckWallet, web3 } from "../libs/web3"
 import {
   ResultConfig as ZkSyncConfig,
   TokenZkSync as ZkSyncToken,
@@ -115,24 +115,14 @@ export const sendMaschine = createMachine<
         invoke: {
           id: "pairing",
           src: async () => {
-            await onboard.walletSelect()
-            const check = await onboard.walletCheck()
-            if (!check) {
-              throw Error("WalletCheck failed")
-            }
+            await selectAndCheckWallet()
 
             const signer = web3.getSigner(0)
             const address = await signer.getAddress()
-            const argentDetector = ArgentWalletDetector__factory.connect(
-              "0xF230cF8980BaDA094720C01308319eF192F0F311",
-              web3,
-            )
 
-            const isArgentWallet = await argentDetector.isArgentWallet(address)
+            const isArgent = await isArgentWallet(address)
 
-            console.log("Connected", address, "isArgentWallet:", isArgentWallet)
-
-            return { isArgentWallet }
+            return { isArgentWallet: isArgent }
           },
           onDone: {
             target: "fetchTokens",

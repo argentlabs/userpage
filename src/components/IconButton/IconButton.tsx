@@ -5,18 +5,33 @@ import { Circle, CircleProps, Clickable, Text } from "./IconButton.style"
 interface IconButtonProps extends CircleProps {
   onClick?: MouseEventHandler<HTMLAnchorElement>
   Icon: ReactNode
+  "aria-label": string
   text?: string
 }
 
 export const IconButton: FC<IconButtonProps> = ({
-  onClick,
   Icon,
   text,
+  size,
+  svgSize,
+  mobileSize,
+  mobileSvgSize,
+  bgColor,
+  border,
   ...props
 }) => {
   return (
-    <Clickable onClick={onClick}>
-      <Circle {...props}>{Icon}</Circle>
+    <Clickable role="button" {...props}>
+      <Circle
+        size={size}
+        svgSize={svgSize}
+        mobileSize={mobileSize}
+        mobileSvgSize={mobileSvgSize}
+        bgColor={bgColor}
+        border={border}
+      >
+        {Icon}
+      </Circle>
       {text && <Text>{text}</Text>}
     </Clickable>
   )

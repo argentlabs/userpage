@@ -32,6 +32,7 @@ export const HomePage: FC = () => {
           <IconButton
             Icon={<Add />}
             text="Add funds"
+            aria-label="Add funds"
             onClick={() => send("PUSH_SEND")}
           />
         </IconBar>

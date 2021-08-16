@@ -46,6 +46,7 @@ export const GoBackButton = styled(IconButton).attrs({
   mobileSize: 28,
   svgSize: 16,
   mobileSvgSize: 14,
+  "aria-label": "Go back",
 })`
   position: absolute;
   top: 32px;
