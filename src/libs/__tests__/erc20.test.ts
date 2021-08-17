@@ -25,7 +25,9 @@ describe("[unit] ERC20", () => {
 
     const multicall = Multicall__factory.connect(mockMulticall.address, wallet)
 
-    expect(process.env.MULTICALL_ADDRESS).toBe(multicall.address)
+    expect(process.env.REACT_APP_MULTICALL_CONTRACT_ADDRESS).toBe(
+      multicall.address,
+    )
 
     const result = await getERC20BalancesAndAllowances(
       provider,
@@ -60,7 +62,9 @@ describe("[unit] ERC20", () => {
 
     const multicall = Multicall__factory.connect(mockMulticall.address, wallet)
 
-    expect(process.env.MULTICALL_ADDRESS).toBe(multicall.address)
+    expect(process.env.REACT_APP_MULTICALL_CONTRACT_ADDRESS).toBe(
+      multicall.address,
+    )
 
     const result = await getERC20BalancesAndAllowances(
       provider,
@@ -95,7 +99,9 @@ describe("[unit] ERC20", () => {
 
     const multicall = Multicall__factory.connect(mockMulticall.address, wallet)
 
-    expect(process.env.MULTICALL_ADDRESS).toBe(multicall.address)
+    expect(process.env.REACT_APP_MULTICALL_CONTRACT_ADDRESS).toBe(
+      multicall.address,
+    )
 
     const result = await getERC20BalancesAndAllowances(
       provider,

@@ -1,10 +1,9 @@
 import joinUrl from "url-join"
 
-const {
-  ZKSYNC_API_BASE = "https://ropsten-beta-api.zksync.io/api/v0.2",
-  ZKSYNC_API_TOKENS_PATH = "tokens?limit=100&from=latest&direction=older",
-  ZKSYNC_API_CONFIG_PATH = "config",
-} = process.env
+const { REACT_APP_ZKSYNC_API_BASE } = process.env
+
+const ZKSYNC_API_TOKENS_PATH = "tokens?limit=100&from=latest&direction=older"
+const ZKSYNC_API_CONFIG_PATH = "config"
 
 export interface TokensZkSync {
   request: Request
@@ -62,8 +61,14 @@ export interface ResultConfig {
   zksyncVersion: string
 }
 
-const zkSyncApiTokensEndpoint = joinUrl(ZKSYNC_API_BASE, ZKSYNC_API_TOKENS_PATH)
-const zkSyncApiConfigEndpoint = joinUrl(ZKSYNC_API_BASE, ZKSYNC_API_CONFIG_PATH)
+const zkSyncApiTokensEndpoint = joinUrl(
+  REACT_APP_ZKSYNC_API_BASE,
+  ZKSYNC_API_TOKENS_PATH,
+)
+const zkSyncApiConfigEndpoint = joinUrl(
+  REACT_APP_ZKSYNC_API_BASE,
+  ZKSYNC_API_CONFIG_PATH,
+)
 
 export const fetchTokenList = async (): Promise<TokenZkSync[]> => {
   const response = await fetch(zkSyncApiTokensEndpoint)

@@ -12,7 +12,7 @@ export const LoadingPage: FC = () => {
   useEffect(() => {
     const pid = setTimeout(() => {
       setShowLoading(true)
-    }, 600)
+    }, 1000)
     return () => {
       clearTimeout(pid)
     }

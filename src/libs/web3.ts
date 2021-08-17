@@ -2,19 +2,19 @@ import Onboard from "bnc-onboard"
 import { ethers, providers } from "ethers"
 
 const {
-  DESIRED_NETWORK_ID = "3",
-  APP_NAME = "Argent Userpage",
-  APP_URL = "https://userpage.vercel.app",
-  CONTACT_EMAIL = "janek@argent.xyz",
-  INFURA_KEY = "1ed4fc296a89420099d446758abd5bee",
+  REACT_APP_DESIRED_NETWORK_ID,
+  REACT_APP_INFURA_KEY,
+  REACT_APP_APP_NAME = "Argent Userpage",
+  REACT_APP_APP_URL = "https://argent.xyz",
+  REACT_APP_CONTACT_EMAIL = "devs@argent.xyz",
 } = process.env
 
-const networkId = parseInt(DESIRED_NETWORK_ID, 10)
+const networkId = parseInt(REACT_APP_DESIRED_NETWORK_ID, 10)
 const network = providers.getNetwork(networkId)
 const networkName = network.chainId === 1 ? "mainnet" : network.name
 const subdomainEtherscan = networkName === "mainnet" ? "" : `${networkName}.`
 
-export const rpcUrl = `https://${networkName}.infura.io/v3/${INFURA_KEY}`
+export const rpcUrl = `https://${networkName}.infura.io/v3/${REACT_APP_INFURA_KEY}`
 
 export const getTransactionExplorerUrl = ({ hash }: { hash: string }) =>
   hash ? `https://${subdomainEtherscan}etherscan.io/tx/${hash}` : ""
@@ -50,12 +50,12 @@ export const onboard = Onboard({
       { walletName: "metamask" },
       {
         walletName: "walletConnect",
-        infuraKey: INFURA_KEY,
+        infuraKey: REACT_APP_INFURA_KEY,
       },
       {
         walletName: "trezor",
-        appUrl: APP_URL,
-        email: CONTACT_EMAIL,
+        appUrl: REACT_APP_APP_URL,
+        email: REACT_APP_CONTACT_EMAIL,
         rpcUrl,
       },
       {
@@ -65,10 +65,10 @@ export const onboard = Onboard({
       { walletName: "coinbase" },
       { walletName: "walletLink", rpcUrl },
       { walletName: "authereum", disableNotifications: true },
-      { walletName: "cobovault", appName: APP_NAME, rpcUrl },
+      { walletName: "cobovault", appName: REACT_APP_APP_NAME, rpcUrl },
       {
         walletName: "lattice",
-        appName: APP_NAME,
+        appName: REACT_APP_APP_NAME,
         rpcUrl,
       },
       { walletName: "status" },

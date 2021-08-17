@@ -1,8 +1,6 @@
 import joinUrl from "url-join"
 
-const {
-  ARGENT_API_ANS_WALLET_ENDPOINT = "https://cloud-test.argent-api.com/v1/wallet",
-} = process.env
+const { REACT_APP_ARGENT_API_ANS_WALLET_ENDPOINT } = process.env
 
 export interface AnsResponse extends AnsGeneric {
   l2: L2
@@ -29,8 +27,11 @@ interface WalletStatus {
 
 export const fetchAns = async (name: string): Promise<Ans> => {
   const ansRes = await fetch(
-    // `https://deelay.me/5000/${ARGENT_API_ANS_WALLET_ENDPOINT}?ens=${name}.argent.xyz`, // for testing purposes, 5s delay added
-    joinUrl(ARGENT_API_ANS_WALLET_ENDPOINT, `?ens=${name}.argent.xyz`),
+    // "https://deelay.me/5000/" + // uncomment for testing purposes, 5s delay added
+    joinUrl(
+      REACT_APP_ARGENT_API_ANS_WALLET_ENDPOINT,
+      `?ens=${name}.argent.xyz`,
+    ),
   )
   if (ansRes.status === 404) throw Error("Not found")
   if (ansRes.status >= 400) throw Error("Request failed")

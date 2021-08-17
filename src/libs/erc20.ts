@@ -3,8 +3,7 @@ import chunk from "lodash.chunk"
 
 import { ERC20__factory, Multicall__factory } from "../generated"
 
-const { MULTICALL_ADDRESS = "0x604D19Ba889A223693B0E78bC1269760B291b9Df" } =
-  process.env
+const { REACT_APP_MULTICALL_CONTRACT_ADDRESS } = process.env
 
 export const getERC20BalancesAndAllowances = async (
   provider: providers.JsonRpcProvider,
@@ -12,7 +11,10 @@ export const getERC20BalancesAndAllowances = async (
   tokens: string[],
   spender: string,
 ): Promise<{ address: string; balance: BigNumber; allowance: BigNumber }[]> => {
-  const contract = Multicall__factory.connect(MULTICALL_ADDRESS, provider)
+  const contract = Multicall__factory.connect(
+    REACT_APP_MULTICALL_CONTRACT_ADDRESS,
+    provider,
+  )
   const erc20Interface = ERC20__factory.createInterface()
 
   const operations = (token?: string) => [
