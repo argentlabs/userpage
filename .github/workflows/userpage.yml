@@ -124,6 +124,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.INFRA_ACCESS_TOKEN }}
-          repository: argent/argent-userpage-infra
+          repository: argentlabs/argent-userpage-infra
           event-type: deploy
           client-payload: "${{ toJSON(github) }}"
