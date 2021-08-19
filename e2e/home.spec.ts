@@ -3,10 +3,6 @@ import { expect, test } from "@playwright/test"
 const HOST = `http://localhost:9999`
 
 test("homepage test and navigation", async ({ page }) => {
-  page.on("request", (request) =>
-    console.log(">>", request.method(), request.url()),
-  )
-
   // Go to ${HOST}/?__overwriteName=janek
   await page.goto(`${HOST}/?__overwriteName=janek`)
   await page.waitForLoadState("networkidle")
