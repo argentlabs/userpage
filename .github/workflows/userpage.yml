@@ -20,18 +20,18 @@ jobs:
           - environment: test
             network: 3
             zksync: https://ropsten-beta-api.zksync.io/api/v0.2
-            detector: 0xF230cF8980BaDA094720C01308319eF192F0F311
-            multicall: 0x604D19Ba889A223693B0E78bC1269760B291b9Df
+            detector: "0xF230cF8980BaDA094720C01308319eF192F0F311"
+            multicall: "0x604D19Ba889A223693B0E78bC1269760B291b9Df"
           - environment: staging
             network: 1
             zksync: https://api.zksync.io/api/v0.2
-            detector: 0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8
-            multicall: 0xF34D2Cb31175a51B23fb6e08cA06d7208FaD379F
+            detector: "0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8"
+            multicall: "0xF34D2Cb31175a51B23fb6e08cA06d7208FaD379F"
           - environment: production
             network: 1
             zksync: https://api.zksync.io/api/v0.2
-            detector: 0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8
-            multicall: 0xF34D2Cb31175a51B23fb6e08cA06d7208FaD379F
+            detector: "0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8"
+            multicall: "0xF34D2Cb31175a51B23fb6e08cA06d7208FaD379F"
     environment: ${{ matrix.environment }}
     env:
       REACT_APP_DESIRED_NETWORK_ID: ${{ matrix.network }}
