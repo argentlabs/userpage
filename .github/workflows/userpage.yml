@@ -55,7 +55,7 @@ jobs:
           name: build-${{ matrix.environment }}
           path: build
 
-  test:unit:
+  test_unit:
     runs-on: ubuntu-latest
     environment: test
     needs: build
@@ -72,7 +72,7 @@ jobs:
           name: build-test
       - run: yarn test:unit
 
-  test:int:
+  test_int:
     runs-on: ubuntu-latest
     environment: test
     needs: build
@@ -89,7 +89,7 @@ jobs:
           name: build-test
       - run: yarn test:int
 
-  test:e2e:
+  test_e2e:
     runs-on: ubuntu-latest
     environment: test
     needs: build
