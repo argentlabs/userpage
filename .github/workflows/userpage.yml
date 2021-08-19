@@ -111,3 +111,8 @@ jobs:
         with:
           name: build-test
       - run: yarn e2e:${{ matrix.browser }}
+      - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: screenshot-${{ matrix.browser }}
+          path: test.png

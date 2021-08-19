@@ -7,6 +7,8 @@ test("homepage test and navigation", async ({ page }) => {
   await page.goto(`${HOST}/?__overwriteName=janek`)
   await page.waitForLoadState("networkidle")
 
+  await page.screenshot({ path: "./test.png" })
+
   // expect text=@janek
   await expect(page.isVisible("text=@janek")).resolves.toBe(true)
 
