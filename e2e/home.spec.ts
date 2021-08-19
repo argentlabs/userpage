@@ -7,22 +7,6 @@ test("homepage test and navigation", async ({ page }) => {
   await page.goto(`${HOST}/?__overwriteName=janek`)
   await page.waitForLoadState("networkidle")
 
-  await page.evaluate(() => {
-    var script = document.createElement("script")
-    script.type = "text/javascript"
-    script.src = "https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"
-    setTimeout(() => {
-      ;(window as any).ethereum = new (
-        window as any
-      )._ethers.providers.JsonRpcProvider(
-        "https://ropsten.infura.io/v3/1ed4fc296a89420099d446758abd5bee",
-      )
-    }, 2000)
-  })
-
-  // expect ${HOST}/
-  expect(page.url()).toBe(`${HOST}/`)
-
   // expect text=@janek
   await expect(page.isVisible("text=@janek")).resolves.toBe(true)
 
