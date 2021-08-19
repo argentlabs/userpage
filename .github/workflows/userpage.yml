@@ -67,9 +67,6 @@ jobs:
           node-version: 14
           cache: "yarn"
       - run: yarn install
-      - uses: actions/download-artifact@v2
-        with:
-          name: build-test
       - run: yarn test:unit -u
 
   test_int:
@@ -84,9 +81,6 @@ jobs:
           node-version: 14
           cache: "yarn"
       - run: yarn install
-      - uses: actions/download-artifact@v2
-        with:
-          name: build-test
       - run: yarn test:int
 
   test_e2e:
@@ -110,6 +104,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: build-test
+          path: build
       - run: yarn e2e:${{ matrix.browser }}
       - uses: actions/upload-artifact@v2
         if: ${{ always() }}
