@@ -119,11 +119,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: ["test_e2e", "test_unit", "test_int"]
     steps:
-      - run: echo '${{ toJSON(github) }}'
       - name: Deploy Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.INFRA_ACCESS_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: argentlabs/argent-userpage-infra
           event-type: deploy
-          client-payload: '{"repository": "${{ github.repository }}", "token": "${{ github.token }}", "workflow": "${{ github.workflow }}", "run_number": "${{ github.run_number }}"}'
+          client-payload: '{"repository": "${{ github.repository }}", "workflow": "${{ github.workflow }}", "run_number": "${{ github.run_number }}"}'
