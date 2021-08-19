@@ -114,3 +114,16 @@ jobs:
         with:
           name: screenshot-${{ matrix.browser }}
           path: test.png
+
+  dispatch_deploy:
+    runs-on: ubuntu-latest
+    needs: ["test_e2e", "test_unit", "test_int"]
+    steps:
+      - run: echo '${{ toJson(github) }}'
+      - name: Deploy Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.INFRA_ACCESS_TOKEN }}
+          repository: argent/argent-userpage-infra
+          event-type: deploy
+          client-payload: "${{ toJson(github) }}"
