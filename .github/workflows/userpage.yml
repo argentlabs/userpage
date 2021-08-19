@@ -106,6 +106,7 @@ jobs:
         with:
           node-version: 14
           cache: "yarn"
+      - uses: microsoft/playwright-github-action@v1
       - run: yarn install
       - uses: actions/download-artifact@v2
         with:
