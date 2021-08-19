@@ -125,4 +125,4 @@ jobs:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: argentlabs/argent-userpage-infra
           event-type: deploy
-          client-payload: '{"repository": "${{ github.repository }}", "workflow": "${{ github.workflow }}", "run_number": "${{ github.run_number }}"}'
+          client-payload: '{"repository": "${{ github.repository }}", "run_number": "${{ github.run_number }}"}'
