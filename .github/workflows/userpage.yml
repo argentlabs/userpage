@@ -30,6 +30,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    needs: install
     strategy:
       matrix:
         include:
