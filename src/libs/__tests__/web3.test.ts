@@ -2,7 +2,9 @@ import { getTransactionExplorerUrl, rpcUrl } from "../web3"
 
 describe("[unit] web3", () => {
   it("has right rpc endpoint", () => {
-    expect(rpcUrl).toBe("https://ropsten.infura.io/v3/test_infura_id")
+    expect(rpcUrl).toBe(
+      `https://ropsten.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+    )
   })
   it("returns correct explorer url", () => {
     expect(getTransactionExplorerUrl({ hash: "test" })).toBe(

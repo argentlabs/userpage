@@ -12,6 +12,22 @@ on:
       - main
 
 jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          cache: "yarn"
+      - run: yarn install
+      - name: Upload install
+        uses: actions/upload-artifact@v2
+        with:
+          name: installed
+          path: .
+
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -41,13 +57,14 @@ jobs:
       REACT_APP_ARGENT_DETECTOR_CONTRACT_ADDRESS: ${{ matrix.detector }}
       REACT_APP_MULTICALL_CONTRACT_ADDRESS: ${{ matrix.multicall }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: installed
       - name: Use Node.js 14
         uses: actions/setup-node@v2
         with:
           node-version: 14
           cache: "yarn"
-      - run: yarn install
       - run: yarn build
       - name: Upload build
         uses: actions/upload-artifact@v2
@@ -60,30 +77,32 @@ jobs:
     environment: test
     needs: build
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-test
       - name: Use Node.js 14
         uses: actions/setup-node@v2
         with:
           node-version: 14
           cache: "yarn"
-      - run: yarn install
       - uses: actions/download-artifact@v2
         with:
           name: build-test
-      - run: yarn test:unit
+      - run: yarn test:unit -u
 
   test_int:
     runs-on: ubuntu-latest
     environment: test
     needs: build
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-test
       - name: Use Node.js 14
         uses: actions/setup-node@v2
         with:
           node-version: 14
           cache: "yarn"
-      - run: yarn install
       - uses: actions/download-artifact@v2
         with:
           name: build-test
@@ -100,13 +119,14 @@ jobs:
           - firefox
           - webkit
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-test
       - name: Use Node.js 14
         uses: actions/setup-node@v2
         with:
           node-version: 14
           cache: "yarn"
-      - run: yarn install
       - uses: actions/download-artifact@v2
         with:
           name: build-test
