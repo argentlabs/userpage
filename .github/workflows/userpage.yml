@@ -101,7 +101,7 @@ jobs:
           node-version: 14
           cache: "yarn"
       - name: Install Webkit deps
-        run: sudo apt-get install -y libegl1 libopus0 libwoff1 libharfbuzz-icu0 gstreamer1.0-plugins-base libgstreamer-gl1.0-0 gstreamer1.0-plugins-bad libopenjp2-7 libwebpdemux2 libenchant1c2a libhyphen0 libgles2 gstreamer1.0-libav libevdev-tools
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libopus0 libwoff1 libharfbuzz-icu0 gstreamer1.0-plugins-base libgstreamer-gl1.0-0 gstreamer1.0-plugins-bad libopenjp2-7 libwebpdemux2 libenchant1c2a libhyphen0 libgles2 gstreamer1.0-libav libevdev-tools
         if: ${{ matrix.browser == 'webkit' }}
       - run: yarn install
       - uses: actions/download-artifact@v2
