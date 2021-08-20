@@ -148,7 +148,7 @@ jobs:
 
   dispatch_deploy:
     runs-on: ubuntu-latest
-    skip: always()
+    if: ${{ !always() }}
     needs: ["test_e2e", "test_unit", "test_int"]
     steps:
       - name: Deploy Dispatch
