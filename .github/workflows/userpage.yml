@@ -128,6 +128,7 @@ jobs:
     env:
       S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
       CF_DISTRIBUTION_ID: ${{ secrets.CF_DISTRIBUTION_ID }}
+    if: ${{ secrets.S3_BUCKET_NAME > 0 }}
     steps:
       - uses: actions/download-artifact@v2
         with:
