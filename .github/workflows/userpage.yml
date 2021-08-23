@@ -148,6 +148,7 @@ jobs:
           - test
           - staging
     environment: ${{ matrix.environment }}
+    if: ${{ github.base_ref == '' }}
     env:
       S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
       CF_DISTRIBUTION_ID: ${{ secrets.CF_DISTRIBUTION_ID }}
