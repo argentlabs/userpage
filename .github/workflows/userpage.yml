@@ -152,14 +152,13 @@ jobs:
     env:
       S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
       CF_DISTRIBUTION_ID: ${{ secrets.CF_DISTRIBUTION_ID }}
+    if: ${{ (matrix.environment == 'test' && contains(github.ref, 'develop')) || (matrix.environment == 'staging' && contains(github.ref, 'main')) || (matrix.environment == 'production' && contains(github.ref, 'main')) }}
     steps:
       - uses: actions/download-artifact@v2
-        if: ${{ (matrix.environment == 'test' && contains(github.ref, 'develop')) || (matrix.environment == 'staging' && contains(github.ref, 'main')) || (matrix.environment == 'production' && contains(github.ref, 'main')) }}
         with:
           name: build-test
           path: build
       - name: Configure AWS Credentials
-        if: ${{ (matrix.environment == 'test' && contains(github.ref, 'develop')) || (matrix.environment == 'staging' && contains(github.ref, 'main')) || (matrix.environment == 'production' && contains(github.ref, 'main')) }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -167,10 +166,8 @@ jobs:
           # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }} # if you have/need it
           aws-region: eu-west-1
       - name: Deploy to S3
-        if: ${{ (matrix.environment == 'test' && contains(github.ref, 'develop')) || (matrix.environment == 'staging' && contains(github.ref, 'main')) || (matrix.environment == 'production' && contains(github.ref, 'main')) }}
         run: aws s3 sync --acl public-read --sse --delete ./build s3://${{env.S3_BUCKET_NAME}}
       - name: Invalidate Cloudfront Cache
-        if: ${{ (matrix.environment == 'test' && contains(github.ref, 'develop')) || (matrix.environment == 'staging' && contains(github.ref, 'main')) || (matrix.environment == 'production' && contains(github.ref, 'main')) }}
         run: aws cloudfront create-invalidation --distribution-id ${{env.CF_DISTRIBUTION_ID}} --paths '/*'
 
   dispatch_deploy:
