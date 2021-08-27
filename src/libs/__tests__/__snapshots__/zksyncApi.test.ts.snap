@@ -14,6 +14,13 @@ exports[`[int] ZKSYNC Api [int] fetchTokenList fetches: fetchTokenList 1`] = `
 Object {
   "list": Array [
     Object {
+      "address": "0x3fd7bf4b341b724d3714dd562b47e49c089e0701",
+      "decimals": 18,
+      "enabledForFees": false,
+      "id": 11,
+      "symbol": "ERC20-11",
+    },
+    Object {
       "address": "0xb36b2e278f5f1980631ad10f693ab3e1bebd9f70",
       "decimals": 18,
       "enabledForFees": true,
@@ -77,13 +84,6 @@ Object {
       "symbol": "DAI",
     },
     Object {
-      "address": "0x3b00ef435fa4fcff5c209a37d1f3dcff37c705ad",
-      "decimals": 18,
-      "enabledForFees": false,
-      "id": 1,
-      "symbol": "T",
-    },
-    Object {
       "address": "0x0000000000000000000000000000000000000000",
       "decimals": 18,
       "enabledForFees": false,
@@ -92,10 +92,92 @@ Object {
     },
   ],
   "pagination": Object {
-    "count": 10,
+    "count": 11,
     "direction": "older",
-    "from": 10,
+    "from": 11,
     "limit": 100,
+  },
+}
+`;
+
+exports[`[int] ZKSYNC Api [int] fetchTokenList fetches: fetchTokenListResponseSet 1`] = `
+Set {
+  Object {
+    "address": "0x0000000000000000000000000000000000000000",
+    "decimals": 18,
+    "enabledForFees": false,
+    "id": 0,
+    "symbol": "ETH",
+  },
+  Object {
+    "address": "0x351714df444b8213f2c46aaa28829fc5a8921304",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 2,
+    "symbol": "DAI",
+  },
+  Object {
+    "address": "0x793f38ae147852c37071684cdffc1ff7c87f7d07",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 3,
+    "symbol": "LINK",
+  },
+  Object {
+    "address": "0x5ae45f7f17f0df0b24abe25a5522a9c9341ac04d",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 4,
+    "symbol": "OKB",
+  },
+  Object {
+    "address": "0x7e317ceaa15fe7d5474349043332319c5f28cc11",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 5,
+    "symbol": "FSN",
+  },
+  Object {
+    "address": "0x16c550a97ad2ae12c0c8cf1cc3f8db4e0c45238f",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 6,
+    "symbol": "BUSD",
+  },
+  Object {
+    "address": "0x6856ec11f56267e3326f536d0e9f36ec7f7d1498",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 7,
+    "symbol": "TUSD",
+  },
+  Object {
+    "address": "0xc865bcbe4b6ef4b58a790052f2b51b4f06f586ac",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 8,
+    "symbol": "ZRX",
+  },
+  Object {
+    "address": "0x1b46bd2fc40030b6959a2d407f7d16f66afadd52",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 9,
+    "symbol": "BAT",
+  },
+  Object {
+    "address": "0xb36b2e278f5f1980631ad10f693ab3e1bebd9f70",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 10,
+    "symbol": "MLTT",
+  },
+  Object {
+    "address": "0x3fd7bf4b341b724d3714dd562b47e49c089e0701",
+    "decimals": 18,
+    "enabledForFees": false,
+    "id": 11,
+    "symbol": "ERC20-11",
   },
 }
 `;

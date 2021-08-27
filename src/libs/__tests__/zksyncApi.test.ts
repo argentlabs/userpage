@@ -113,8 +113,6 @@ describe("[int] ZKSYNC Api", () => {
 
       fetchMock.enableMocks()
 
-      const expectedResult = new Set(tokensApiResponseMock.result.list)
-
       let lastResponseClone: Response | undefined
       const fetchJestFn = jest.fn<
         Promise<Response>,
@@ -129,7 +127,7 @@ describe("[int] ZKSYNC Api", () => {
 
       const response = await fetchTokenList()
 
-      expect(new Set(response)).toEqual(expectedResult)
+      expect(new Set(response)).toMatchSnapshot("fetchTokenListResponseSet")
       // fetch gets called once
       expect(fetchJestFn.mock.calls.length).toBe(1)
       // calls the right url

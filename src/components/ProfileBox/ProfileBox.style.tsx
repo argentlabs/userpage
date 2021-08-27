@@ -1,13 +1,19 @@
 import styled from "styled-components"
-import { ifProp } from "styled-tools"
+import { ifProp, prop } from "styled-tools"
 
 import { centerMixin } from "../../mixins.style"
 import IconButton from "../IconButton"
 import CaretLeft from "../Svgs/CaretLeft"
 
-export const Box = styled.div<{ lean?: boolean }>`
+export interface BoxProps {
+  lean?: boolean
+  mt?: string
+  pt?: string
+}
+
+export const Box = styled.div<BoxProps>`
   min-width: calc(100vw - 10px);
-  padding-top: 128px;
+  padding-top: ${prop("pt", "128px")};
   padding-bottom: ${ifProp("lean", "64px", "111px")};
   position: relative;
 
@@ -19,7 +25,7 @@ export const Box = styled.div<{ lean?: boolean }>`
   box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.04);
   border-radius: 48px;
 
-  margin-top: -120px;
+  margin-top: ${prop("mt", "-120px")};
 
   ${centerMixin}
 

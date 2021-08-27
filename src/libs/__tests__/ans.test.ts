@@ -24,6 +24,7 @@ describe("[unit] ANS", () => {
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
       hasZkSync: true,
+      name: "janek",
     }
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
@@ -43,6 +44,7 @@ describe("[unit] ANS", () => {
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
       hasZkSync: false,
+      name: "janek",
     }
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
@@ -70,6 +72,7 @@ describe("[int] ANS", () => {
 
     const expectedResult: Ans = {
       ens: "janek.argent.xyz",
+      name: "janek",
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
       hasZkSync: true,

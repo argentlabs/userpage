@@ -16,6 +16,12 @@ export type RouterEvent =
   | { type: "PUSH_SEND" }
   | { type: "PUSH_HOME" }
   | { type: "PUSH_VAULT" }
+  | { type: "PUSH_GALLERY" }
+  | {
+      type: "PUSH_GALLERY_DETAIL"
+      tokenId: string
+      assetContractAddress: string
+    }
 
 export interface RouterContext {
   name: string
@@ -31,6 +37,8 @@ export type RouterValueType =
   | "vault"
   | "claim"
   | "send"
+  | "gallery"
+  | "gallery_detail"
   | "404"
 
 export type RouterTypestate = {
@@ -82,11 +90,7 @@ export const createRouterMachine = (history: {
           invoke: {
             id: "getWallet",
             src: async (context): Promise<RouterContext> => {
-              const ans = await fetchAns(context.name)
-              return {
-                name: context.name,
-                ...ans,
-              }
+              return fetchAns(context.name)
             },
             onDone: [
               {
@@ -119,9 +123,33 @@ export const createRouterMachine = (history: {
           on: {
             PUSH_SEND: "send",
             PUSH_VAULT: "vault",
+            PUSH_GALLERY: "gallery",
+            PUSH_GALLERY_DETAIL: "gallery_detail",
           },
           meta: {
             path: "/",
+          },
+        },
+        gallery: {
+          entry: ["navigateGallery"],
+          on: {
+            PUSH_HOME: "home",
+            PUSH_SEND: "send",
+            PUSH_VAULT: "vault",
+            PUSH_GALLERY_DETAIL: "gallery_detail",
+          },
+          meta: {
+            path: "/gallery",
+          },
+        },
+        gallery_detail: {
+          entry: ["navigateGalleryDetail"],
+          on: {
+            PUSH_HOME: "home",
+            PUSH_GALLERY: "gallery",
+          },
+          meta: {
+            path: "/gallery/:id",
           },
         },
         vault: {
@@ -187,6 +215,22 @@ export const createRouterMachine = (history: {
             return {
               type: "PUSH_VAULT",
             }
+          if (history.location.pathname === "/gallery")
+            return {
+              type: "PUSH_GALLERY",
+            }
+          if (history.location.pathname.match(/\/gallery\/.+\/.+/))
+            return {
+              type: "PUSH_GALLERY_DETAIL",
+              tokenId:
+                window.location.pathname.split("/")[
+                  window.location.pathname.split("/").length - 1
+                ],
+              assetContractAddress:
+                window.location.pathname.split("/")[
+                  window.location.pathname.split("/").length - 2
+                ],
+            }
           return {
             type: "NOOP",
           }
@@ -197,6 +241,15 @@ export const createRouterMachine = (history: {
         })),
         navigateHome: (_context, _event) => {
           history?.push("/")
+        },
+        navigateGallery: (_context, _event) => {
+          history?.push("/gallery")
+        },
+        navigateGalleryDetail: (_context, _event) => {
+          if (_event.type === "PUSH_GALLERY_DETAIL")
+            history?.push(
+              `/gallery/${_event.assetContractAddress}/${_event.tokenId}`,
+            )
         },
         navigateSend: (_context, _event) => {
           history?.push("/send")
