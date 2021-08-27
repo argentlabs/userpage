@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <filter id="inset-outline-1">
+    <feFlood flood-color="black" flood-opacity="1" result="color"/>
+    <feColorMatrix in="SourceGraphic" result="mask1" type="matrix" values="0 0 0 0,0 0 0 0,0 0 0 0,0 0 0 0,0 0 1 0"/>
+    <feMorphology in="mask1" result="mask2" operator="erode" radius="1"/>
+    <feComposite in="color" in2="mask1" operator="in" result="inner"/>
+    <feComposite in="inner" in2="mask2" operator="out" result="outline"/>
+    <feBlend in="outline" in2="SourceGraphic" mode="normal"/>
+  </filter>
+</svg>

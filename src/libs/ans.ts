@@ -1,3 +1,5 @@
+import { ethers } from "ethers"
+import chunk from "lodash.chunk"
 import joinUrl from "url-join"
 
 const { REACT_APP_ARGENT_API_ANS_WALLET_ENDPOINT } = process.env
@@ -8,6 +10,7 @@ export interface AnsResponse extends AnsGeneric {
 
 export interface Ans extends AnsGeneric {
   hasZkSync: boolean
+  name: string
 }
 
 interface AnsGeneric {
@@ -26,6 +29,19 @@ interface WalletStatus {
 }
 
 export const fetchAns = async (name: string): Promise<Ans> => {
+  if (ethers.utils.isAddress(name)) {
+    const addrShow = chunk(name.substr(2).split(""), 4)
+      .map((a) => a.join(""))
+      .filter((_, i, a) => i === 0 || i === a.length - 1)
+      .join("…")
+    return {
+      name: addrShow,
+      ens: name,
+      hasZkSync: true,
+      walletAddress: name,
+      walletDeployed: true,
+    }
+  }
   const ansRes = await fetch(
     // "https://deelay.me/5000/" + // uncomment for testing purposes, 5s delay added
     joinUrl(
@@ -40,6 +56,7 @@ export const fetchAns = async (name: string): Promise<Ans> => {
 
   return {
     ...response,
+    name,
     hasZkSync:
       l2?.walletStatus?.find?.((w) => w.type === "ZK_SYNC")?.hasWallet ?? false,
   }

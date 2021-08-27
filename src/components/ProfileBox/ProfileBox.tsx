@@ -1,25 +1,26 @@
 import { FC } from "react"
 
-import { Box, GoBackButton, H1, H2 } from "./ProfileBox.style"
+import { Box, BoxProps, GoBackButton, H1, H2 } from "./ProfileBox.style"
 
-interface ProfileBoxProps {
+interface ProfileBoxProps extends BoxProps {
   title?: string
   subtitle?: string
   tinyTitle?: string
-  lean?: boolean
   onBackButtonClick?: () => void
 }
 
 export const ProfileBox: FC<ProfileBoxProps> = ({
   subtitle,
   lean,
+  mt,
+  pt,
   title,
   tinyTitle,
   children,
   onBackButtonClick,
 }) => {
   return (
-    <Box lean={lean}>
+    <Box lean={lean} mt={mt} pt={pt}>
       {onBackButtonClick && <GoBackButton onClick={onBackButtonClick} />}
       {title && <H1>{title}</H1>}
       {tinyTitle && <H1 tiny>{tinyTitle}</H1>}
