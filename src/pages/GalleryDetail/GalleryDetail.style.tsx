@@ -1,12 +1,13 @@
 import { useState } from "react"
 import { FC } from "react"
 import styled from "styled-components"
-import { prop } from "styled-tools"
+import { prop, theme } from "styled-tools"
 
 import Center from "../../components/Center"
 import IconButton from "../../components/IconButton"
 import Loading from "../../components/Loading"
 import CaretLeft from "../../components/Svgs/CaretLeft"
+import CloseFullscreen from "../../components/Svgs/CloseFullscreen"
 import Fullscreen from "../../components/Svgs/Fullscreen"
 import Info from "../../components/Svgs/Info"
 import Moon from "../../components/Svgs/Moon"
@@ -23,13 +24,16 @@ const BigDisplayImg = styled.img<{ borderWidth: string }>`
   height: 100%;
   object-fit: contain;
 
-  filter: drop-shadow(0 -${prop("borderWidth")} 0 white)
-    drop-shadow(0 ${prop("borderWidth")} 0 white)
-    drop-shadow(-${prop("borderWidth")} 0 0 white)
-    drop-shadow(${prop("borderWidth")} 0 0 white);
+  filter: drop-shadow(
+      0 -${prop<any>("borderWidth")} 0 ${theme("colors.bg", "white")}
+    )
+    drop-shadow(0 ${prop<any>("borderWidth")} 0 ${theme("colors.bg", "white")})
+    drop-shadow(-${prop<any>("borderWidth")} 0 0 ${theme("colors.bg", "white")})
+    drop-shadow(${prop<any>("borderWidth")} 0 0 ${theme("colors.bg", "white")})
+    drop-shadow(0 8px 80px ${theme("colors.fg20", "rgba(0,0,0,.2)")});
 `
 
-function getProps<T extends boolean>(isVideo: T, onLoad: () => void) {
+function getProps(isVideo: boolean, onLoad: () => void) {
   return isVideo
     ? {
         autoPlay: true,
@@ -69,62 +73,115 @@ export const BigNftDisplay: FC<{ src: string }> = (props) => {
   )
 }
 
-export const GoBackButton = styled(IconButton).attrs({
-  Icon: <CaretLeft />,
-  bgColor: "#C2C0BE",
-  size: 32,
-  mobileSize: 28,
-  svgSize: 16,
-  mobileSvgSize: 14,
-  "aria-label": "Go back",
-})``
+export const GoBackButton = styled(IconButton).attrs(
+  ({
+    theme: {
+      colors: { iconBg },
+    },
+  }) => ({
+    Icon: <CaretLeft />,
+    bgColor: iconBg,
+    size: 32,
+    mobileSize: 28,
+    svgSize: 16,
+    mobileSvgSize: 14,
+    "aria-label": "Go back",
+  }),
+)``
 
-export const InfoButton = styled(IconButton).attrs({
-  Icon: <Info />,
-  bgColor: "#C2C0BE",
-  size: 32,
-  mobileSize: 28,
-  svgSize: 16,
-  mobileSvgSize: 14,
-  "aria-label": "Go back",
-})``
+export const InfoButton = styled(IconButton).attrs(
+  ({
+    theme: {
+      colors: { iconBg },
+    },
+  }) => ({
+    Icon: <Info />,
+    bgColor: iconBg,
+    size: 32,
+    mobileSize: 28,
+    svgSize: 16,
+    target: "_blank",
+    mobileSvgSize: 14,
+    "aria-label": "Additional Info",
+  }),
+)``
 
-export const SunButton = styled(IconButton).attrs({
-  Icon: <Sun />,
-  bgColor: "#C2C0BE",
-  size: 32,
-  mobileSize: 28,
-  svgSize: 16,
-  mobileSvgSize: 14,
-  "aria-label": "Go back",
-})``
+export const SunButton = styled(IconButton).attrs(
+  ({
+    theme: {
+      colors: { iconBg },
+    },
+  }) => ({
+    Icon: <Sun />,
+    bgColor: iconBg,
+    size: 32,
+    mobileSize: 28,
+    svgSize: 16,
+    mobileSvgSize: 14,
+    "aria-label": "Toggle Darkmode",
+  }),
+)``
 
-export const MoonButton = styled(IconButton).attrs({
-  Icon: <Moon />,
-  bgColor: "#C2C0BE",
-  size: 32,
-  mobileSize: 28,
-  svgSize: 16,
-  mobileSvgSize: 14,
-  "aria-label": "Go back",
-})``
+export const MoonButton = styled(IconButton).attrs(
+  ({
+    theme: {
+      colors: { iconBg },
+    },
+  }) => ({
+    Icon: <Moon />,
+    bgColor: iconBg,
+    size: 32,
+    mobileSize: 28,
+    svgSize: 16,
+    mobileSvgSize: 14,
+    "aria-label": "Toggle Darkmode",
+  }),
+)``
 
-export const FullscreenButton = styled(IconButton).attrs({
-  Icon: <Fullscreen />,
-  bgColor: "#C2C0BE",
-  size: 32,
-  mobileSize: 28,
-  svgSize: 16,
-  mobileSvgSize: 14,
-  "aria-label": "Go back",
-})``
+export const FullscreenButton = styled(IconButton).attrs(
+  ({
+    theme: {
+      colors: { iconBg },
+    },
+  }) => ({
+    Icon: <Fullscreen />,
+    bgColor: iconBg,
+    size: 32,
+    mobileSize: 28,
+    svgSize: 16,
+    mobileSvgSize: 14,
+    "aria-label": "Enter fullscreen",
+  }),
+)``
 
-export const PlayButton = styled(IconButton).attrs({
-  Icon: <Play />,
-  bgColor: "#C2C0BE",
-  size: 32,
-  mobileSize: 28,
-  svgSize: 16,
-  mobileSvgSize: 14,
-  "aria-label": "Go back",
-})``
+export const CloseFullscreenButton = styled(IconButton).attrs(
+  ({
+    theme: {
+      colors: { iconBg },
+    },
+  }) => ({
+    Icon: <CloseFullscreen />,
+    bgColor: iconBg,
+    size: 32,
+    mobileSize: 28,
+    svgSize: 16,
+    mobileSvgSize: 14,
+    "aria-label": "Close fullscreen",
+  }),
+)``
+
+export const PlayButton = styled(IconButton).attrs(
+  ({
+    theme: {
+      colors: { iconBg },
+    },
+  }) => ({
+    Icon: <Play />,
+    bgColor: iconBg,
+    size: 32,
+    mobileSize: 28,
+    svgSize: 16,
+    mobileSvgSize: 14,
+    "aria-label": "Play",
+  }),
+)``

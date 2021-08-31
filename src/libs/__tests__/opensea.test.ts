@@ -67,9 +67,9 @@ describe("[int] Opensea", () => {
     // gets correct api response
     const fetchResponse: Response = await fetchJestFn.mock.results[0].value
     expect(fetchResponse.status).toBe(200)
-    await expect(lastResponseClone?.json()).resolves.toMatchSnapshot(
-      "fetchNftsResponse",
-    )
+    await expect(
+      lastResponseClone?.json().then((x) => x.assets.length),
+    ).resolves.toBe(1)
 
     fetchMock.disableMocks()
   })

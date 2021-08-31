@@ -4,6 +4,8 @@ import { Circle, CircleProps, Clickable, Text } from "./IconButton.style"
 
 interface IconButtonProps extends CircleProps {
   onClick?: MouseEventHandler<HTMLAnchorElement>
+  href?: string
+  target?: string
   Icon: ReactNode
   "aria-label": string
   text?: string
