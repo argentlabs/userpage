@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { prop } from "styled-tools"
+import styled, { css } from "styled-components"
+import { prop, theme } from "styled-tools"
 
 import { centerMixin } from "../../mixins.style"
 
@@ -13,26 +13,27 @@ export interface CircleProps {
 }
 
 export const Circle = styled.span<CircleProps>`
-  height: ${prop("mobileSize", "64")}px;
-  width: ${prop("mobileSize", "64")}px;
+  height: ${prop<any>("mobileSize", "64")}px;
+  width: ${prop<any>("mobileSize", "64")}px;
+  color: white;
 
   ${centerMixin}
 
   border-radius: 50%;
-  background-color: ${prop("bgColor", "#ff875b")};
-  border: ${prop("border", "5px solid white")};
+  background-color: ${prop<any>("bgColor", "#ff875b")};
+  border: ${prop<any>("border", css`5px solid ${theme("colors.bg", "white")}`)};
 
   > svg {
-    max-width: ${prop("mobileSvgSize", "28")}px;
-    max-height: ${prop("mobileSvgSize", "28")}px;
+    max-width: ${prop<any>("mobileSvgSize", "28")}px;
+    max-height: ${prop<any>("mobileSvgSize", "28")}px;
   }
 
   @media only screen and (min-width: 480px) {
-    height: ${prop("size", "80")}px;
-    width: ${prop("size", "80")}px;
+    height: ${prop<any>("size", "80")}px;
+    width: ${prop<any>("size", "80")}px;
     > svg {
-      max-width: ${prop("svgSize", "36")}px;
-      max-height: ${prop("svgSize", "36")}px;
+      max-width: ${prop<any>("svgSize", "36")}px;
+      max-height: ${prop<any>("svgSize", "36")}px;
     }
   }
 `

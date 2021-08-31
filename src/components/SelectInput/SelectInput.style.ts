@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { theme } from "styled-tools"
 
 import Expand from "../Svgs/Expand"
 
@@ -13,12 +14,12 @@ export const SelectInputWrapper = styled.div`
 
 export const Select = styled.select`
   border: none;
-  border-top: 1px solid #ededed;
-  border-bottom: 1px solid #ededed;
+  border-top: 1px solid ${theme("colors.fg20", "#333332")};
+  border-bottom: 1px solid ${theme("colors.fg20", "#333332")};
   border-radius: 0;
 
-  color: #8f8e8c;
-  background-color: white;
+  color: ${theme("colors.fc", "#333332")};
+  background-color: ${theme("colors.bg", "#white")};
   padding: 8px;
   min-width: 180px;
   appearance: none;
@@ -37,8 +38,14 @@ export const Select = styled.select`
     top: 50%;
     transform: translateY(-50%);
     right: 0;
-    background-color: white;
+    background-color: ${theme("colors.bg", "#white")};
     padding: 8px 12px 8px 10px;
     pointer-events: none;
+  }
+
+  :disabled {
+    & + svg {
+      background-color: transparent;
+    }
   }
 `

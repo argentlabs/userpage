@@ -1,6 +1,8 @@
 import Onboard from "bnc-onboard"
 import { ethers, providers } from "ethers"
 
+import { localStorageKey } from "../themes"
+
 const {
   REACT_APP_DESIRED_NETWORK_ID,
   REACT_APP_INFURA_KEY,
@@ -15,6 +17,11 @@ const networkName = network.chainId === 1 ? "mainnet" : network.name
 const subdomainEtherscan = networkName === "mainnet" ? "" : `${networkName}.`
 
 export const rpcUrl = `https://${networkName}.infura.io/v3/${REACT_APP_INFURA_KEY}`
+
+export const ethersProvider = new ethers.providers.InfuraProvider(
+  network,
+  REACT_APP_INFURA_KEY,
+)
 
 export const getTransactionExplorerUrl = ({ hash }: { hash: string }) =>
   hash ? `https://${subdomainEtherscan}etherscan.io/tx/${hash}` : ""
@@ -32,6 +39,7 @@ let gWallet: any
 export const onboard = Onboard({
   networkId,
   hideBranding: true,
+  darkMode: localStorage.getItem(localStorageKey) === "dark",
   subscriptions: {
     wallet: (wallet: any) => {
       if (wallet?.provider) {

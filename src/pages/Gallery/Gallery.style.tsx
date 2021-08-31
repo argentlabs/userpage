@@ -5,7 +5,7 @@ import { useRef } from "react"
 import { useEffect } from "react"
 import { FC } from "react"
 import styled, { keyframes } from "styled-components"
-import { prop, withProp } from "styled-tools"
+import { prop, theme, withProp } from "styled-tools"
 
 import Center from "../../components/Center"
 import { centerMixin } from "../../mixins.style"
@@ -32,10 +32,10 @@ const ImageWrapper = styled.div<{
 }>`
   width: calc(100% - ${withProp("border", (x) => `${2 * x}px`)});
   border-radius: 8px;
-  padding: ${prop("border")}px;
+  padding: ${prop<any>("border")}px;
   animation: ${showAnimation} 400ms ease-in-out;
-  background-color: white;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: ${theme("colors.bg", "white")};
+  box-shadow: 0 4px 8px 0 ${theme("colors.fg20", "rgba(0, 0, 0, 0.2)")};
   cursor: pointer;
 
   ${centerMixin}
@@ -120,15 +120,15 @@ export const GridBase = styled.div<{
   width: ${({ columns, gap }) =>
     `calc(${100 / columns}% - ${((columns - 1) * gap) / columns}px)`};
   align-self: flex-start;
-  gap: ${prop("gap")}px;
-  max-height: ${prop("height", "0")}px;
+  gap: ${prop<any>("gap")}px;
+  max-height: ${prop<any>("height", "0")}px;
 `
 const GridBaseWrapper = styled.div<{
   columns: number
   width?: string
 }>`
   margin: 100px 0;
-  width: ${prop("width", "calc(100% - 512px)")};
+  width: ${prop<any>("width", "calc(100% - 512px)")};
 `
 
 export type ImageProp = {
@@ -397,8 +397,8 @@ const LoadingStrip = styled.div`
 
 export const Block = styled.div<{ ar: string; index: number }>`
   width: 100%;
-  aspect-ratio: ${prop("ar")};
-  background: url("https://source.unsplash.com/random?${prop("index")}");
+  aspect-ratio: ${prop<any>("ar")};
+  background: url("https://source.unsplash.com/random?${prop<any>("index")}");
   background-size: cover;
   border-radius: 5px;
   color: white;

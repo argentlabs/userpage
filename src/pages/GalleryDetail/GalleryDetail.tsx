@@ -1,3 +1,4 @@
+import { useAtom } from "jotai"
 import { Suspense, useEffect, useState } from "react"
 import { useMemo } from "react"
 import { useRef } from "react"
@@ -9,11 +10,14 @@ import Center from "../../components/Center"
 import Loading from "../../components/Loading"
 import { AssetElement, fetchNft } from "../../libs/opensea"
 import { useRouterMachine } from "../../states/hooks"
+import { themeAtom } from "../../themes"
 import {
   BigNftDisplay,
+  CloseFullscreenButton,
   FullscreenButton,
   GoBackButton,
   InfoButton,
+  MoonButton,
   PlayButton,
   SunButton,
 } from "./GalleryDetail.style"
@@ -22,7 +26,9 @@ const getNftMediaUrl = (nft?: AssetElement): string =>
   nft?.animation_original_url ||
   nft?.animation_url ||
   nft?.image_original_url ||
+  nft?.image_url ||
   nft?.image_preview_url ||
+  nft?.image_thumbnail_url ||
   "placehol"
 
 const useFullscreenBehaviour = () => {
@@ -67,13 +73,17 @@ const useNft = (tokenId: string, assetContractAddress: string) => {
   return nft
 }
 
-const Controls: FC<{ visible: boolean }> = ({ visible }) => {
+const Controls: FC<{ visible: boolean; infoLink: string }> = ({
+  visible,
+  infoLink,
+}) => {
   const [
     {
       context: { ens },
     },
     send,
   ] = useRouterMachine()
+  const [theme, setTheme] = useAtom(themeAtom)
 
   const [isFullscreen, setIsFullscreen] = useState(
     Boolean(document.fullscreenElement),
@@ -116,12 +126,33 @@ const Controls: FC<{ visible: boolean }> = ({ visible }) => {
       </Center>
       <Center direction="row" gap="16px">
         {isFullscreen && <PlayButton border="none" />}
-        <FullscreenButton
-          border="none"
-          onClick={() => window.document.documentElement.requestFullscreen()}
-        />
-        <InfoButton border="none" />
-        <SunButton border="none" />
+        {isFullscreen ? (
+          <CloseFullscreenButton
+            border="none"
+            onClick={() => window.document.exitFullscreen()}
+          />
+        ) : (
+          <FullscreenButton
+            border="none"
+            onClick={() => window.document.documentElement.requestFullscreen()}
+          />
+        )}
+        <InfoButton border="none" href={infoLink} />
+        {theme.name === "light" ? (
+          <SunButton
+            onClick={() => {
+              setTheme("dark")
+            }}
+            border="none"
+          />
+        ) : (
+          <MoonButton
+            onClick={() => {
+              setTheme("light")
+            }}
+            border="none"
+          />
+        )}
       </Center>
     </div>
   )
@@ -138,7 +169,7 @@ export const GalleryDetail: FC = () => {
       onMouseMove={onMouseMove}
       style={{ height: "100vh", cursor: controlsVisible ? "inherit" : "none" }}
     >
-      <Controls visible={controlsVisible} />
+      <Controls infoLink={nft?.permalink || ""} visible={controlsVisible} />
       <BigNftDisplay src={getNftMediaUrl(nft)} />
     </Center>
   )
@@ -148,7 +179,7 @@ export const GalleryDetailPage: FC = () => {
   return (
     <Suspense
       fallback={
-        <Center style={{ height: "100%", width: "100%" }}>
+        <Center style={{ height: "75vh", width: "100%" }}>
           <Loading />
         </Center>
       }

@@ -11,7 +11,7 @@ export interface CenterProps {
 export const Center = styled.div<CenterProps>`
   ${centerMixin}
 
-  flex-direction: ${prop("direction", "inherit")};
+  flex-direction: ${prop<any>("direction", "inherit")};
 
   ${({ gap }) =>
     gap
