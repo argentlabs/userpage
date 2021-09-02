@@ -1,11 +1,9 @@
 import { useState } from "react"
-import { FC } from "react"
-import styled from "styled-components"
-import { prop, theme } from "styled-tools"
+import styled, { withTheme } from "styled-components"
 
 import Center from "../../components/Center"
 import IconButton from "../../components/IconButton"
-import Loading from "../../components/Loading"
+import { DelayedLoading as Loading } from "../../components/Loading"
 import CaretLeft from "../../components/Svgs/CaretLeft"
 import CloseFullscreen from "../../components/Svgs/CloseFullscreen"
 import Fullscreen from "../../components/Svgs/Fullscreen"
@@ -13,65 +11,54 @@ import Info from "../../components/Svgs/Info"
 import Moon from "../../components/Svgs/Moon"
 import Play from "../../components/Svgs/Play"
 import Sun from "../../components/Svgs/Sun"
+import { centerMixin } from "../../mixins.style"
+import { Theme } from "../../themes/theme"
+import { Dimensions, ImageFrame } from "../Gallery/Gallery.style"
 
 const BigDisplayWrapper = styled.div`
   height: 75vh;
   width: 75vw;
+
+  ${centerMixin}
 `
 
-const BigDisplayImg = styled.img<{ borderWidth: string }>`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+export const BigNftDisplay = withTheme(
+  ({ src, theme }: { src: string; theme: Theme }) => {
+    const [dimensions, setDimensions] = useState<Dimensions>()
 
-  filter: drop-shadow(
-      0 -${prop<any>("borderWidth")} 0 ${theme("colors.bg", "white")}
+    return (
+      <BigDisplayWrapper>
+        {!dimensions && (
+          <Center
+            style={{
+              position: "absolute",
+              top: 0,
+              height: "60vh",
+              width: "100%",
+              zIndex: -1,
+            }}
+          >
+            <Loading />
+          </Center>
+        )}
+        <ImageFrame
+          onDimensionsKnown={setDimensions}
+          onDimensionsChange={setDimensions}
+          border="min(6vh, 6vw)"
+          url={src}
+          maxHeight="60vh"
+          style={{
+            opacity: dimensions ? 1 : 0,
+            ...(!dimensions && { transform: "translateY(-200vh)" }),
+            transition: "opacity 300ms ease-in-out",
+            width: "auto",
+            backgroundColor: theme.colors.nftDetailFrame,
+          }}
+        />
+      </BigDisplayWrapper>
     )
-    drop-shadow(0 ${prop<any>("borderWidth")} 0 ${theme("colors.bg", "white")})
-    drop-shadow(-${prop<any>("borderWidth")} 0 0 ${theme("colors.bg", "white")})
-    drop-shadow(${prop<any>("borderWidth")} 0 0 ${theme("colors.bg", "white")})
-    drop-shadow(0 8px 80px ${theme("colors.fg20", "rgba(0,0,0,.2)")});
-`
-
-function getProps(isVideo: boolean, onLoad: () => void) {
-  return isVideo
-    ? {
-        autoPlay: true,
-        muted: true,
-        loop: true,
-        onCanPlayThrough: onLoad,
-      }
-    : {
-        onLoad,
-      }
-}
-
-export const BigNftDisplay: FC<{ src: string }> = (props) => {
-  const isVideo = props.src.endsWith(".mp4")
-  const [loaded, setLoaded] = useState(false)
-
-  return (
-    <BigDisplayWrapper>
-      {!loaded && (
-        <Center style={{ height: "100%", width: "100%" }}>
-          <Loading />
-        </Center>
-      )}
-      <BigDisplayImg
-        borderWidth="5vh"
-        as={isVideo ? "video" : undefined}
-        style={{
-          opacity: loaded ? 1 : 0,
-          transition: "opacity 500ms ease-in-out",
-        }}
-        {...getProps(isVideo, () => {
-          setLoaded(true)
-        })}
-        {...props}
-      />
-    </BigDisplayWrapper>
-  )
-}
+  },
+)
 
 export const GoBackButton = styled(IconButton).attrs(
   ({

@@ -3,7 +3,7 @@ import { FC } from "react"
 
 import loadingAnimation from "../../animations/spinner.json"
 
-interface LoadingProps {
+export interface LoadingProps {
   size?: string
 }
 

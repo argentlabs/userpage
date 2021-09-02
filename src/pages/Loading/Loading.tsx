@@ -1,22 +1,12 @@
-import { FC, useEffect, useState } from "react"
+import { FC } from "react"
 import { Helmet } from "react-helmet"
 
-import loadingAnimation from "../../animations/spinner.json"
 import ArgentLogo from "../../components/ArgentLogo"
 import Center from "../../components/Center"
+import { DelayedLoading } from "../../components/Loading"
 import PageWrapper from "../../components/PageWrapper"
-import { SLottie } from "./Loading.style"
 
 export const LoadingPage: FC = () => {
-  const [showLoading, setShowLoading] = useState(false)
-  useEffect(() => {
-    const pid = setTimeout(() => {
-      setShowLoading(true)
-    }, 1000)
-    return () => {
-      clearTimeout(pid)
-    }
-  }, [])
   return (
     <PageWrapper>
       <Helmet>
@@ -24,7 +14,7 @@ export const LoadingPage: FC = () => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        {showLoading && <SLottie animationData={loadingAnimation} />}
+        <DelayedLoading delay={1000} />
       </Center>
     </PageWrapper>
   )

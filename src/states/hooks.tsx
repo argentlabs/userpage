@@ -3,6 +3,7 @@ import { FC, createContext, useContext, useEffect, useMemo } from "react"
 import { useHistory } from "react-router-dom"
 import { ActorRefFrom, Interpreter } from "xstate"
 
+import { galleryMachine } from "./nftGallery"
 import {
   RouterContext,
   RouterEvent,
@@ -79,4 +80,32 @@ export const useSendMachine = () => {
 export const useSendContextSelector = () => {
   const sendMachine = useSendActor()
   return useSelector(sendMachine, (state) => state.context)
+}
+
+const useGalleryActor = () => {
+  const globalRouterService = useContext(GlobalRouterStateContext)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, send] = useActor(globalRouterService)
+  return useSelector(globalRouterService, (state) => {
+    if (state.children["galleryMachine"])
+      return state.children["galleryMachine"] as ActorRefFrom<
+        typeof galleryMachine
+      >
+    throw new Promise<ActorRefFrom<typeof galleryMachine>>((res) => {
+      send("PUSH_SEND")
+      res(
+        state.children["galleryMachine"] as ActorRefFrom<typeof galleryMachine>,
+      )
+    })
+  })
+}
+
+export const useGalleryMachine = () => {
+  const galleryMachine = useGalleryActor()
+  return useActor(galleryMachine)
+}
+
+export const useGalleryContextSelector = () => {
+  const galleryMachine = useGalleryActor()
+  return useSelector(galleryMachine, (state) => state.context)
 }

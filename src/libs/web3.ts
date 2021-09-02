@@ -1,7 +1,7 @@
 import Onboard from "bnc-onboard"
 import { ethers, providers } from "ethers"
 
-import { localStorageKey } from "../themes"
+import { storageKey } from "../themes"
 
 const {
   REACT_APP_DESIRED_NETWORK_ID,
@@ -39,7 +39,7 @@ let gWallet: any
 export const onboard = Onboard({
   networkId,
   hideBranding: true,
-  darkMode: localStorage.getItem(localStorageKey) === "dark",
+  darkMode: localStorage.getItem(storageKey) === "dark",
   subscriptions: {
     wallet: (wallet: any) => {
       if (wallet?.provider) {
