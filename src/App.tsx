@@ -88,19 +88,19 @@ function RouterComponent() {
 function App() {
   const [theme] = useAtom(themeAtom)
   return (
-    <ErrorBoundary fallback={<Error500Page />}>
-      <Suspense fallback={<Loading />}>
-        <Router>
-          <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <ErrorBoundary fallback={<Error500Page />}>
+        <Suspense fallback={<Loading />}>
+          <Router>
             <GlobalRouterStateProvider>
               <Links />
-              <GlobalStyle />
               <RouterComponent />
             </GlobalRouterStateProvider>
-          </ThemeProvider>
-        </Router>
-      </Suspense>
-    </ErrorBoundary>
+          </Router>
+        </Suspense>
+      </ErrorBoundary>
+    </ThemeProvider>
   )
 }
 
