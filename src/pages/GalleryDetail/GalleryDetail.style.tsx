@@ -1,4 +1,5 @@
 import { useState } from "react"
+// import Tilt from "react-parallax-tilt"
 import styled, { withTheme } from "styled-components"
 
 import Center from "../../components/Center"
@@ -41,6 +42,7 @@ export const BigNftDisplay = withTheme(
             <Loading />
           </Center>
         )}
+        {/* <Tilt gyroscope={true} tiltMaxAngleX={10} tiltMaxAngleY={10}> */}
         <ImageFrame
           onDimensionsKnown={setDimensions}
           onDimensionsChange={setDimensions}
@@ -55,6 +57,7 @@ export const BigNftDisplay = withTheme(
             backgroundColor: theme.colors.nftDetailFrame,
           }}
         />
+        {/* </Tilt> */}
       </BigDisplayWrapper>
     )
   },
@@ -90,38 +93,6 @@ export const InfoButton = styled(IconButton).attrs(
     target: "_blank",
     mobileSvgSize: 14,
     "aria-label": "Additional Info",
-  }),
-)``
-
-export const SunButton = styled(IconButton).attrs(
-  ({
-    theme: {
-      colors: { iconBg },
-    },
-  }) => ({
-    Icon: <Sun />,
-    bgColor: iconBg,
-    size: 32,
-    mobileSize: 28,
-    svgSize: 16,
-    mobileSvgSize: 14,
-    "aria-label": "Toggle Darkmode",
-  }),
-)``
-
-export const MoonButton = styled(IconButton).attrs(
-  ({
-    theme: {
-      colors: { iconBg },
-    },
-  }) => ({
-    Icon: <Moon />,
-    bgColor: iconBg,
-    size: 32,
-    mobileSize: 28,
-    svgSize: 16,
-    mobileSvgSize: 14,
-    "aria-label": "Toggle Darkmode",
   }),
 )``
 

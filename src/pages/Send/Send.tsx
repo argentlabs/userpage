@@ -10,6 +10,7 @@ import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
 import Button, { SecondaryButton } from "../../components/Button"
 import Center from "../../components/Center"
+import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import TokenSelect from "../../containers/TokenSelect"
@@ -36,7 +37,7 @@ export const SendPage: FC = () => {
   /** STATE MACHINES */
   // Router Machine
   const [stateRouter, sendRouter] = useRouterMachine()
-  const { ens } = stateRouter.context
+  const { ens, walletAddress } = stateRouter.context
   // Send Machine
   const [state, send] = useSendMachine()
   const { amount, contract, tokens, transactionHash } = state.context
@@ -114,12 +115,13 @@ export const SendPage: FC = () => {
 
   return (
     <PageWrapper>
+      <DarkmodeSwitch />
       <Helmet>
         <title>{state.matches("pairing") ? ens : `Send - ${ens}`}</title>
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar />
+        <Avatar pubkey={walletAddress} />
         <Box
           lean
           onBackButtonClick={onBackButtonClick}

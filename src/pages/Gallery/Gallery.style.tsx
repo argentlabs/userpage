@@ -1,7 +1,7 @@
 import { useWindowResize } from "beautiful-react-hooks"
 import { CSSProperties, FC, useMemo, useRef, useState } from "react"
 import styled, { keyframes } from "styled-components"
-import { prop, theme, withProp } from "styled-tools"
+import { ifProp, prop, theme, withProp } from "styled-tools"
 
 import Center from "../../components/Center"
 import { useDebounceUpdate } from "../../hooks/useDebounceUpdate"
@@ -16,24 +16,27 @@ export const IconBar = styled(Center)`
   }
 `
 
+const WaitAndShowAnimation = keyframes`
+  0% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`
+
 export const OpenseaWrapper = styled.div`
   ${centerMixin}
   flex-direction: row;
-  animation: ${keyframes`
-    0% {
-      opacity: 0;
-    }
-    90% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  `} 5s ease-in-out;
+  animation: ${WaitAndShowAnimation} 5s ease-in-out;
 `
 
 const ImageWrapper = styled.div<{
   border: string
+  clickable?: boolean
 }>`
   width: calc(100% - 2 * ${withProp("border", (x) => x)});
   border-radius: 8px;
@@ -48,7 +51,7 @@ const ImageWrapper = styled.div<{
   `} 400ms ease-in-out;
   background-color: ${theme("colors.bg", "white")};
   box-shadow: 0 4px 8px 0 ${theme("colors.fg20", "rgba(0, 0, 0, 0.2)")};
-  cursor: pointer;
+  cursor: ${ifProp("clickable", "pointer", "inherit")};
 
   ${centerMixin}
 `
@@ -65,6 +68,7 @@ export const ImageFrame: FC<{
   border: string
   height?: number
   width?: number
+  clickable?: boolean
   maxHeight?: string
   onDimensionsKnown?: (dimensions: Dimensions) => void
   onDimensionsChange?: (dimensions: Dimensions) => void
@@ -81,6 +85,7 @@ export const ImageFrame: FC<{
   height,
   width,
   maxHeight = "1000px",
+  clickable = false,
   style,
   ...props
 }) => {
@@ -96,7 +101,12 @@ export const ImageFrame: FC<{
     }
   })
   return (
-    <ImageWrapper style={style} border={border} onClick={() => onClick?.()}>
+    <ImageWrapper
+      clickable={clickable}
+      style={style}
+      border={border}
+      onClick={() => onClick?.()}
+    >
       {url.endsWith(".mp4") ? (
         <video
           autoPlay
@@ -180,6 +190,11 @@ export type ImageProp = {
   id: string
   assetContractAddress: string
 }
+
+const NotFoundText = styled.h3`
+  font-weight: bold;
+  animation: ${WaitAndShowAnimation} 5s ease-in-out;
+`
 
 export const Grid: FC<{
   images: ImageProp[]
@@ -295,7 +310,9 @@ export const Grid: FC<{
     }))
   }, [flatColumns])
 
-  const finishedLoading = sortedImages.length - 2 + errorCount === images.length
+  const hasNoNfts = images.length === 0
+  const finishedLoading =
+    sortedImages.length - 2 + errorCount === images.length || hasNoNfts
   const isLoading = useDelayedLoading(finishedLoading, 1000)
 
   return (
@@ -351,6 +368,7 @@ export const Grid: FC<{
               height={x.height}
               url={x.url}
               border={`${border}px`}
+              clickable
               onClick={() => {
                 onImageClick?.(
                   x.id,
@@ -362,6 +380,11 @@ export const Grid: FC<{
         })}
       </GridBase>
       {isLoading && <LoadingStrip />}
+      {hasNoNfts && (
+        <Center direction="column">
+          <NotFoundText>You do not own any displayable NFTs</NotFoundText>
+        </Center>
+      )}
     </GridBaseWrapper>
   )
 }

@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet"
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
 import Center from "../../components/Center"
+import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import QRCode from "../../components/QRCode"
@@ -21,12 +22,13 @@ export const VaultPage: FC = () => {
   const { ens, walletAddress } = useRouterContextSelector()
   return (
     <PageWrapper>
+      <DarkmodeSwitch />
       <Helmet>
         <title>Vault - {ens}</title>
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar />
+        <Avatar pubkey={walletAddress} />
         <Box lean title={ens}>
           <SCenter>
             <QRCode size={280} data={walletAddress} />

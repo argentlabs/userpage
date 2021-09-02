@@ -4,6 +4,7 @@ import { withTheme } from "styled-components"
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
 import Center from "../../components/Center"
+import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import IconButton from "../../components/IconButton"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
@@ -20,7 +21,7 @@ import { Grid, IconBar, OpenseaWrapper } from "./Gallery.style"
 export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
   const [
     {
-      context: { name, ens },
+      context: { name, ens, walletAddress },
     },
     send,
   ] = useRouterMachine()
@@ -33,12 +34,13 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
 
   return (
     <PageWrapper>
+      <DarkmodeSwitch />
       <Helmet>
         <title>Gallery - {ens}</title>
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar size="80px" sizeMobile="80px" bw="5px" />
+        <Avatar pubkey={walletAddress} size="80px" sizeMobile="80px" bw="5px" />
         <Box
           onBackButtonClick={() => send("PUSH_HOME")}
           lean

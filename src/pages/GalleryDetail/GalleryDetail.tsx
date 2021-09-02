@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet"
 import { useParams } from "react-router-dom"
 
 import Center from "../../components/Center"
+import { MoonButton, SunButton } from "../../components/DarkmodeSwitch"
 import { DelayedLoading as Loading } from "../../components/Loading"
 import { getNftMediaUrl } from "../../libs/opensea"
 import { useRouterMachine } from "../../states/hooks"
@@ -14,9 +15,7 @@ import {
   FullscreenButton,
   GoBackButton,
   InfoButton,
-  MoonButton,
   PlayButton,
-  SunButton,
 } from "./GalleryDetail.style"
 import { useFullscreen } from "./useFullscreen"
 import { useMouseBehaviour } from "./useMouseBehaviour"

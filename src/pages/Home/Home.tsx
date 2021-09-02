@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet"
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
 import Center from "../../components/Center"
+import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import IconButton from "../../components/IconButton"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
@@ -15,19 +16,20 @@ import { IconBar } from "./Home.style"
 export const HomePage: FC = () => {
   const [
     {
-      context: { name, ens },
+      context: { name, ens, walletAddress },
     },
     send,
   ] = useRouterMachine()
 
   return (
     <PageWrapper>
+      <DarkmodeSwitch />
       <Helmet>
         <title>Home - {ens}</title>
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar />
+        <Avatar pubkey={walletAddress} />
         <Box title={`@${name}`} subtitle={ens} />
         <IconBar direction="row" gap="40px">
           <IconButton
