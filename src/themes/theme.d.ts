@@ -5,9 +5,9 @@ export interface Theme {
   colors: {
     bodyBg: string
     bg: string
-    fg: string
     fg20: string
     fc: string
     iconBg: string
+    nftDetailFrame: string
   }
 }

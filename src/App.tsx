@@ -30,6 +30,7 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     color: ${({ theme }) => theme.colors.fc};
+    text-decoration: none;
   }
 
   .bn-onboard-custom.bn-onboard-modal {

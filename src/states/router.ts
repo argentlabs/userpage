@@ -9,6 +9,11 @@ import {
 } from "xstate"
 
 import { fetchAns } from "../libs/ans"
+import {
+  GalleryContext,
+  galleryMachine,
+  galleryMachineDefaultContext,
+} from "./nftGallery"
 import { SendContext, sendMachineDefaultContext, sendMaschine } from "./send"
 
 export type RouterEvent =
@@ -132,6 +137,14 @@ export const createRouterMachine = (history: {
         },
         gallery: {
           entry: ["navigateGallery"],
+          invoke: {
+            id: "galleryMachine",
+            src: galleryMachine,
+            data: (context): GalleryContext => ({
+              ...galleryMachineDefaultContext,
+              walletAddress: context.walletAddress,
+            }),
+          },
           on: {
             PUSH_HOME: "home",
             PUSH_SEND: "send",

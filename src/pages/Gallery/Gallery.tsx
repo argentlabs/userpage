@@ -1,6 +1,5 @@
-import { useEffect } from "react"
-import { FC, useState } from "react"
 import { Helmet } from "react-helmet"
+import { withTheme } from "styled-components"
 
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
@@ -10,39 +9,27 @@ import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import Add from "../../components/Svgs/Add"
 import Gallery from "../../components/Svgs/Gallery"
-import { fetchNfts } from "../../libs/opensea"
-import { useRouterMachine } from "../../states/hooks"
-import { Grid, IconBar, ImageProp } from "./Gallery.style"
+import OpenseaLogo, {
+  darkProps,
+  lightProps,
+} from "../../components/Svgs/OpenseaLogo"
+import { useGalleryMachine, useRouterMachine } from "../../states/hooks"
+import { Theme } from "../../themes/theme"
+import { Grid, IconBar, OpenseaWrapper } from "./Gallery.style"
 
-export const GalleryPage: FC = () => {
+export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
   const [
     {
-      context: { name, ens, walletAddress },
+      context: { name, ens },
     },
     send,
   ] = useRouterMachine()
 
-  const [nfts, setNfts] = useState<ImageProp[]>([])
-  useEffect(() => {
-    async function main() {
-      const result = await fetchNfts(walletAddress)
-      setNfts(
-        result.map((x) => ({
-          url:
-            x.animation_original_url ||
-            x.animation_url ||
-            x.image_original_url ||
-            x.image_url ||
-            x.image_preview_url ||
-            x.image_thumbnail_url ||
-            "https://via.placeholder.com/150",
-          id: x.token_id,
-          assetContractAddress: x.asset_contract.address,
-        })),
-      )
-    }
-    walletAddress && main()
-  }, [walletAddress])
+  const [
+    {
+      context: { nfts },
+    },
+  ] = useGalleryMachine()
 
   return (
     <PageWrapper>
@@ -90,15 +77,15 @@ export const GalleryPage: FC = () => {
         onImageClick={(tokenId, assetContractAddress) => {
           send({ type: "PUSH_GALLERY_DETAIL", tokenId, assetContractAddress })
         }}
-        // images={new Array(Math.round(Math.random() * 40))
-        //   .fill(0)
-        //   .map((_, i) => ({
-        //     url: `https://source.unsplash.com/random/800x${Math.round(
-        //       300 + Math.random() * 1000,
-        //     )}?${i}`,
-        //     id: i,
-        //   }))}
       />
+
+      <OpenseaWrapper as="a" href="https://opensea.io/" target="_blank">
+        <OpenseaLogo
+          {...(theme.name === "dark" ? darkProps : lightProps)}
+          style={{ marginRight: ".5em", height: "1.5em" }}
+        />
+        <span>Powered by OpenSea</span>
+      </OpenseaWrapper>
     </PageWrapper>
   )
-}
+})

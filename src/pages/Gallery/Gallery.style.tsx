@@ -1,13 +1,11 @@
 import { useWindowResize } from "beautiful-react-hooks"
-import { SetStateAction, useMemo } from "react"
-import { useState } from "react"
-import { useRef } from "react"
-import { useEffect } from "react"
-import { FC } from "react"
+import { CSSProperties, FC, useMemo, useRef, useState } from "react"
 import styled, { keyframes } from "styled-components"
 import { prop, theme, withProp } from "styled-tools"
 
 import Center from "../../components/Center"
+import { useDebounceUpdate } from "../../hooks/useDebounceUpdate"
+import { useDelayedLoading } from "../../hooks/useDelayedLoading"
 import { centerMixin } from "../../mixins.style"
 
 export const IconBar = styled(Center)`
@@ -18,22 +16,36 @@ export const IconBar = styled(Center)`
   }
 `
 
-const showAnimation = keyframes`
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+export const OpenseaWrapper = styled.div`
+  ${centerMixin}
+  flex-direction: row;
+  animation: ${keyframes`
+    0% {
+      opacity: 0;
+    }
+    90% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  `} 5s ease-in-out;
 `
 
 const ImageWrapper = styled.div<{
-  border: number
+  border: string
 }>`
-  width: calc(100% - ${withProp("border", (x) => `${2 * x}px`)});
+  width: calc(100% - 2 * ${withProp("border", (x) => x)});
   border-radius: 8px;
-  padding: ${prop<any>("border")}px;
-  animation: ${showAnimation} 400ms ease-in-out;
+  padding: ${prop<any>("border")};
+  animation: ${keyframes`
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  `} 400ms ease-in-out;
   background-color: ${theme("colors.bg", "white")};
   box-shadow: 0 4px 8px 0 ${theme("colors.fg20", "rgba(0, 0, 0, 0.2)")};
   cursor: pointer;
@@ -41,32 +53,50 @@ const ImageWrapper = styled.div<{
   ${centerMixin}
 `
 
+export interface Dimensions {
+  domHeight: number
+  domWidth: number
+  realHeight: number
+  realWidth: number
+}
+
 export const ImageFrame: FC<{
   url: string
-  border: number
-  index: number
+  border: string
   height?: number
-  onHeightKnown?: (height: number) => void
-  onHeightChanged?: (height: number) => void
+  width?: number
+  maxHeight?: string
+  onDimensionsKnown?: (dimensions: Dimensions) => void
+  onDimensionsChange?: (dimensions: Dimensions) => void
+  style?: CSSProperties
   onClick?: () => void
+  onError?: () => void
 }> = ({
   url,
-  onHeightKnown,
-  onHeightChanged,
+  onDimensionsKnown,
+  onDimensionsChange,
   onClick,
+  onError,
   border,
   height,
-  index,
+  width,
+  maxHeight = "1000px",
+  style,
   ...props
 }) => {
   const ref = useRef<HTMLVideoElement & HTMLImageElement>(null)
   useWindowResize(() => {
     if (ref.current?.offsetHeight) {
-      onHeightChanged?.(ref.current?.offsetHeight)
+      onDimensionsChange?.({
+        domHeight: ref.current.offsetHeight,
+        domWidth: ref.current.offsetWidth,
+        realHeight: ref.current.height,
+        realWidth: ref.current.offsetWidth,
+      })
     }
   })
   return (
-    <ImageWrapper border={border} onClick={() => onClick?.()}>
+    <ImageWrapper style={style} border={border} onClick={() => onClick?.()}>
       {url.endsWith(".mp4") ? (
         <video
           autoPlay
@@ -75,15 +105,22 @@ export const ImageFrame: FC<{
           preload="auto"
           ref={ref}
           src={url}
+          onError={onError}
           onCanPlay={(img) => {
             if (img?.currentTarget?.offsetHeight) {
-              onHeightKnown?.(img.currentTarget.offsetHeight)
+              onDimensionsKnown?.({
+                domHeight: img.currentTarget.offsetHeight,
+                domWidth: img.currentTarget.offsetWidth,
+                realHeight: img.currentTarget.height,
+                realWidth: img.currentTarget.offsetWidth,
+              })
             }
           }}
           style={{
             maxWidth: `100%`,
-            maxHeight: 1000,
+            maxHeight,
             height: `${height}px` || "auto",
+            width: `${width}px` || "auto",
           }}
           {...props}
         />
@@ -92,15 +129,22 @@ export const ImageFrame: FC<{
           alt=""
           src={url}
           ref={ref}
+          onError={onError}
           onLoad={(img) => {
             if (img?.currentTarget?.offsetHeight) {
-              onHeightKnown?.(img.currentTarget.offsetHeight)
+              onDimensionsKnown?.({
+                domHeight: img.currentTarget.offsetHeight,
+                domWidth: img.currentTarget.offsetWidth,
+                realHeight: img.currentTarget.height,
+                realWidth: img.currentTarget.offsetWidth,
+              })
             }
           }}
           style={{
             maxWidth: `100%`,
-            maxHeight: 1000,
+            maxHeight,
             height: `${height}px` || "auto",
+            width: `${width}px` || "auto",
           }}
           {...props}
         />
@@ -137,38 +181,6 @@ export type ImageProp = {
   assetContractAddress: string
 }
 
-const useDebounceUpdate = <T extends any>(
-  updateFn: React.Dispatch<SetStateAction<T>>,
-  delayMs: number[] = [250],
-): React.Dispatch<SetStateAction<T>> => {
-  const updates = useRef<SetStateAction<T>[]>([])
-  const timeoutPid = useRef(0)
-  const run = useRef(0)
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(timeoutPid.current)
-    }
-  }, [])
-
-  const delayForRun = useMemo(() => {
-    return delayMs[run.current] ?? delayMs[delayMs.length - 1]
-  }, [delayMs, run.current])
-
-  return (s) => {
-    updates.current.push(s)
-    if (!timeoutPid.current) {
-      timeoutPid.current = setTimeout(() => {
-        console.log("DISPATCH")
-        timeoutPid.current = 0
-        run.current++
-        updates.current.map(updateFn)
-        updates.current = []
-      }, delayForRun) as unknown as number
-    }
-  }
-}
-
 export const Grid: FC<{
   images: ImageProp[]
   onImageClick?: (tokenId: string, assetContractAddress: string) => void
@@ -178,20 +190,21 @@ export const Grid: FC<{
     setWidth(window.innerWidth)
   })
   const rowsCount = useMemo(
-    () => (width > 720 ? 3 : width > 380 ? 2 : 1),
+    () => (width > 1200 ? 3 : width > 420 ? 2 : 1),
     [width],
   )
+  const [errorCount, setErrorCount] = useState(0)
 
   const gap = useMemo(() => (rowsCount > 2 ? 32 : 16), [rowsCount])
-  const border = useMemo(() => (width > 1024 ? 32 : 16), [width])
+  const border = useMemo(() => (width > 1024 ? 32 : 32), [width])
   const widthContainer = useMemo(
-    () => (rowsCount > 2 ? "calc(100% - 40vw)" : "calc(100% - 32px)"),
+    () => (rowsCount > 2 ? "calc(100% - 40vw)" : "calc(100% - 64px)"),
     [rowsCount],
   )
 
   const [allHeight, setAllHeight] = useState<{ [i: string]: number }>({})
 
-  const setHeightProxy = useDebounceUpdate(setAllHeight, [500, 1000])
+  const setHeightProxy = useDebounceUpdate(setAllHeight, [100, 500, 1000])
 
   const [prevColumns, setPrevColumns] = useState(
     new Array(rowsCount).fill({ acc: 0, items: [] }) as Array<{
@@ -282,7 +295,8 @@ export const Grid: FC<{
     }))
   }, [flatColumns])
 
-  const isLoading = sortedImages.length - 2 !== images.length
+  const finishedLoading = sortedImages.length - 2 + errorCount === images.length
+  const isLoading = useDelayedLoading(finishedLoading, 1000)
 
   return (
     <GridBaseWrapper width={widthContainer} columns={rowsCount}>
@@ -300,15 +314,15 @@ export const Grid: FC<{
             {images.map((x, i) => {
               return (
                 <ImageFrame
-                  index={i}
                   key={"preload-" + x.id}
                   url={x.url}
-                  border={border}
-                  onHeightKnown={(h) => {
-                    setHeightProxy((all) => ({ ...all, [x.id]: h }))
+                  border={`${border}px`}
+                  onError={() => setErrorCount((x) => ++x)}
+                  onDimensionsKnown={(h) => {
+                    setHeightProxy((all) => ({ ...all, [x.id]: h.domHeight }))
                   }}
-                  onHeightChanged={(h) => {
-                    setHeightProxy((all) => ({ ...all, [x.id]: h }))
+                  onDimensionsChange={(h) => {
+                    setHeightProxy((all) => ({ ...all, [x.id]: h.domHeight }))
                   }}
                 />
               )
@@ -333,11 +347,10 @@ export const Grid: FC<{
 
           return (
             <ImageFrame
-              index={i}
               key={x.id}
               height={x.height}
               url={x.url}
-              border={border}
+              border={`${border}px`}
               onClick={() => {
                 onImageClick?.(
                   x.id,
