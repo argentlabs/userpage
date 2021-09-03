@@ -6,7 +6,7 @@ import { ifProp, prop, theme, withProp } from "styled-tools"
 import Center from "../../components/Center"
 import { useDebounceUpdate } from "../../hooks/useDebounceUpdate"
 import { useDelayedLoading } from "../../hooks/useDelayedLoading"
-import { centerMixin } from "../../mixins.style"
+import { centerMixin, shadowMixin } from "../../mixins.style"
 
 export const IconBar = styled(Center)`
   margin-top: -30px;
@@ -50,9 +50,9 @@ const ImageWrapper = styled.div<{
     }
   `} 400ms ease-in-out;
   background-color: ${theme("colors.bg", "white")};
-  box-shadow: 0 4px 8px 0 ${theme("colors.fg20", "rgba(0, 0, 0, 0.2)")};
   cursor: ${ifProp("clickable", "pointer", "inherit")};
 
+  ${shadowMixin}
   ${centerMixin}
 `
 
@@ -205,7 +205,7 @@ export const Grid: FC<{
     setWidth(window.innerWidth)
   })
   const rowsCount = useMemo(
-    () => (width > 1200 ? 3 : width > 420 ? 2 : 1),
+    () => (width > 1000 ? 3 : width > 420 ? 2 : 1),
     [width],
   )
   const [errorCount, setErrorCount] = useState(0)
@@ -213,7 +213,12 @@ export const Grid: FC<{
   const gap = 16
   const border = 32
   const widthContainer = useMemo(
-    () => (width >= 1280 ? "calc(100% - 35vw)" : "calc(100% - 64px)"),
+    () =>
+      width >= 1280
+        ? "calc(100% - 35vw)"
+        : width > 480
+        ? "calc(100% - 64px)"
+        : "calc(100% - 32px)",
     [width],
   )
 

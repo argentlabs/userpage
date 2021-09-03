@@ -192,14 +192,25 @@ export interface Trait {
   order: null
 }
 
-export const getNftMediaUrl = (nft?: AssetElement): string =>
-  nft?.animation_original_url ||
-  nft?.animation_url ||
-  nft?.image_original_url ||
-  nft?.image_url ||
-  nft?.image_preview_url ||
-  nft?.image_thumbnail_url ||
-  "error"
+export const getNftMediaUrl = (
+  nft?: AssetElement,
+  detailView: boolean = false,
+): string =>
+  detailView
+    ? nft?.animation_original_url ||
+      nft?.animation_url ||
+      nft?.image_original_url ||
+      nft?.image_url ||
+      nft?.image_preview_url ||
+      nft?.image_thumbnail_url ||
+      "error"
+    : nft?.animation_url ||
+      nft?.animation_original_url ||
+      nft?.image_url ||
+      nft?.image_original_url ||
+      nft?.image_preview_url ||
+      nft?.image_thumbnail_url ||
+      "error"
 
 const {
   REACT_APP_OPENSEA_ENDPOINT = "https://api.opensea.io/api/v1/assets",
