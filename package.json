@@ -59,7 +59,7 @@
     "lint": "eslint . --cache --fix --ignore-path .gitignore",
     "prepare": "husky install",
     "typechain": "typechain --target ethers-v5 --out-dir ./src/generated './src/abis/**/*.json'",
-    "postinstall": "yarn typechain",
+    "postinstall": "yarn typechain || exit 0",
     "serve": "serve -p 9999 --no-port-switching -s build"
   },
   "browserslist": {
