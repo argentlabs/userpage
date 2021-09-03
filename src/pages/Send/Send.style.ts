@@ -5,7 +5,7 @@ import { ifProp } from "styled-tools"
 import { SecondaryButton } from "../../components/Button"
 import Center from "../../components/Center"
 import { SelectInputWrapper } from "../../components/SelectInput/SelectInput.style"
-import { centerMixin } from "../../mixins.style"
+import { centerMixin, shadowMixin } from "../../mixins.style"
 
 export const ButtonWrapper = styled(Center)`
   margin-top: 63px;
@@ -54,4 +54,29 @@ export const MetaText = styled.p<{ invisible?: boolean }>`
   user-select: ${ifProp("invisible", "none", "auto")};
   font-size: 14px;
   text-align: center;
+`
+
+export const NotMainnetDisclaimer = styled.div`
+  position: fixed;
+  width: calc(100vw - 4em - 32px);
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: red;
+  color: white;
+  padding: 1em 2em;
+  border-radius: 4px;
+  font-size: 1em;
+  font-weight: bolder;
+  text-align: center;
+  z-index: 9999;
+  line-height: 1.3em;
+  ${shadowMixin};
+  ${centerMixin};
+  @media only screen and (min-width: 720px) {
+    width: calc(100vw - 4em - 128px);
+  }
+  @media only screen and (min-width: 1024px) {
+    width: auto;
+  }
 `
