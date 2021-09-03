@@ -1,6 +1,5 @@
 /** Visualization: https://xstate.js.org/viz/?gist=5158cd1138aaab449b556375906456ac */
 
-import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk"
 import { BigNumber, ContractReceipt, ContractTransaction, ethers } from "ethers"
 import type { RequireAtLeastOne } from "type-fest"
 import {
@@ -18,6 +17,7 @@ import {
 } from "../generated"
 import { isArgentWallet } from "../libs/argent"
 import { getERC20BalancesAndAllowances } from "../libs/erc20"
+import { showRampPromise } from "../libs/ramp"
 import { selectAndCheckWallet, web3 } from "../libs/web3"
 import {
   ResultConfig as ZkSyncConfig,
@@ -117,58 +117,7 @@ export const sendMaschine = createMachine<
       ramp: {
         invoke: {
           id: "ramp",
-          src: (context) =>
-            new Promise<boolean>((res, rej) => {
-              new RampInstantSDK({
-                hostAppName: "Argent Userpage",
-                hostLogoUrl:
-                  "https://images.prismic.io/argentwebsite/313db37e-055d-42ee-9476-a92bda64e61d_logo.svg?auto=format%2Ccompress&fit=max&q=50",
-                userAddress: context.walletAddress,
-              })
-                /** Possible Events (for more info see https://docs.ramp.network/events)
-                  WIDGET_CLOSE = "WIDGET_CLOSE",
-                  WIDGET_CONFIG_DONE = "WIDGET_CONFIG_DONE",
-                  WIDGET_CONFIG_FAILED = "WIDGET_CONFIG_FAILED",
-                  PURCHASE_CREATED = "PURCHASE_CREATED",
-                  PURCHASE_SUCCESSFUL = "PURCHASE_SUCCESSFUL",
-                  PURCHASE_FAILED = "PURCHASE_FAILED"
-                */
-                .on("*", (event) => {
-                  console.log(event)
-                  switch (event.type) {
-                    case "WIDGET_CONFIG_DONE":
-                      return document
-                        .querySelector("body > div:last-of-type")
-                        ?.shadowRoot?.querySelector("div.overlay")
-                        ?.classList.remove("ramp--loading-overwrite")
-                    case "WIDGET_CLOSE":
-                      return res(false)
-                    case "PURCHASE_FAILED":
-                    case "WIDGET_CONFIG_FAILED":
-                      return rej(event.type)
-                    case "PURCHASE_SUCCESSFUL":
-                      return res(true)
-                  }
-                })
-                .show()
-
-              const styleEl = document.createElement("style")
-              styleEl.appendChild(
-                document.createTextNode(`
-                  .ramp--loading-overwrite {
-                    opacity: 0;
-                  }
-                `),
-              )
-              document
-                .querySelector("body > div:last-of-type")
-                ?.shadowRoot?.querySelector("div.overlay")
-                ?.classList.add("ramp--loading-overwrite")
-              document
-                .querySelector("body > div:last-of-type")
-                ?.shadowRoot?.querySelector("div.overlay")
-                ?.appendChild(styleEl)
-            }),
+          src: showRampPromise,
           onDone: [
             {
               target: "success",
