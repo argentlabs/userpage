@@ -6,7 +6,7 @@ import { themeAtom } from "../../themes"
 import { MoonButton, SunButton } from "./DarkmodeSwitch.style"
 
 const DarkmodeSwitchWrapper = styled.div`
-  position: fixed;
+  position: absolute;
   top: 27px;
   right: 27px;
 `

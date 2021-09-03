@@ -1,36 +1,43 @@
 import QRCodeStyling from "qr-code-styling"
-import { FC, useEffect, useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
+import { withTheme } from "styled-components"
+
+import { Theme } from "../../themes/theme"
 
 interface QRCodeProps {
   size: number
   data: string
+  theme: Theme
 }
 
-export const QRCode: FC<QRCodeProps> = ({ size, data, ...props }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const qrCode = useMemo(
-    () =>
-      new QRCodeStyling({
-        width: size,
-        height: size,
-        dotsOptions: { type: "dots", color: "#000000" },
-        cornersSquareOptions: { type: "dot", color: "#000000" },
-        cornersDotOptions: { type: "dot", color: "#000000" },
-        imageOptions: {
-          crossOrigin: "anonymous",
-        },
-      }),
-    [size],
-  )
-  useEffect(() => {
-    qrCode.append(ref.current ?? undefined)
-  }, [])
+export const QRCode = withTheme(
+  ({ size, data, theme, ...props }: QRCodeProps) => {
+    const ref = useRef<HTMLDivElement>(null)
+    const qrCode = useMemo(
+      () =>
+        new QRCodeStyling({
+          width: size,
+          height: size,
+          dotsOptions: { type: "dots", color: theme.colors.fc },
+          cornersSquareOptions: { type: "dot", color: theme.colors.fc },
+          cornersDotOptions: { type: "dot", color: theme.colors.fc },
+          backgroundOptions: { color: theme.colors.bg },
+          imageOptions: {
+            crossOrigin: "anonymous",
+          },
+        }),
+      [size],
+    )
+    useEffect(() => {
+      qrCode.append(ref.current ?? undefined)
+    }, [])
 
-  useEffect(() => {
-    qrCode.update({
-      data,
-    })
-  }, [data])
+    useEffect(() => {
+      qrCode.update({
+        data,
+      })
+    }, [data])
 
-  return <div ref={ref} className="qrcode" {...props} />
-}
+    return <div ref={ref} className="qrcode" {...props} />
+  },
+)
