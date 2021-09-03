@@ -14,12 +14,13 @@ import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import TokenSelect from "../../containers/TokenSelect"
-import { getTransactionExplorerUrl } from "../../libs/web3"
+import { getTransactionExplorerUrl, networkId } from "../../libs/web3"
 import { useRouterMachine, useSendMachine } from "../../states/hooks"
 import {
   amountScreens,
   connectScreens,
   inFlightScreens,
+  notOverwriteableScreens,
   stateMatchesFactory,
 } from "./helper"
 import {
@@ -28,6 +29,7 @@ import {
   InputWrapper,
   LottieWrapper,
   MetaText,
+  NotMainnetDisclaimer,
   SLottie,
 } from "./Send.style"
 
@@ -46,6 +48,10 @@ export const SendPage: FC = () => {
   // Animation helper hook
   const [loadingState, setLoadingState] = useState<AnimationState>("idle")
   useEffect(() => {
+    // reset loading state when on non overwriteable screen
+    if (stateMatches(notOverwriteableScreens)) {
+      setLoadingState("idle")
+    }
     // get loading animation running when required
     if (stateMatches(inFlightScreens) && loadingState === "idle") {
       setLoadingState("loading")
@@ -95,6 +101,8 @@ export const SendPage: FC = () => {
         ? "Something went wrong"
         : explorerUrl //if tx hash is there, show explorer tx url
         ? "Pending..."
+        : state.matches("ramp")
+        ? "Waiting for Ramp..."
         : "Waiting for signature..." // last case left is that we're waiting for metamask to approve
       : undefined
 
@@ -198,7 +206,9 @@ export const SendPage: FC = () => {
                       <Button fullWidth onClick={() => send("START_PAIR")}>
                         Connect a wallet
                       </Button>
-                      <Button fullWidth>Pay with card/bank</Button>
+                      <Button fullWidth onClick={() => send("START_RAMP")}>
+                        Pay with card/bank
+                      </Button>
                       <MetaText>
                         Funds are sent to their zkSync account
                       </MetaText>
@@ -249,6 +259,19 @@ export const SendPage: FC = () => {
           }
         </Box>
       </Center>
+      {
+        // warning for non mainnet bank purchases
+        networkId !== 1 && state.matches("ramp") && (
+          <NotMainnetDisclaimer>
+            You are not using Ethereum Mainnet!
+            <br />
+            Ramp will always send purchased funds to Ethereum Mainnet.
+            <br />
+            Make sure to provide a valid Ethereum Mainnet Address to them in
+            order to receive the Funds!
+          </NotMainnetDisclaimer>
+        )
+      }
     </PageWrapper>
   )
 }

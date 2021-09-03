@@ -11,7 +11,7 @@ const {
   REACT_APP_CONTACT_EMAIL = "devs@argent.xyz",
 } = process.env
 
-const networkId = parseInt(REACT_APP_DESIRED_NETWORK_ID, 10)
+export const networkId = parseInt(REACT_APP_DESIRED_NETWORK_ID, 10)
 const network = providers.getNetwork(networkId)
 const networkName = network.chainId === 1 ? "mainnet" : network.name
 const subdomainEtherscan = networkName === "mainnet" ? "" : `${networkName}.`

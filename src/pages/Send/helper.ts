@@ -19,4 +19,7 @@ export const inFlightScreens: Array<SendValueType> = [
   "sending",
   "approving",
   "waitForTx",
+  "ramp",
 ]
+
+export const notOverwriteableScreens: Array<SendValueType> = ["readyToPair"]
