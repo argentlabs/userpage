@@ -12,7 +12,6 @@ interface ProfileBoxProps extends BoxProps {
 export const ProfileBox: FC<ProfileBoxProps> = ({
   subtitle,
   lean,
-  mt,
   pt,
   title,
   tinyTitle,
@@ -20,7 +19,7 @@ export const ProfileBox: FC<ProfileBoxProps> = ({
   onBackButtonClick,
 }) => {
   return (
-    <Box lean={lean} mt={mt} pt={pt}>
+    <Box lean={lean} pt={pt}>
       {onBackButtonClick && <GoBackButton onClick={onBackButtonClick} />}
       {title && <H1>{title}</H1>}
       {tinyTitle && <H1 tiny>{tinyTitle}</H1>}

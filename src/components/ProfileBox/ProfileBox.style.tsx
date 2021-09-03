@@ -7,30 +7,43 @@ import CaretLeft from "../Svgs/CaretLeft"
 
 export interface BoxProps {
   lean?: boolean
-  mt?: string
   pt?: string
 }
 
 export const Box = styled.div<BoxProps>`
-  min-width: calc(100vw - 10px);
-  padding-top: ${prop<any>("pt", "128px")};
-  padding-bottom: ${ifProp("lean", "64px", "111px")};
+  width: calc(100vw - 32px);
+  padding-top: ${prop<any>("pt", "100px")};
+  padding-bottom: ${ifProp("lean", "64px", "84px")};
   position: relative;
+  border-radius: 32px;
 
   @media only screen and (min-width: 480px) {
+    max-width: calc(100vw - 64px);
+    width: auto;
+    border-radius: 48px;
     min-width: 480px;
+  }
+
+  @media only screen and (min-height: 600px) {
+    padding-top: ${prop<any>("pt", "128px")};
+    padding-bottom: ${ifProp("lean", "64px", "111px")};
   }
 
   background: ${theme("colors.bg", "white")};
   box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.04);
-  border-radius: 48px;
-
-  margin-top: ${prop<any>("mt", "-120px")};
 
   ${centerMixin}
 
   h1 + h2 {
     margin-top: 16px;
+  }
+
+  h1,
+  h2 {
+    max-width: calc(100% - 32px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 `
 
@@ -59,7 +72,11 @@ export const GoBackButton = styled(IconButton).attrs(
   }),
 )`
   position: absolute;
-  top: 32px;
-  left: 32px;
+  top: 16px;
+  left: 16px;
   z-index: 1;
+  @media only screen and (min-width: 480px) {
+    top: 32px;
+    left: 32px;
+  }
 `
