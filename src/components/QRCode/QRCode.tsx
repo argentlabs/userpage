@@ -37,9 +37,10 @@ export const QRCode: FC<QRCodeProps> = ({ size, data, ...props }) => {
       ref={ref}
       className="qrcode"
       style={{
-        borderRadius: "32px",
+        borderRadius: 48,
         overflow: "hidden",
         backgroundColor: "white",
+        padding: 16,
       }}
       {...props}
     />
