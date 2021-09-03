@@ -79,4 +79,12 @@ export const NotMainnetDisclaimer = styled.div`
   @media only screen and (min-width: 1024px) {
     width: auto;
   }
+
+  ::before {
+    content: "x";
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    color: white;
+  }
 `

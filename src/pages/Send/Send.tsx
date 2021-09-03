@@ -36,6 +36,9 @@ import {
 type AnimationState = "idle" | "loading" | "error" | "success"
 
 export const SendPage: FC = () => {
+  /** Non production state */
+  const [hideNotMainnetDisclaimer, setHideNotMainnetDisclaimer] =
+    useState(false)
   /** STATE MACHINES */
   // Router Machine
   const [stateRouter, sendRouter] = useRouterMachine()
@@ -261,8 +264,10 @@ export const SendPage: FC = () => {
       </Center>
       {
         // warning for non mainnet bank purchases
-        networkId !== 1 && state.matches("ramp") && (
-          <NotMainnetDisclaimer>
+        networkId !== 1 && state.matches("ramp") && !hideNotMainnetDisclaimer && (
+          <NotMainnetDisclaimer
+            onClick={() => setHideNotMainnetDisclaimer(true)}
+          >
             You are not using Ethereum Mainnet!
             <br />
             Ramp will always send purchased funds to Ethereum Mainnet.
