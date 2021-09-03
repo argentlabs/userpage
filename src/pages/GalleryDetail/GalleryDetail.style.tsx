@@ -40,7 +40,7 @@ export const BigNftDisplay = withTheme(
             <Loading />
           </Center>
         )}
-        <Tilt gyroscope={true} tiltMaxAngleX={10} tiltMaxAngleY={10}>
+        <Tilt gyroscope={false} tiltMaxAngleX={10} tiltMaxAngleY={10}>
           <ImageFrame
             onDimensionsKnown={setDimensions}
             onDimensionsChange={setDimensions}
