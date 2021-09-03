@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { ifProp, prop, theme } from "styled-tools"
 
-import { centerMixin } from "../../mixins.style"
+import { centerMixin, shadowMixin } from "../../mixins.style"
 import IconButton from "../IconButton"
 import CaretLeft from "../Svgs/CaretLeft"
 
@@ -30,7 +30,7 @@ export const Box = styled.div<BoxProps>`
   }
 
   background: ${theme("colors.bg", "white")};
-  box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.04);
+  ${shadowMixin}
 
   ${centerMixin}
 

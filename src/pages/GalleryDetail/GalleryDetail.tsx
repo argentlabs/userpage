@@ -96,7 +96,7 @@ export const GalleryDetail: FC = () => {
       style={{ height: "100vh", cursor: controlsVisible ? "inherit" : "none" }}
     >
       <Controls infoLink={nft?.permalink || ""} visible={controlsVisible} />
-      <BigNftDisplay src={getNftMediaUrl(nft)} />
+      <BigNftDisplay src={getNftMediaUrl(nft, true)} />
     </Center>
   )
 }
