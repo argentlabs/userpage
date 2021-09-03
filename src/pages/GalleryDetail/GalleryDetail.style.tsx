@@ -1,5 +1,5 @@
 import { useState } from "react"
-// import Tilt from "react-parallax-tilt"
+import Tilt from "react-parallax-tilt"
 import styled, { withTheme } from "styled-components"
 
 import Center from "../../components/Center"
@@ -40,22 +40,22 @@ export const BigNftDisplay = withTheme(
             <Loading />
           </Center>
         )}
-        {/* <Tilt gyroscope={true} tiltMaxAngleX={10} tiltMaxAngleY={10}> */}
-        <ImageFrame
-          onDimensionsKnown={setDimensions}
-          onDimensionsChange={setDimensions}
-          border="min(6vh, 6vw)"
-          url={src}
-          maxHeight="60vh"
-          style={{
-            opacity: dimensions ? 1 : 0,
-            ...(!dimensions && { transform: "translateY(-200vh)" }),
-            transition: "opacity 300ms ease-in-out",
-            width: "auto",
-            backgroundColor: theme.colors.nftDetailFrame,
-          }}
-        />
-        {/* </Tilt> */}
+        <Tilt gyroscope={true} tiltMaxAngleX={10} tiltMaxAngleY={10}>
+          <ImageFrame
+            onDimensionsKnown={setDimensions}
+            onDimensionsChange={setDimensions}
+            border="min(6vh, 6vw)"
+            url={src}
+            maxHeight="60vh"
+            style={{
+              opacity: dimensions ? 1 : 0,
+              ...(!dimensions && { transform: "translateY(-200vh)" }),
+              transition: "opacity 300ms ease-in-out",
+              width: "auto",
+              backgroundColor: theme.colors.nftDetailFrame,
+            }}
+          />
+        </Tilt>
       </BigDisplayWrapper>
     )
   },
