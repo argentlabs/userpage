@@ -15075,6 +15075,11 @@ react-modal@^3.12.1:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
+react-parallax-tilt@^1.5.57:
+  version "1.5.57"
+  resolved "https://registry.yarnpkg.com/react-parallax-tilt/-/react-parallax-tilt-1.5.57.tgz#575cc26b8237b65874d7d69edb145f40a56e76b3"
+  integrity sha512-Ziz2rbDnJKRyVBZApl9LdQ/Tv7bB6O1ZbvYdR0wbdtQPYcK/7uKfFC4VfUNFZJJs2MFk/XLmolvaMPnyM5KpVA==
+
 react-qr-reader@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-qr-reader/-/react-qr-reader-2.2.1.tgz#dc89046d1c1a1da837a683dd970de5926817d55b"
