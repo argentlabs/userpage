@@ -12,8 +12,7 @@ export interface BoxProps {
 
 export const Box = styled.div<BoxProps>`
   width: calc(100vw - 32px);
-  padding-top: ${prop<any>("pt", "100px")};
-  padding-bottom: ${ifProp("lean", "64px", "84px")};
+  padding: ${prop<any>("pt", "100px")} 8px ${ifProp("lean", "64px", "84px")};
   position: relative;
   border-radius: 32px;
 
@@ -22,6 +21,7 @@ export const Box = styled.div<BoxProps>`
     width: auto;
     border-radius: 48px;
     min-width: 480px;
+    padding: ${prop<any>("pt", "100px")} 16px ${ifProp("lean", "64px", "84px")};
   }
 
   @media only screen and (min-height: 600px) {
@@ -40,7 +40,7 @@ export const Box = styled.div<BoxProps>`
 
   h1,
   h2 {
-    max-width: calc(100% - 32px);
+    max-width: 100%;
     overflow-x: hidden;
     line-height: 1.3em;
     white-space: nowrap;
