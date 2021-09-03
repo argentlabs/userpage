@@ -41,7 +41,8 @@ export const Box = styled.div<BoxProps>`
   h1,
   h2 {
     max-width: calc(100% - 32px);
-    overflow: hidden;
+    overflow-x: hidden;
+    line-height: 1.3em;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -49,10 +50,12 @@ export const Box = styled.div<BoxProps>`
 
 export const H1 = styled.h1<{ tiny?: boolean }>`
   font-weight: bold;
+  line-height: 1.3em;
   font-size: ${ifProp("tiny", "24px", "32px")};
 `
 
 export const H2 = styled.h2`
+  line-height: 1.3em;
   font-size: 16px;
 `
 
