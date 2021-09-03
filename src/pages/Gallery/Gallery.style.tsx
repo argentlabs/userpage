@@ -210,11 +210,11 @@ export const Grid: FC<{
   )
   const [errorCount, setErrorCount] = useState(0)
 
-  const gap = useMemo(() => (rowsCount > 2 ? 32 : 16), [rowsCount])
-  const border = useMemo(() => (width > 1024 ? 32 : 32), [width])
+  const gap = 16
+  const border = 32
   const widthContainer = useMemo(
-    () => (rowsCount > 2 ? "calc(100% - 40vw)" : "calc(100% - 64px)"),
-    [rowsCount],
+    () => (width >= 1280 ? "calc(100% - 35vw)" : "calc(100% - 64px)"),
+    [width],
   )
 
   const [allHeight, setAllHeight] = useState<{ [i: string]: number }>({})

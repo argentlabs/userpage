@@ -40,12 +40,16 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar pubkey={walletAddress} size="80px" sizeMobile="80px" bw="5px" />
+        <Avatar
+          pubkey={walletAddress}
+          size="80px"
+          sizeMobile="80px"
+          bw="10px"
+        />
         <Box
           onBackButtonClick={() => send("PUSH_HOME")}
           lean
-          mt="-45px"
-          pt="80px"
+          pt="64px"
           title={`@${name}`}
           subtitle={ens}
         />
