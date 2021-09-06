@@ -3,7 +3,7 @@
 import { DoneInvokeEvent, assign, createMachine } from "xstate"
 
 import { fetchNfts, getNftMediaUrl } from "../libs/opensea"
-import { ImageProp } from "../pages/Gallery/Gallery.style"
+import { ImageProp } from "../pages/Gallery/Grid"
 
 export type GalleryEvent = { type: "NOOP" }
 
