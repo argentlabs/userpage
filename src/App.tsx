@@ -33,6 +33,11 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
   }
 
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   .bn-onboard-custom.bn-onboard-modal {
     z-index: 99;
   }
