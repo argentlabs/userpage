@@ -12,7 +12,7 @@ import Info from "../../components/Svgs/Info"
 import Play from "../../components/Svgs/Play"
 import { centerMixin } from "../../mixins.style"
 import { Theme } from "../../themes/theme"
-import { Dimensions, ImageFrame } from "../Gallery/Gallery.style"
+import { Dimensions, ImageFrame } from "../Gallery/ImageFrame"
 
 const BigDisplayWrapper = styled.div`
   height: 75vh;

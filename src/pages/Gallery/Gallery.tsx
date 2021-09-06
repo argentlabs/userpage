@@ -16,7 +16,8 @@ import OpenseaLogo, {
 } from "../../components/Svgs/OpenseaLogo"
 import { useGalleryMachine, useRouterMachine } from "../../states/hooks"
 import { Theme } from "../../themes/theme"
-import { Grid, IconBar, OpenseaWrapper } from "./Gallery.style"
+import { IconBar, OpenseaWrapper } from "./Gallery.style"
+import { Grid } from "./Grid"
 
 export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
   const [

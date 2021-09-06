@@ -11,7 +11,7 @@ export interface BoxProps {
 }
 
 export const Box = styled.div<BoxProps>`
-  width: calc(100vw - 32px);
+  width: calc(100vw - 64px);
   padding: ${prop<any>("pt", "100px")} 8px ${ifProp("lean", "64px", "84px")};
   position: relative;
   border-radius: 32px;
