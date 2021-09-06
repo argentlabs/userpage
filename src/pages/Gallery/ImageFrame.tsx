@@ -24,8 +24,6 @@ const ImageWrapper = styled.div<{
   cursor: ${ifProp("clickable", "pointer", "inherit")};
 
   ${shadowMixin}
-  display: block;
-  margin: auto;
 `
 
 export interface Dimensions {
@@ -41,8 +39,6 @@ const isVideoSrc = (url: string): boolean =>
 export const ImageFrame: FC<{
   url: string
   border: string
-  height?: number
-  width?: number
   clickable?: boolean
   maxHeight?: string
   onDimensionsKnown?: (dimensions: Dimensions) => void
@@ -57,8 +53,6 @@ export const ImageFrame: FC<{
   onClick,
   onError,
   border,
-  height,
-  width,
   maxHeight = "1000px",
   clickable = false,
   style,
@@ -106,8 +100,9 @@ export const ImageFrame: FC<{
             maxWidth: `100%`,
             boxSizing: "border-box",
             maxHeight,
-            height: `${height}px` || "auto",
-            width: `${width}px` || "auto",
+            width: "100%",
+            display: "block",
+            margin: "auto",
           }}
           {...props}
         />
@@ -131,8 +126,9 @@ export const ImageFrame: FC<{
             maxWidth: `100%`,
             boxSizing: "border-box",
             maxHeight,
-            height: `${height}px` || "auto",
-            width: `${width}px` || "auto",
+            width: "100%",
+            display: "block",
+            margin: "auto",
           }}
           {...props}
         />
