@@ -6,8 +6,7 @@ export interface RampOptions {
   walletAddress: string
 }
 
-const { REACT_APP_RAMP_API_KEY = "vto7z4chprpfy4s6rzjhc2fdsw97hngg5rhdotrv" } =
-  process.env
+const { REACT_APP_RAMP_API_KEY } = process.env
 
 export const showRampPromise = ({
   walletAddress,
@@ -18,7 +17,7 @@ export const showRampPromise = ({
       hostLogoUrl:
         "https://images.prismic.io/argentwebsite/313db37e-055d-42ee-9476-a92bda64e61d_logo.svg?auto=format%2Ccompress&fit=max&q=50",
       userAddress: walletAddress,
-      ...(networkId === 1 && {
+      ...(REACT_APP_RAMP_API_KEY && {
         hostApiKey: REACT_APP_RAMP_API_KEY,
       }),
       ...(networkId === 3 && {
