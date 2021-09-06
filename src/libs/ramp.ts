@@ -1,5 +1,7 @@
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk"
 
+import { networkId } from "./web3"
+
 export interface RampOptions {
   walletAddress: string
 }
@@ -16,7 +18,12 @@ export const showRampPromise = ({
       hostLogoUrl:
         "https://images.prismic.io/argentwebsite/313db37e-055d-42ee-9476-a92bda64e61d_logo.svg?auto=format%2Ccompress&fit=max&q=50",
       userAddress: walletAddress,
-      hostApiKey: REACT_APP_RAMP_API_KEY,
+      ...(networkId === 1 && {
+        hostApiKey: REACT_APP_RAMP_API_KEY,
+      }),
+      ...(networkId === 3 && {
+        url: "https://ri-widget-staging-ropsten.firebaseapp.com/",
+      }),
     })
       /** Possible Events (for more info see https://docs.ramp.network/events)
         WIDGET_CLOSE = "WIDGET_CLOSE",
