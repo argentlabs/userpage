@@ -15,7 +15,6 @@ import {
   FullscreenButton,
   GoBackButton,
   InfoButton,
-  PlayButton,
 } from "./GalleryDetail.style"
 import { useFullscreen } from "./useFullscreen"
 import { useMouseBehaviour } from "./useMouseBehaviour"
@@ -57,7 +56,7 @@ const Controls: FC<{ visible: boolean; infoLink: string }> = ({
         )}
       </Center>
       <Center direction="row" gap="16px">
-        {isFullscreen && <PlayButton border="none" />}
+        {/* {isFullscreen && <PlayButton border="none" />} */}
         {isFullscreen ? (
           <CloseFullscreenButton border="none" onClick={toggleFullscreen} />
         ) : (

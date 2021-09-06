@@ -24,6 +24,8 @@ const ImageWrapper = styled.div<{
   cursor: ${ifProp("clickable", "pointer", "inherit")};
 
   ${shadowMixin}
+  display: block;
+  margin: auto;
 `
 
 export interface Dimensions {

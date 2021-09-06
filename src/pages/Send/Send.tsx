@@ -264,18 +264,15 @@ export const SendPage: FC = () => {
       </Center>
       {
         // warning for non mainnet bank purchases
-        networkId !== 1 && state.matches("ramp") && !hideNotMainnetDisclaimer && (
-          <NotMainnetDisclaimer
-            onClick={() => setHideNotMainnetDisclaimer(true)}
-          >
-            You are not using Ethereum Mainnet!
-            <br />
-            Ramp will always send purchased funds to Ethereum Mainnet.
-            <br />
-            Make sure to provide a valid Ethereum Mainnet Address to them in
-            order to receive the Funds!
-          </NotMainnetDisclaimer>
-        )
+        networkId !== 1 &&
+          state.matches("ramp") &&
+          !hideNotMainnetDisclaimer && (
+            <NotMainnetDisclaimer
+              onClick={() => setHideNotMainnetDisclaimer(true)}
+            >
+              You are not using Ethereum Mainnet!
+            </NotMainnetDisclaimer>
+          )
       }
     </PageWrapper>
   )
