@@ -99,7 +99,6 @@ export const createRouterMachine = (history: {
             onDone: [
               {
                 target: "home",
-                cond: "hasZkSyncWallet",
                 actions: ["assignContext", "respectPath"],
               },
               {
@@ -196,6 +195,7 @@ export const createRouterMachine = (history: {
             data: (context): SendContext => ({
               ...sendMachineDefaultContext,
               walletAddress: context.walletAddress,
+              hasZkSync: context.hasZkSync,
             }),
           },
           on: {
@@ -277,10 +277,6 @@ export const createRouterMachine = (history: {
         },
       },
       guards: {
-        hasZkSyncWallet: (_context, event) => {
-          const promiseEvent = event as DoneInvokeEvent<RouterContext>
-          return Boolean(promiseEvent?.data?.hasZkSync)
-        },
         canVisitClaim: (_context, event) => {
           const promiseEvent = event as ErrorPlatformEvent
           const name = getNameFromGlobal()

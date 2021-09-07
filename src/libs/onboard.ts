@@ -1,5 +1,6 @@
 import Onboard from "bnc-onboard"
 import { ethers } from "ethers"
+import Cookies from "js-cookie"
 
 import { storageKey } from "../themes"
 import { networkId, rpcUrl } from "./web3"
@@ -24,7 +25,7 @@ let gWallet: any
 export const onboard = Onboard({
   networkId,
   hideBranding: true,
-  darkMode: localStorage.getItem(storageKey) === "dark",
+  darkMode: Cookies.get(storageKey) === "dark",
   subscriptions: {
     wallet: (wallet: any) => {
       if (wallet?.provider) {

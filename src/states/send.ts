@@ -60,6 +60,7 @@ export interface SendContext {
   walletAddress: string
   isArgentWallet: boolean
   transactionHash: string | null
+  hasZkSync: boolean
   zkSyncTokens: ZkSyncToken[]
   zkSyncConfig: ZkSyncConfig | null
   tokens: Token[]
@@ -96,6 +97,7 @@ export const sendMachineDefaultContext: SendContext = {
   isArgentWallet: false,
   transactionHash: null,
   tokens: [],
+  hasZkSync: false,
   zkSyncTokens: [],
   zkSyncConfig: null,
 }
@@ -320,7 +322,7 @@ export const sendMaschine = createMachine<
         entry: "resetTransactionHash",
         invoke: {
           id: "sending",
-          src: async (context) => {
+          src: async (context): Promise<ContractTransaction> => {
             const { amount, contract, tokens, walletAddress, zkSyncConfig } =
               context
             const token = tokens.find((x) => x.address === contract)
@@ -332,6 +334,30 @@ export const sendMaschine = createMachine<
               decimals || 0,
             )
 
+            // L1 Transfer
+            if (!context.hasZkSync) {
+              // L1 Ether Transfer
+              if (contract === ethers.constants.AddressZero) {
+                return signer.sendTransaction({
+                  to: walletAddress,
+                  value: amountBn,
+                })
+              }
+              // L1 ERC20 Transfer
+              else {
+                const erc20Contract = ERC20__factory.connect(contract, signer)
+
+                return erc20Contract
+                  .transfer(walletAddress, amountBn)
+                  .catch((e) => {
+                    console.error(e)
+
+                    throw Error("transaction_rejected")
+                  })
+              }
+            }
+
+            // L1 -> L2 transfer
             const zkSync = ZkSync__factory.connect(
               zkSyncConfig!.contract,
               signer,
@@ -415,14 +441,15 @@ export const sendMaschine = createMachine<
         return {}
       }),
       checkApproveSkip: send((context) => {
-        const { amount, contract, tokens } = context
+        const { amount, contract, tokens, hasZkSync, isArgentWallet } = context
         const token = tokens.find((x) => x.address === contract)
         if (!token) return { type: "APPROVE_STAY" }
         const { allowance, decimals } = token
         const amountBn = ethers.utils.parseUnits(amount || "0", decimals || 0)
 
         if (
-          context.isArgentWallet ||
+          !hasZkSync ||
+          isArgentWallet ||
           contract === ethers.constants.AddressZero ||
           allowance.gte(amountBn)
         ) {
