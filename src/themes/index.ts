@@ -8,7 +8,7 @@ import { Theme, ThemeName } from "./theme"
 export const storageKey = "themeName"
 
 const themeNameAtom = atom<ThemeName>(
-  (Cookies.get("themeName") as ThemeName) ?? "light",
+  (Cookies.get(storageKey) as ThemeName) ?? "light",
 )
 
 const getRootDomain = () => {

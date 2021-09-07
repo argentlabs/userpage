@@ -45,7 +45,7 @@ export const SendPage: FC = () => {
   const { ens, walletAddress } = stateRouter.context
   // Send Machine
   const [state, send] = useSendMachine()
-  const { amount, contract, tokens, transactionHash } = state.context
+  const { amount, contract, tokens, transactionHash, hasZkSync } = state.context
 
   /** HELPER */
   // Animation helper hook
@@ -212,8 +212,10 @@ export const SendPage: FC = () => {
                       <Button fullWidth onClick={() => send("START_RAMP")}>
                         Pay with card/bank
                       </Button>
-                      <MetaText>
-                        Funds are sent to their zkSync account
+                      <MetaText red={!hasZkSync}>
+                        {hasZkSync
+                          ? "Funds are sent to their zkSync account"
+                          : "Funds are transfered on Ethereum Mainnet"}
                       </MetaText>
                     </ButtonWrapper>
                   )

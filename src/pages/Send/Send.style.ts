@@ -49,8 +49,9 @@ export const LottieWrapper = styled.div`
   }
 `
 
-export const MetaText = styled.p<{ invisible?: boolean }>`
-  color: ${ifProp("invisible", "transparent", "#8F8E8C")};
+export const MetaText = styled.p<{ invisible?: boolean; red?: boolean }>`
+  color: ${({ invisible, red }) =>
+    invisible ? "transparent" : red ? "red" : "#8F8E8C"};
   user-select: ${ifProp("invisible", "none", "auto")};
   font-size: 14px;
   text-align: center;
