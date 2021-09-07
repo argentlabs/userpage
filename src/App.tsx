@@ -23,6 +23,7 @@ const GlobalStyle = createGlobalStyle`
   ${reset}
   /* other styles */
   body {
+    transition: all 0.2s linear;
     background-color: ${({ theme }) => theme.colors.bodyBg};
     color: ${({ theme }) => theme.colors.fc};
     font-family: 'Barlow', sans-serif;

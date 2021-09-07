@@ -8,7 +8,7 @@ import {
   send,
 } from "xstate"
 
-import { fetchAns } from "../libs/ans"
+import { getUserInfo } from "../libs/ans"
 import {
   GalleryContext,
   galleryMachine,
@@ -55,9 +55,8 @@ const getNameFromGlobal = () => {
   const overwriteName = new URLSearchParams(window.location.search).get(
     "__overwriteName",
   )
-  const domainSplitByDot = window.location.hostname.split(".")
-  const name =
-    overwriteName || (domainSplitByDot.length > 2 ? domainSplitByDot[0] : "")
+  const domainBeforeArgent = window.location.hostname.split(".argent")[0]
+  const name = overwriteName || domainBeforeArgent
 
   if (overwriteName) {
     window.history.replaceState("", "", window.location.pathname)
@@ -67,7 +66,7 @@ const getNameFromGlobal = () => {
 }
 
 const isNameClaimable = (name: string): boolean => {
-  return name.length >= 5 && name.length <= 30
+  return name.length >= 5 && name.length <= 30 && !name.includes(".")
 }
 
 export const createRouterMachine = (history: {
@@ -95,7 +94,9 @@ export const createRouterMachine = (history: {
           invoke: {
             id: "getWallet",
             src: async (context): Promise<RouterContext> => {
-              return fetchAns(context.name)
+              const x = await getUserInfo(context.name)
+              console.log(x)
+              return getUserInfo(context.name)
             },
             onDone: [
               {

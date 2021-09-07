@@ -2,8 +2,8 @@ import fetchMock from "jest-fetch-mock"
 
 import {
   Config,
-  ResultConfig,
-  TokensZkSync,
+  ConfigResult,
+  Tokens,
   fetchConfig,
   fetchTokenList,
 } from "../zksyncApi"
@@ -25,7 +25,7 @@ describe("[unit] ZKSYNC Api", () => {
   describe("[unit] fetchConfig", () => {
     it("transforms 200", async () => {
       const mockResponse: Config = configApiResponseMock
-      const expectedResult: ResultConfig = configApiResponseMock.result
+      const expectedResult: ConfigResult = configApiResponseMock.result
       fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
       const response = await fetchConfig()
@@ -45,7 +45,7 @@ describe("[unit] ZKSYNC Api", () => {
   })
   describe("[unit] fetchTokenList", () => {
     it("transforms 200", async () => {
-      const mockResponse: TokensZkSync = tokensApiResponseMock
+      const mockResponse: Tokens = tokensApiResponseMock
       const expectedResult = new Set(tokensApiResponseMock.result.list)
       fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
@@ -74,7 +74,7 @@ describe("[int] ZKSYNC Api", () => {
 
       fetchMock.enableMocks()
 
-      const expectedResult: ResultConfig = configApiResponseMock.result
+      const expectedResult: ConfigResult = configApiResponseMock.result
 
       let lastResponseClone: Response | undefined
       const fetchJestFn = jest.fn<
