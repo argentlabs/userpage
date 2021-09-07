@@ -94,8 +94,6 @@ export const createRouterMachine = (history: {
           invoke: {
             id: "getWallet",
             src: async (context): Promise<RouterContext> => {
-              const x = await getUserInfo(context.name)
-              console.log(x)
               return getUserInfo(context.name)
             },
             onDone: [
