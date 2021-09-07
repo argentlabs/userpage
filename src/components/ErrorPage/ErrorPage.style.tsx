@@ -10,9 +10,11 @@ export const ErrorSign = styled(ErrorSvg)`
   border-radius: 50%;
   border: 30px solid white;
   background: white;
+  margin-bottom: -90px;
   @media only screen and (min-width: 480px) {
     max-width: 160px;
     max-height: 160px;
+    margin-bottom: -110px;
   }
 `
 

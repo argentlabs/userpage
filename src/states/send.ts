@@ -17,11 +17,11 @@ import {
 } from "../generated"
 import { isArgentWallet } from "../libs/argent"
 import { getERC20BalancesAndAllowances } from "../libs/erc20"
+import { selectAndCheckWallet, writeProvider } from "../libs/onboard"
 import { showRampPromise } from "../libs/ramp"
-import { selectAndCheckWallet, web3 } from "../libs/web3"
 import {
-  ResultConfig as ZkSyncConfig,
-  TokenZkSync as ZkSyncToken,
+  ConfigResult as ZkSyncConfig,
+  Token as ZkSyncToken,
   fetchConfig,
   fetchTokenList,
 } from "../libs/zksyncApi"
@@ -134,7 +134,7 @@ export const sendMaschine = createMachine<
           src: async () => {
             await selectAndCheckWallet()
 
-            const signer = web3.getSigner(0)
+            const signer = writeProvider.getSigner(0)
             const address = await signer.getAddress()
 
             const isArgent = await isArgentWallet(address)
@@ -177,10 +177,10 @@ export const sendMaschine = createMachine<
         invoke: {
           id: "fetchBalancesAndAllowances",
           src: async (context): Promise<Token[]> => {
-            const signer = web3.getSigner(0)
+            const signer = writeProvider.getSigner(0)
             const { zkSyncTokens, zkSyncConfig } = context
             const balances = await getERC20BalancesAndAllowances(
-              web3,
+              writeProvider,
               await signer.getAddress(),
               zkSyncTokens
                 .filter(
@@ -260,7 +260,7 @@ export const sendMaschine = createMachine<
               decimals || 0,
             )
 
-            const signer = web3.getSigner(0)
+            const signer = writeProvider.getSigner(0)
             const erc20token = ERC20__factory.connect(contract, signer)
 
             const approveTx = await erc20token
@@ -326,7 +326,7 @@ export const sendMaschine = createMachine<
             const token = tokens.find((x) => x.address === contract)
             if (!token) throw Error("Token not found")
             const { decimals } = token
-            const signer = web3.getSigner(0)
+            const signer = writeProvider.getSigner(0)
             const amountBn = ethers.utils.parseUnits(
               amount || "0",
               decimals || 0,
