@@ -3,7 +3,7 @@ import chunk from "lodash.chunk"
 import joinUrl from "url-join"
 
 import { readProvider } from "./web3"
-import { fetchAccount } from "./zksyncApi"
+import { AccountResult, fetchAccount } from "./zksyncApi"
 
 const { REACT_APP_ARGENT_API_ANS_WALLET_ENDPOINT } = process.env
 
@@ -63,26 +63,41 @@ export const getEnsFromAddress = (address: string) =>
   readProvider.lookupAddress(address)
 export const getAddressFromEns = (name: string) =>
   readProvider.resolveName(name)
+const resultOrNull = <T extends any>(promise: Promise<T>): Promise<T | null> =>
+  promise.catch(() => null)
+const zkAccountExists = (zkAccount: AccountResult | null): boolean =>
+  Boolean(zkAccount) &&
+  zkAccount!.pubKeyHash !== "sync:0000000000000000000000000000000000000000"
 
+/**
+ * Resolves a given name to its address and additional info about the wallet
+ *
+ * @param name could be an address, an ens name or some argent user name
+ * @returns ANS object containing wallet name, address, and L2 infos
+ */
 export const getUserInfo = async (name: string): Promise<Ans> => {
   // try to resolve name using argent backend
-  let response = await fetchAns(name).catch(() => null)
+  let response = await resultOrNull(fetchAns(name))
 
   // if no response from argent backend
   if (!response) {
     // check if name is pure address
     if (ethers.utils.isAddress(name)) {
-      const ens = await getEnsFromAddress(name).catch(() => null)
+      // reverse lookup ENS
+      const ens = await resultOrNull(getEnsFromAddress(name))
       response = {
+        // show ens and fallback to short address
         name: ens || getShortAddress(name),
         ens: name,
         hasZkSync: false,
         walletAddress: name,
         walletDeployed: true,
       }
-      // check if name is ens
-    } else if (ethers.utils.isValidName(name)) {
-      const address = await getAddressFromEns(name).catch(() => null)
+    }
+    // check if name could be ens
+    else if (ethers.utils.isValidName(name)) {
+      // check if ens resolves
+      const address = await resultOrNull(getAddressFromEns(name))
       if (address) {
         response = {
           name,
@@ -102,19 +117,10 @@ export const getUserInfo = async (name: string): Promise<Ans> => {
 
   // double check zkSync
   if (!response.hasZkSync) {
-    const zkAccount = await fetchAccount(response.walletAddress).catch(
-      () => null,
-    )
-    if (
-      zkAccount &&
-      zkAccount.pubKeyHash !== "sync:0000000000000000000000000000000000000000"
-    ) {
+    const zkAccount = await resultOrNull(fetchAccount(response.walletAddress))
+    if (zkAccountExists(zkAccount)) {
       response.hasZkSync = true
     }
-  }
-
-  if (response.walletAddress === "0x0239769a1adf4def9f07da824b80b9c4fcb59593") {
-    response.hasZkSync = true
   }
 
   return response
