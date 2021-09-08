@@ -42,7 +42,7 @@ export const SendPage: FC = () => {
   /** STATE MACHINES */
   // Router Machine
   const [stateRouter, sendRouter] = useRouterMachine()
-  const { ens, name, walletAddress } = stateRouter.context
+  const { name, walletAddress } = stateRouter.context
   // Send Machine
   const [state, send] = useSendMachine()
   const { amount, contract, tokens, transactionHash, hasZkSync } = state.context
@@ -89,7 +89,7 @@ export const SendPage: FC = () => {
   const title = stateMatches(connectScreens) ? "Add funds to" : undefined
 
   // subtitle and backButton are shown when there is no animation on screen
-  const subTitle = loadingState === "idle" ? ens || name : undefined
+  const subTitle = loadingState === "idle" ? name : undefined
   const onBackButtonClick =
     loadingState === "idle" ? () => sendRouter("PUSH_HOME") : undefined
 
@@ -128,7 +128,7 @@ export const SendPage: FC = () => {
     <PageWrapper>
       <DarkmodeSwitch />
       <Helmet>
-        <title>{state.matches("pairing") ? ens : `Send - ${ens}`}</title>
+        <title>{state.matches("pairing") ? name : `Send - ${name}`}</title>
       </Helmet>
       <ArgentLogo />
       <Center>

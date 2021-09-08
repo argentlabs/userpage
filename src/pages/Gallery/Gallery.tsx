@@ -16,13 +16,13 @@ import OpenseaLogo, {
 } from "../../components/Svgs/OpenseaLogo"
 import { useGalleryMachine, useRouterMachine } from "../../states/hooks"
 import { Theme } from "../../themes/theme"
-import { IconBar, OpenseaWrapper } from "./Gallery.style"
+import { IconBar, OpenseaWrapper, SAddress } from "./Gallery.style"
 import { Grid } from "./Grid"
 
 export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
   const [
     {
-      context: { name, ens, walletAddress },
+      context: { name, walletAddress, hasZkSync },
     },
     send,
   ] = useRouterMachine()
@@ -37,7 +37,7 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
     <PageWrapper>
       <DarkmodeSwitch />
       <Helmet>
-        <title>Gallery - {ens}</title>
+        <title>Gallery - {name}</title>
       </Helmet>
       <ArgentLogo />
       <Center>
@@ -52,8 +52,9 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
           lean
           pt="64px"
           title={`@${name}`}
-          subtitle={ens}
-        />
+        >
+          <SAddress address={walletAddress} short zkSync={hasZkSync} />
+        </Box>
         <IconBar direction="row" gap="40px">
           <IconButton
             Icon={<Add />}

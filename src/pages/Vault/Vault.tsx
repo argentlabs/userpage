@@ -16,7 +16,7 @@ import { ErrorText, SAddress, SCenter } from "./Vault.style"
 export const VaultPage: FC = () => {
   const [
     {
-      context: { ens, walletAddress, hasZkSync },
+      context: { name, walletAddress, hasZkSync },
     },
     send,
   ] = useRouterMachine()
@@ -24,12 +24,12 @@ export const VaultPage: FC = () => {
     <PageWrapper>
       <DarkmodeSwitch />
       <Helmet>
-        <title>Vault - {ens}</title>
+        <title>Vault - {name}</title>
       </Helmet>
       <ArgentLogo />
       <Center>
         <Avatar pubkey={walletAddress} />
-        <Box lean title={ens} onBackButtonClick={() => send("PUSH_HOME")}>
+        <Box lean title={name} onBackButtonClick={() => send("PUSH_HOME")}>
           <SCenter>
             <QRCode size={280} data={walletAddress} />
             <SAddress address={walletAddress} zkSync={hasZkSync}>

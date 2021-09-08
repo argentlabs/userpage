@@ -1,9 +1,8 @@
 import styled, { keyframes } from "styled-components"
 import { prop } from "styled-tools"
 
-export const AddressBase = styled.p`
+export const AddressBase = styled.div`
   position: relative;
-  display: block;
   text-align: center;
   max-width: 220px;
   line-height: 1.3em;

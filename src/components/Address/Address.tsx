@@ -1,5 +1,5 @@
 import chunk from "lodash.chunk"
-import { FC, useCallback, useRef, useState } from "react"
+import { FC, useCallback, useEffect, useRef, useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
 
 import { AddressBase, ConfirmationIndicator } from "./Address.style"
@@ -28,6 +28,14 @@ const useQueue = <T extends any>(
 ): [{ id: number; arg: T }[], (arg: T) => void] => {
   const [queue, setQueue] = useState<{ id: number; arg: T }[]>([])
   const pids = useRef<number[]>([])
+
+  useEffect(() => {
+    return () => {
+      pids.current.forEach((pid) => {
+        clearTimeout(pid)
+      })
+    }
+  }, [])
 
   const addToQueue = useCallback(
     (arg) => {
@@ -91,7 +99,7 @@ export const Address: FC<AddressProps> = ({
           short,
           zkSync,
         })}
-        {children}
+        <p>{children}</p>
         {clickFeedbackQueue.map(({ id, arg }) => (
           <ConfirmationIndicator key={id} {...arg}>
             {getConfirmationEmoji(id)}

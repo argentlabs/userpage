@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components"
 
+import Address from "../../components/Address"
 import Center from "../../components/Center"
 import { centerMixin } from "../../mixins.style"
 
@@ -27,4 +28,8 @@ export const OpenseaWrapper = styled.div`
   ${centerMixin}
   flex-direction: row;
   animation: ${WaitAndShowAnimation} 5s ease-in-out;
+`
+
+export const SAddress = styled(Address)`
+  margin-top: 16px;
 `
