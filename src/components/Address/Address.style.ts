@@ -15,19 +15,17 @@ export const AddressBase = styled.p`
 const ConfirmationAnimation = keyframes`
     0% {
         opacity: 0;
-        transform: translateX(-0.5em) translateY(0) scale(50%);
+        transform: translate(-50%, 0) scale(50%);
     }
-    70% {
+    60% {
         opacity: 1;
-        transform: translateX(-0.5em) translateY(-1em) scale(100%);
     }
-    90% {
+    80% {
         opacity: 1;
-        transform: translateX(-0.5em) translateY(-1em) scale(100%);
     }
     100% {
         opacity: 0;
-        transform: translateX(-0.5em) translateY(-1em) scale(100%);
+        transform: translate(-50%, -120%) scale(100%);
     }
 `
 
@@ -40,8 +38,8 @@ export const ConfirmationIndicator = styled.span<ConfirmationIndicatorProps>`
   display: block;
   top: ${prop("y")}px;
   left: ${prop("x")}px;
-  height: 1.5em;
-  width: 1.5em;
-  font-size: 1.5em;
-  animation: ${ConfirmationAnimation} 1s ease-out forwards;
+  height: 1.6em;
+  width: 1.6em;
+  font-size: 1.6em;
+  animation: ${ConfirmationAnimation} 800ms ease-out forwards;
 `
