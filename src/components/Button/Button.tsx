@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import { ifProp } from "styled-tools"
 
+import { centerMixin } from "../../mixins.style"
+
 interface ButtonProps {
   fullWidth?: boolean
 }
@@ -37,5 +39,18 @@ export const SecondaryButton = styled(Button)`
     background-color: #8f8e8c;
     color: white;
     cursor: not-allowed;
+  }
+`
+
+export const SecondaryButtonWithIcon = styled(SecondaryButton)`
+  background-color: #f5f3f0;
+  color: #8f8e8c;
+
+  ${centerMixin}
+  flex-direction: row;
+
+  > svg {
+    height: 1em;
+    margin-right: 0.5em;
   }
 `
