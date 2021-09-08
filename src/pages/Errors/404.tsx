@@ -10,7 +10,7 @@ const Error404Page: FC = () => {
         <title>404 - Error</title>
       </Helmet>
       <ErrorPage
-        title="This page doesnt exist"
+        title="This page does not exist"
         descriptions={["Have you downloaded Argent yet?"]}
       />
     </>
