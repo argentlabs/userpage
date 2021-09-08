@@ -35,7 +35,7 @@ export const VaultPage: FC = () => {
             <SAddress address={walletAddress} zkSync={hasZkSync}>
               <Center>
                 <SecondaryButtonWithIcon>
-                  <Copy /> Copy full address
+                  <Copy /> Copy address
                 </SecondaryButtonWithIcon>
               </Center>
             </SAddress>
