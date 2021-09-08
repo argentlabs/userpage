@@ -26,7 +26,7 @@ const Controls: FC<{ visible: boolean; infoLink: string }> = ({
 }) => {
   const [
     {
-      context: { ens },
+      context: { name },
     },
     send,
   ] = useRouterMachine()
@@ -48,7 +48,7 @@ const Controls: FC<{ visible: boolean; infoLink: string }> = ({
       }}
     >
       <Helmet>
-        <title>Gallery - {ens}</title>
+        <title>Gallery - {name}</title>
       </Helmet>
       <Center>
         {!isFullscreen && (

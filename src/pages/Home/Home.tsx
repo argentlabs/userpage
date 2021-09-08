@@ -18,7 +18,7 @@ import { IconBar, SAddress } from "./Home.style"
 export const HomePage: FC = () => {
   const [
     {
-      context: { name, ens, walletAddress, hasZkSync },
+      context: { name, walletAddress, hasZkSync },
     },
     send,
   ] = useRouterMachine()
@@ -27,7 +27,7 @@ export const HomePage: FC = () => {
     <PageWrapper>
       <DarkmodeSwitch />
       <Helmet>
-        <title>Home - {ens}</title>
+        <title>Home - {name}</title>
       </Helmet>
       <ArgentLogo />
       <Center>
