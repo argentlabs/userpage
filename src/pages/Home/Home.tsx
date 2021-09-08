@@ -35,7 +35,7 @@ export const HomePage: FC = () => {
         <Box title={`@${name}`}>
           <SAddress address={walletAddress} short zkSync={hasZkSync} />
           <SecondaryButtonWithIcon onClick={() => send("PUSH_VAULT")}>
-            <Qr /> View full address
+            <Qr /> View address
           </SecondaryButtonWithIcon>
         </Box>
         <IconBar direction="row" gap="40px">
