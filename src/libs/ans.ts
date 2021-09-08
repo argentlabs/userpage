@@ -54,10 +54,10 @@ export const fetchAns = async (name: string): Promise<Ans> => {
 }
 
 export const getShortAddress = (address: string) =>
-  chunk(address.substr(2).split(""), 4)
+  `0x ${chunk(address.substr(2).split(""), 4)
     .map((a) => a.join(""))
     .filter((_, i, a) => i === 0 || i === a.length - 1)
-    .join("…")
+    .join(" … ")}`
 
 export const getEnsFromAddress = (address: string) =>
   readProvider.lookupAddress(address)
@@ -87,8 +87,8 @@ export const getUserInfo = async (name: string): Promise<Ans> => {
       const ens = await resultOrNull(getEnsFromAddress(name))
       response = {
         // show ens and fallback to short address
-        name: ens || getShortAddress(name),
-        ens: name,
+        name: ens ?? getShortAddress(name),
+        ens: ens ?? "",
         hasZkSync: false,
         walletAddress: name,
         walletDeployed: true,
@@ -101,7 +101,7 @@ export const getUserInfo = async (name: string): Promise<Ans> => {
       if (address) {
         response = {
           name,
-          ens: address,
+          ens: name,
           hasZkSync: false,
           walletAddress: address,
           walletDeployed: true,

@@ -1,25 +1,25 @@
-import chunk from "lodash.chunk"
 import { FC } from "react"
-import CopyToClipboard from "react-copy-to-clipboard"
 import { Helmet } from "react-helmet"
 
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
+import { SecondaryButtonWithIcon } from "../../components/Button/Button"
 import Center from "../../components/Center"
 import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import QRCode from "../../components/QRCode"
-import { useRouterContextSelector } from "../../states/hooks"
-import { Address, ErrorText, SCenter } from "./Vault.style"
-
-const formatAddress = (address: string) =>
-  `0x ${chunk(address.substr(2).split(""), 4)
-    .map((x) => x.join(""))
-    .join(" ")}`
+import Copy from "../../components/Svgs/Copy"
+import { useRouterMachine } from "../../states/hooks"
+import { ErrorText, SAddress, SCenter } from "./Vault.style"
 
 export const VaultPage: FC = () => {
-  const { ens, walletAddress } = useRouterContextSelector()
+  const [
+    {
+      context: { ens, walletAddress, hasZkSync },
+    },
+    send,
+  ] = useRouterMachine()
   return (
     <PageWrapper>
       <DarkmodeSwitch />
@@ -29,16 +29,23 @@ export const VaultPage: FC = () => {
       <ArgentLogo />
       <Center>
         <Avatar pubkey={walletAddress} />
-        <Box lean title={ens}>
+        <Box lean title={ens} onBackButtonClick={() => send("PUSH_HOME")}>
           <SCenter>
             <QRCode size={280} data={walletAddress} />
-            <CopyToClipboard text={walletAddress}>
-              <Address>{formatAddress(walletAddress)}</Address>
-            </CopyToClipboard>
-            <ErrorText>
-              Only send to this address on Ethereum mainnet. <br />
-              You will lose funds if you use any other chain.
-            </ErrorText>
+            <SAddress address={walletAddress} zkSync={hasZkSync}>
+              <Center>
+                <SecondaryButtonWithIcon>
+                  <Copy /> Copy full address
+                </SecondaryButtonWithIcon>
+              </Center>
+            </SAddress>
+
+            {!hasZkSync && (
+              <ErrorText>
+                Only send to this address on Ethereum mainnet. <br />
+                You will lose funds if you use any other chain.
+              </ErrorText>
+            )}
           </SCenter>
         </Box>
       </Center>

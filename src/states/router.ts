@@ -165,7 +165,9 @@ export const createRouterMachine = (history: {
         },
         vault: {
           entry: ["navigateVault"],
-          type: "final",
+          on: {
+            PUSH_HOME: "home",
+          },
           meta: {
             path: "/vault",
           },
