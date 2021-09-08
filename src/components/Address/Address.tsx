@@ -95,11 +95,13 @@ export const Address: FC<AddressProps> = ({
         }}
         {...props}
       >
-        {formatAddress(address, {
-          short,
-          zkSync,
-        })}
-        <p>{children}</p>
+        <p>
+          {formatAddress(address, {
+            short,
+            zkSync,
+          })}
+        </p>
+        {children}
         {clickFeedbackQueue.map(({ id, arg }) => (
           <ConfirmationIndicator key={id} {...arg}>
             {getConfirmationEmoji(id)}
