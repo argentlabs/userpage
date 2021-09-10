@@ -214,7 +214,7 @@ export const getNftMediaUrl = (
 
 const {
   REACT_APP_OPENSEA_ENDPOINT = "https://api.opensea.io/api/v1/assets",
-  REACT_APP_OPENSEA_API_KEY = "d7ded80db9ef4be799593f38485b2908",
+  REACT_APP_OPENSEA_API_KEY,
 } = process.env
 
 export const fetchNfts = async (address: string): Promise<AssetElement[]> => {
