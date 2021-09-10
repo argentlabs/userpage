@@ -1,6 +1,7 @@
 import styled from "styled-components"
 
 import Center from "../Center"
+import ProfileBox from "../ProfileBox"
 import ErrorSvg from "../Svgs/Error"
 
 export const ErrorSign = styled(ErrorSvg)`
@@ -8,7 +9,7 @@ export const ErrorSign = styled(ErrorSvg)`
   max-width: 120px;
   max-height: 120px;
   border-radius: 50%;
-  border: 30px solid white;
+  border: 20px solid white;
   background: white;
   margin-bottom: -90px;
   @media only screen and (min-width: 480px) {
@@ -19,6 +20,9 @@ export const ErrorSign = styled(ErrorSvg)`
 `
 
 export const ErrorWrapper = styled(Center)`
+  text-align: center;
+  line-height: 2em;
+
   > p:first-of-type {
     margin-top: 64px;
   }
@@ -30,5 +34,17 @@ export const ErrorWrapper = styled(Center)`
   }
   > p {
     font-size: 24px;
+  }
+`
+
+export const SBox = styled(ProfileBox)`
+  h1,
+  h2,
+  h3,
+  p {
+    overflow: auto;
+    white-space: normal;
+    text-overflow: normal;
+    text-align: center;
   }
 `
