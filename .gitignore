@@ -27,6 +27,5 @@ yarn-error.log*
 
 src/generated
 
-.env*
-!.env.example
-!.env.test
+.env*.local
+.env
