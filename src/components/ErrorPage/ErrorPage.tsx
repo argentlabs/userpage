@@ -3,8 +3,7 @@ import { FC } from "react"
 import ArgentLogo from "../ArgentLogo"
 import Center from "../Center"
 import PageWrapper from "../PageWrapper"
-import Box from "../ProfileBox"
-import { ErrorSign, ErrorWrapper } from "./ErrorPage.style"
+import { ErrorSign, ErrorWrapper, SBox } from "./ErrorPage.style"
 
 interface ErrorPageProps {
   title: string
@@ -21,14 +20,14 @@ export const ErrorPage: FC<ErrorPageProps> = ({
       <ArgentLogo />
       <Center>
         <ErrorSign />
-        <Box lean title={title}>
+        <SBox lean title={title}>
           <ErrorWrapper>
             {descriptions.map((desc) => (
               <p>{desc}</p>
             ))}
             {children}
           </ErrorWrapper>
-        </Box>
+        </SBox>
       </Center>
     </PageWrapper>
   )
