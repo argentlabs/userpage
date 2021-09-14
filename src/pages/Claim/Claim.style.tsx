@@ -1,7 +1,6 @@
 import styled from "styled-components"
 
 import Center from "../../components/Center"
-import ProfileBox from "../../components/ProfileBox"
 
 export const ClaimWrapper = styled(Center)`
   text-align: center;
