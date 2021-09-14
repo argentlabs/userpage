@@ -22,6 +22,12 @@ export const SCenter = styled(Center)`
     margin-top: 24px;
   }
 
+  @media only screen and (max-width: 410px) {
+    > .qrcode {
+      transform: scale(80%);
+    }
+  }
+
   > ${SAddress} {
     margin: 24px 0 24px;
   }
