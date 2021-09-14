@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { prop, theme } from "styled-tools"
 
-// import AvatarSvg from "../Svgs/Avatar"
+import AvatarSvg from "../Svgs/Avatar"
 
 interface AvatarProps {
   size?: string
@@ -10,15 +10,15 @@ interface AvatarProps {
   pubkey: string
 }
 
-export const Avatar = styled.img.attrs<AvatarProps>((props) => ({
-  src: `https://avatars.dicebear.com/api/avataaars/${props.pubkey}.svg?background=%230078a4`,
-}))<AvatarProps>`
+export const Avatar = styled(AvatarSvg)<AvatarProps>`
   z-index: 1;
   max-width: ${prop<any>("sizeMobile", "120px")};
   max-height: ${prop<any>("sizeMobile", "120px")};
   border-radius: 50%;
   border: ${prop<any>("bw", "20px")} solid ${theme("colors.bg", "white")};
   color: ${theme("colors.bg", "white")};
+  background-color: #0078a4;
+  background: linear-gradient(#0078a4 82%, white 82%);
   /* prettier-ignore */
   margin-bottom: calc(${prop<any>("sizeMobile", "120px")} / -2 - ${prop<any>(
     "bw",
