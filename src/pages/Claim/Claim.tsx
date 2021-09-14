@@ -10,7 +10,7 @@ import Box from "../../components/ProfileBox"
 import AppStore from "../../components/Svgs/AppStore"
 import PlayStore from "../../components/Svgs/PlayStore"
 import { useRouterContextSelector } from "../../states/hooks"
-import { ClaimWrapper, InvisibleLink } from "./Claim.style"
+import { AppButtonWrapper, ClaimWrapper, InvisibleLink } from "./Claim.style"
 
 export const ClaimPage: FC = () => {
   const { name, walletAddress } = useRouterContextSelector()
@@ -29,22 +29,22 @@ export const ClaimPage: FC = () => {
             <p>This address is not yet registered.</p>
 
             <p>Download Argent to reserve it now!</p>
-            <Center direction="row" gap="24px">
+            <AppButtonWrapper>
               <InvisibleLink
                 href="https://argent.link/claim-username"
                 target="_blank"
                 rel="noreferrer"
               >
-                <AppStore height={48} width={160} />
+                <AppStore width="100%" />
               </InvisibleLink>
               <InvisibleLink
                 href="https://argent.link/claim-username"
                 target="_blank"
                 rel="noreferrer"
               >
-                <PlayStore height={48} width={160} />
+                <PlayStore width="100%" />
               </InvisibleLink>
-            </Center>
+            </AppButtonWrapper>
           </ClaimWrapper>
         </Box>
       </Center>

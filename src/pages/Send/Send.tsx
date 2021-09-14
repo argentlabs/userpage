@@ -219,7 +219,7 @@ export const SendPage: FC = () => {
                       <MetaText red={!hasZkSync}>
                         {hasZkSync
                           ? "Funds are sent to their zkSync account"
-                          : "Funds are transfered on Ethereum Mainnet"}
+                          : "Funds are transferred on Ethereum Mainnet"}
                       </MetaText>
                     </ButtonWrapper>
                   )
