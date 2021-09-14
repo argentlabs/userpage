@@ -5,7 +5,10 @@ import joinUrl from "url-join"
 import { readProvider } from "./web3"
 import { AccountResult, fetchAccount } from "./zksyncApi"
 
-const { REACT_APP_ARGENT_API_ANS_WALLET_ENDPOINT } = process.env
+const {
+  REACT_APP_ARGENT_API_ANS_WALLET_ENDPOINT,
+  REACT_APP_ANS_DOMAIN = "argent.xyz",
+} = process.env
 
 export interface AnsResponse extends AnsGeneric {
   l2: L2
@@ -37,7 +40,7 @@ export const fetchAns = async (name: string): Promise<Ans> => {
     // "https://deelay.me/5000/" + // uncomment for testing purposes, 5s delay added
     joinUrl(
       REACT_APP_ARGENT_API_ANS_WALLET_ENDPOINT,
-      `?ens=${name}.argent.xyz`,
+      `?ens=${name}.${REACT_APP_ANS_DOMAIN}`,
     ),
   )
   if (ansRes.status === 404) throw Error("Not found")
