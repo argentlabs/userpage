@@ -17,3 +17,5 @@ declare namespace NodeJS {
 }
 
 declare module "@analytics/google-analytics"
+
+declare module "analytics-plugin-do-not-track"

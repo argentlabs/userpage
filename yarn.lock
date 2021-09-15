@@ -3831,6 +3831,11 @@ alphanum-sort@^1.0.0:
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
+analytics-plugin-do-not-track@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/analytics-plugin-do-not-track/-/analytics-plugin-do-not-track-0.1.5.tgz#e5a3ffb14b900538d322402c71bad065bf9932cd"
+  integrity sha512-Bnadur6Y8UB2GrZD11SXAmIVraPpsVINcU8cgbq6ynJIE00xrcJ/RhqFdqqIM7Heyuze93FhcEKLl5WGV9N9mA==
+
 analytics-utils@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/analytics-utils/-/analytics-utils-1.0.3.tgz#fcbf2f03720b6b1be12ea9fa7843e08c57a11ec5"

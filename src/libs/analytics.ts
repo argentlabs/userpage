@@ -1,5 +1,6 @@
 import googleAnalytics from "@analytics/google-analytics"
 import Analytics from "analytics"
+import doNotTrack from "analytics-plugin-do-not-track"
 import Cookies from "js-cookie"
 import { v4 as uuid } from "uuid"
 
@@ -10,6 +11,7 @@ const { REACT_APP_GA_ID } = process.env
 export const analytics = Analytics({
   app: "argent-userpage",
   plugins: [
+    doNotTrack(),
     googleAnalytics({
       trackingId: REACT_APP_GA_ID,
       enabled: Boolean(REACT_APP_GA_ID),
