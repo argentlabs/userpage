@@ -18,13 +18,15 @@ export const SAddress = styled(Address)`
 `
 
 export const SCenter = styled(Center)`
-  > .qrcode {
-    margin-top: 24px;
-  }
-
   @media only screen and (max-width: 410px) {
     > .qrcode {
       transform: scale(80%);
+    }
+  }
+
+  @media only screen and (min-width: 411px) {
+    > .qrcode {
+      margin-top: 24px;
     }
   }
 

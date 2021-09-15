@@ -21,7 +21,6 @@ export const ErrorSign = styled(ErrorSvg)`
 
 export const ErrorWrapper = styled(Center)`
   text-align: center;
-  line-height: 2em;
 
   > p:first-of-type {
     margin-top: 64px;
@@ -33,7 +32,8 @@ export const ErrorWrapper = styled(Center)`
     margin-bottom: 44px;
   }
   > p {
-    font-size: 24px;
+    font-size: 18px;
+    line-height: 1.3em;
   }
 `
 
