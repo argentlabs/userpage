@@ -49,6 +49,6 @@ export const Clickable = styled.a`
 `
 
 export const Text = styled.p`
-  color: #5c5b59;
+  color: ${theme("colors.iconButtonFont", "#5c5b59")};
   font-size: 16px;
 `

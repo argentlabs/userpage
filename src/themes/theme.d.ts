@@ -9,5 +9,6 @@ export interface Theme {
     fc: string
     iconBg: string
     nftDetailFrame: string
+    iconButtonFont: string
   }
 }
