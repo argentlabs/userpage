@@ -3,6 +3,7 @@ import { FC, createContext, useContext, useEffect, useMemo } from "react"
 import { useHistory } from "react-router-dom"
 import { ActorRefFrom, Interpreter } from "xstate"
 
+import { analytics } from "../libs/analytics"
 import { galleryMachine } from "./nftGallery"
 import {
   RouterContext,
@@ -37,6 +38,12 @@ export const GlobalRouterStateProvider: FC = (props) => {
             }` as any,
           )
         }
+
+        analytics.page({
+          path: location.pathname,
+          url: window.location.href,
+          title: document.title.split(" - ")[0],
+        })
       }),
     [history],
   )
