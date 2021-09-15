@@ -1,0 +1,30 @@
+{
+  "lang": "en",
+  "dir": "ltr",
+  "name": "Argent Userpage",
+  "short_name": "Userpage",
+  "icons": [
+    {
+      "src": "images/icons/argent-app-icon@1x.png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "images/icons/argent-app-icon@2x.png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "images/icons/argent-app-icon@3x.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "images/icons/argent-app-icon@8x.png",
+      "sizes": "512x512"
+    }
+  ],
+  "scope": "./",
+  "start_url": ".",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "theme_color": "#FF875B",
+  "background_color": "#EDEDED"
+}
