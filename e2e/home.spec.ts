@@ -16,7 +16,7 @@ test("homepage test and navigation", async ({ page }) => {
   await page.waitForSelector("text=Add funds to")
   expect(page.url()).toBe(`${HOST}/send`)
   await expect(page.isVisible("text=Add funds to")).resolves.toBe(true)
-  await expect(page.isVisible("text=janek.argent.xyz")).resolves.toBe(true)
+  await expect(page.isVisible("text=janek")).resolves.toBe(true)
   await expect(page.isVisible("text=Connect a wallet")).resolves.toBe(true)
   await expect(page.isVisible("text=Pay with card/bank")).resolves.toBe(true)
   await expect(
