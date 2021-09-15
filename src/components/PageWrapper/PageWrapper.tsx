@@ -7,6 +7,6 @@ export const PageWrapper = styled.div`
 
   padding: clamp(2rem, 8vh, 6rem) 0;
   > a {
-    margin-bottom: clamp(2rem, 8vh, 5rem);
+    margin-bottom: clamp(2rem, 7vh, 5rem);
   }
 `

@@ -11,8 +11,9 @@ export interface BoxProps {
 }
 
 export const Box = styled.div<BoxProps>`
-  width: calc(100vw - 64px);
-  padding: ${prop<any>("pt", "100px")} 8px ${ifProp("lean", "64px", "84px")};
+  box-sizing: border-box;
+  width: calc(100vw - 48px);
+  padding: ${prop<any>("pt", "100px")} 24px ${ifProp("lean", "64px", "84px")};
   position: relative;
   border-radius: 32px;
 
@@ -51,7 +52,11 @@ export const Box = styled.div<BoxProps>`
 export const H1 = styled.h1<{ tiny?: boolean }>`
   font-weight: bold;
   line-height: 1.3em;
-  font-size: ${ifProp("tiny", "24px", "32px")};
+  font-size: 24px;
+
+  @media only screen and (min-width: 480px) {
+    font-size: 32px;
+  }
 `
 
 export const H2 = styled.h2`

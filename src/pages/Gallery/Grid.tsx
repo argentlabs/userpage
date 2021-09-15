@@ -220,7 +220,10 @@ export const Grid: FC<{
   return (
     <>
       {hasNoNfts && (
-        <Center direction="column" style={{ margin: "128px" }}>
+        <Center
+          direction="column"
+          style={{ margin: "64px", textAlign: "center" }}
+        >
           <NotFoundText>You do not own any displayable NFTs</NotFoundText>
         </Center>
       )}
