@@ -6,7 +6,8 @@ export const AddressBase = styled.div`
   text-align: center;
   max-width: 220px;
   line-height: 1.3em;
-  font-size: 16px;
+  margin: 1.2em;
+  font-size: 14px;
   cursor: pointer;
   user-select: none;
 `

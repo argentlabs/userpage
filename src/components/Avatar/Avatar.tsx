@@ -15,7 +15,7 @@ export const Avatar = styled(AvatarSvg)<AvatarProps>`
   max-width: ${prop<any>("sizeMobile", "120px")};
   max-height: ${prop<any>("sizeMobile", "120px")};
   border-radius: 50%;
-  border: ${prop<any>("bw", "20px")} solid ${theme("colors.bg", "white")};
+  border: ${prop<any>("bw", "12px")} solid ${theme("colors.bg", "white")};
   color: ${theme("colors.bg", "white")};
   background-color: #0078a4;
   background: radial-gradient(
@@ -32,6 +32,8 @@ export const Avatar = styled(AvatarSvg)<AvatarProps>`
   @media only screen and (min-width: 480px) {
     max-width: ${prop<any>("size", "160px")};
     max-height: ${prop<any>("size", "160px")};
+    border: ${prop<any>("bw", "20px")} solid ${theme("colors.bg", "white")};
+
     /* prettier-ignore */
     margin-bottom: calc(${prop<any>("size", "160px")} / -2 - ${prop<any>(
       "bw",
