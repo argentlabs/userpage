@@ -12,6 +12,7 @@ export const SunButton = styled(IconButton).attrs(
   }) => ({
     Icon: <Sun />,
     bgColor: iconBg,
+    border: 0,
     size: 32,
     mobileSize: 28,
     svgSize: 16,
@@ -28,6 +29,7 @@ export const MoonButton = styled(IconButton).attrs(
   }) => ({
     Icon: <Moon />,
     bgColor: iconBg,
+    border: 0,
     size: 32,
     mobileSize: 28,
     svgSize: 16,
