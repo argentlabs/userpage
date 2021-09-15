@@ -197,10 +197,10 @@ export const getNftMediaUrl = (
   detailView: boolean = false,
 ): string =>
   detailView
-    ? nft?.animation_original_url ||
-      nft?.animation_url ||
-      nft?.image_original_url ||
+    ? nft?.animation_url ||
+      nft?.animation_original_url ||
       nft?.image_url ||
+      nft?.image_original_url ||
       nft?.image_preview_url ||
       nft?.image_thumbnail_url ||
       "error"
