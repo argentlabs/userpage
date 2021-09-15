@@ -17,12 +17,16 @@ export const Avatar = styled(AvatarSvg)<AvatarProps>`
   border-radius: 50%;
   border: ${prop<any>("bw", "12px")} solid ${theme("colors.bg", "white")};
   color: ${theme("colors.bg", "white")};
+
   background-color: #0078a4;
-  background: radial-gradient(
-    circle,
-    #0078a4 69.7%,
-    ${theme("colors.bg", "white")} 70%
+
+  background: conic-gradient(
+    from 0deg at 50% 80%,
+    #0078a4 130deg,
+    ${theme("colors.bg", "white")} 131deg 256deg,
+    #0078a4 257deg 360deg
   );
+
   /* prettier-ignore */
   margin-bottom: calc(${prop<any>("sizeMobile", "120px")} / -2 - ${prop<any>(
     "bw",
