@@ -6,8 +6,8 @@ test("homepage test and navigation", async ({ page }) => {
   // Go to ${HOST}/?__overwriteName=janek
   await page.goto(`${HOST}/?__overwriteName=janek`)
   await page.waitForLoadState("networkidle")
-  await page.waitForTimeout(5000)
 
+  await page.waitForSelector("text=@janek")
   // expect text=@janek
   await expect(page.isVisible("text=@janek")).resolves.toBe(true)
 
@@ -31,7 +31,7 @@ test("homepage test and navigation", async ({ page }) => {
   // Click a
   const [argentPopup] = await Promise.all([
     page.waitForEvent("popup"),
-    page.click("a"),
+    page.click('a[title="Argent Logo Link"]'),
   ])
 
   expect(argentPopup.url()).toBe("https://www.argent.xyz/")

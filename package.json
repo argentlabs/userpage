@@ -32,7 +32,11 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "yarn build:production",
+    "build:production": "react-scripts build",
+    "build:staging": "sh -ac '. .env.staging; react-scripts build'",
+    "build:development": "sh -ac '. .env.development; react-scripts build'",
+    "build:test": "yarn build:development",
     "pretest": "npm run lint",
     "test": "yarn test:all",
     "test:watch": "yarn test:all:watch",
@@ -102,7 +106,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": ">=2",
     "prettier-plugin-import-sort": "^0.0.7",
-    "serve": "^12.0.0",
+    "serve": "^12.0.1",
     "source-map-explorer": "^2.5.2",
     "type-fest": "^1.3.0",
     "typechain": "^5.1.2"

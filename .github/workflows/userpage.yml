@@ -50,7 +50,7 @@ jobs:
           node-version: 14
           cache: "yarn"
       - run: yarn install
-      - run: yarn build
+      - run: yarn build:${{ matrix.environment }}
       - name: Upload build
         uses: actions/upload-artifact@v2
         with:
