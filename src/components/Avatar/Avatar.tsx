@@ -11,6 +11,7 @@ interface AvatarProps {
 }
 
 export const Avatar = styled(AvatarSvg)<AvatarProps>`
+  box-sizing: content-box;
   z-index: 1;
   max-width: ${prop<any>("sizeMobile", "120px")};
   max-height: ${prop<any>("sizeMobile", "120px")};

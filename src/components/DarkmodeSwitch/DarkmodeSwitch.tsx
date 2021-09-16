@@ -7,8 +7,8 @@ import { MoonButton, SunButton } from "./DarkmodeSwitch.style"
 
 const DarkmodeSwitchWrapper = styled.div`
   position: absolute;
-  top: 27px;
-  right: 27px;
+  top: 24px;
+  right: 24px;
 `
 
 export const DarkmodeSwitch: FC = () => {

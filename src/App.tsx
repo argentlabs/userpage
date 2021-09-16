@@ -23,6 +23,12 @@ const GlobalStyle = createGlobalStyle`
   ${normalize}
   ${reset}
   /* other styles */
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+  
   body {
     transition: all 0.2s linear;
     background-color: ${({ theme }) => theme.colors.bodyBg};

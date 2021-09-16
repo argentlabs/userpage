@@ -40,7 +40,7 @@ export const QRCode: FC<QRCodeProps> = ({ size, data, ...props }) => {
         borderRadius: 48,
         overflow: "hidden",
         backgroundColor: "white",
-        padding: 16,
+        padding: 24,
       }}
       {...props}
     />
