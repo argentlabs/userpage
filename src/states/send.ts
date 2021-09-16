@@ -15,6 +15,7 @@ import {
   ERC20__factory,
   ZkSync__factory,
 } from "../generated"
+import { analytics } from "../libs/analytics"
 import { isArgentWallet } from "../libs/argent"
 import { getERC20BalancesAndAllowances } from "../libs/erc20"
 import { selectAndCheckWallet, writeProvider } from "../libs/onboard"
@@ -287,7 +288,7 @@ export const sendMaschine = createMachine<
         },
       },
       waitForTx: {
-        entry: "setTransactionHash",
+        entry: ["setTransactionHash", "trackTxSent"],
         invoke: {
           id: "waitForTx",
           src: async (_context, event) => {
@@ -433,6 +434,13 @@ export const sendMaschine = createMachine<
   },
   {
     actions: {
+      trackTxSent: async (_context, event) => {
+        const txWaitEvent = event as DoneInvokeEvent<ContractTransaction>
+        analytics.track("txSent", {
+          txHash: txWaitEvent.data.hash,
+          txChainId: txWaitEvent.data.chainId,
+        })
+      },
       setContext: assign((_context, event) => {
         const { type, ...newContext } = event
         if (["CHANGE_CONTEXT", "CHANGE_TOKENS"].includes(type)) {

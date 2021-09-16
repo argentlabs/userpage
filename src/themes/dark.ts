@@ -9,5 +9,6 @@ export const darkTheme: Theme = {
     fc: "white",
     iconBg: "#333332",
     nftDetailFrame: "black",
+    iconButtonFont: "white",
   },
 }

@@ -9,5 +9,6 @@ export const lightTheme: Theme = {
     fc: "#333332",
     iconBg: "rgba(0, 0, 0, 0.15)",
     nftDetailFrame: "white",
+    iconButtonFont: "#5c5b59",
   },
 }

@@ -4,17 +4,19 @@ import Center from "../../components/Center"
 
 export const ClaimWrapper = styled(Center)`
   text-align: center;
-  > p:first-of-type {
-    margin-top: 64px;
-  }
-  > p + p {
+  > p {
     margin-top: 24px;
   }
   > p:last-of-type {
     margin-bottom: 64px;
   }
-  > p {
-    font-size: 24px;
+  @media only screen and (min-width: 411px) {
+    > p:first-of-type {
+      margin-top: 64px;
+    }
+    > p {
+      font-size: 20px;
+    }
   }
 `
 

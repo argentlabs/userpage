@@ -15,3 +15,7 @@ declare namespace NodeJS {
     REACT_APP_CONTACT_EMAIL?: string
   }
 }
+
+declare module "@analytics/google-analytics"
+
+declare module "analytics-plugin-do-not-track"

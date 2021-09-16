@@ -17,13 +17,20 @@ export const Button = styled.button<ButtonProps>`
   outline: none;
   cursor: pointer;
   font-size: 17px;
+  font-weight: 600;
   text-decoration: none;
   transition: all 200ms ease-in-out;
 
   width: ${ifProp("fullWidth", "100%", "auto")};
 
+  :focus,
+  :hover {
+    background-color: #ff7947;
+  }
+
   :disabled {
     background-color: #8f8e8c;
+    color: rgba(255, 255, 255, 0.7);
     cursor: not-allowed;
   }
 `
@@ -34,6 +41,11 @@ export const SecondaryButton = styled(Button)`
   font-size: 13px;
   font-weight: 600;
   padding: 6px 12px;
+
+  :focus,
+  :hover {
+    background-color: #e6e6e6;
+  }
 
   :disabled {
     background-color: #8f8e8c;
@@ -52,5 +64,9 @@ export const SecondaryButtonWithIcon = styled(SecondaryButton)`
   > svg {
     height: 1em;
     margin-right: 0.5em;
+
+    > path {
+      fill: #8f8e8c;
+    }
   }
 `

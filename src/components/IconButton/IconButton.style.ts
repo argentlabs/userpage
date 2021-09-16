@@ -13,6 +13,7 @@ export interface CircleProps {
 }
 
 export const Circle = styled.span<CircleProps>`
+  box-sizing: content-box;
   height: ${prop<any>("mobileSize", "64")}px;
   width: ${prop<any>("mobileSize", "64")}px;
   color: white;
@@ -49,6 +50,6 @@ export const Clickable = styled.a`
 `
 
 export const Text = styled.p`
-  color: #5c5b59;
+  color: ${theme("colors.iconButtonFont", "#5c5b59")};
   font-size: 16px;
 `

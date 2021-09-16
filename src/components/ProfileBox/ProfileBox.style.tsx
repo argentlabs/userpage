@@ -26,8 +26,8 @@ export const Box = styled.div<BoxProps>`
   }
 
   @media only screen and (min-height: 600px) {
-    padding-top: ${prop<any>("pt", "128px")};
-    padding-bottom: ${ifProp("lean", "64px", "111px")};
+    padding-top: ${prop<any>("pt", "112px")};
+    padding-bottom: ${ifProp("lean", "64px", "112px")};
   }
 
   background: ${theme("colors.bg", "white")};
@@ -72,6 +72,7 @@ export const GoBackButton = styled(IconButton).attrs(
   }) => ({
     Icon: <CaretLeft />,
     bgColor: iconBg,
+    border: 0,
     size: 32,
     mobileSize: 28,
     svgSize: 16,
@@ -83,6 +84,16 @@ export const GoBackButton = styled(IconButton).attrs(
   top: 16px;
   left: 16px;
   z-index: 1;
+  transition: all 0.3s ease-in-out;
+
+  :hover {
+    transform: translateX(-3px);
+  }
+
+  @media only screen and (min-width: 374px) {
+    top: 24px;
+    left: 24px;
+  }
   @media only screen and (min-width: 480px) {
     top: 32px;
     left: 32px;

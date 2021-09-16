@@ -1,11 +1,12 @@
 import { useAtom } from "jotai"
-import React, { Suspense } from "react"
+import React, { Suspense, useEffect } from "react"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 import { ThemeProvider, createGlobalStyle } from "styled-components/macro"
 import { normalize } from "styled-normalize"
 import reset from "styled-reset"
 
 import ErrorBoundary from "./components/ErrorBoundary"
+import { identify } from "./libs/analytics"
 import Claim from "./pages/Claim"
 import NotFound from "./pages/Errors/404"
 import Error500Page from "./pages/Errors/500"
@@ -22,6 +23,12 @@ const GlobalStyle = createGlobalStyle`
   ${normalize}
   ${reset}
   /* other styles */
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+  
   body {
     transition: all 0.2s linear;
     background-color: ${({ theme }) => theme.colors.bodyBg};
@@ -93,6 +100,11 @@ function RouterComponent() {
 
 function App() {
   const [theme] = useAtom(themeAtom)
+
+  useEffect(() => {
+    identify()
+  }, [])
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
