@@ -1,7 +1,7 @@
 import { useWindowResize } from "beautiful-react-hooks"
 import { FC, useRef } from "react"
 import styled, { CSSProperties, keyframes } from "styled-components"
-import { ifProp, prop, theme, withProp } from "styled-tools"
+import { ifProp, prop, theme } from "styled-tools"
 
 import { shadowMixin } from "../../mixins.style"
 
@@ -9,7 +9,7 @@ const ImageWrapper = styled.div<{
   border: string
   clickable?: boolean
 }>`
-  width: calc(100% - 2 * ${withProp("border", (x) => x)});
+  width: 100%;
   border-radius: 8px;
   padding: ${prop("border")};
   animation: ${keyframes`
