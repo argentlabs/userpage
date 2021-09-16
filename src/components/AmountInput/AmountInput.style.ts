@@ -16,6 +16,7 @@ export const AmountInputBare = styled.input<{ length: number }>`
   background-color: transparent;
   color: ${theme("colors.fc", "#333332")};
   caret-color: ${theme("colors.fc", "#333332")};
+  box-sizing: content-box;
   ::placeholder {
     color: ${theme("colors.fc", "#333332")};
   }

@@ -173,7 +173,10 @@ export const sendMaschine = createMachine<
               return { zkSyncTokens, zkSyncConfig }
             }),
           },
-          onError: "error",
+          onError: [
+            { target: "fetchBalancesAndAllowances", cond: "isL1View" },
+            { target: "error" },
+          ],
         },
       },
       fetchBalancesAndAllowances: {
@@ -190,7 +193,7 @@ export const sendMaschine = createMachine<
                   (token) => token.address !== ethers.constants.AddressZero,
                 )
                 .map((token) => token.address),
-              zkSyncConfig!.contract,
+              zkSyncConfig?.contract ?? ethers.constants.AddressZero,
             )
 
             const tokens = zkSyncTokens
@@ -493,6 +496,9 @@ export const sendMaschine = createMachine<
       purchaseDone: (_context, event) => {
         const { data } = event as DoneInvokeEvent<boolean | undefined>
         return Boolean(data)
+      },
+      isL1View: (context) => {
+        return !context.hasZkSync
       },
     },
   },

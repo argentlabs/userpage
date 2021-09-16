@@ -87,7 +87,7 @@ export const GalleryDetail: FC = () => {
   const { tokenId, assetContractAddress } =
     useParams<{ tokenId: string; assetContractAddress: string }>()
   const nft = useNft(tokenId, assetContractAddress)
-  const { onMouseMove, controlsVisible } = useMouseBehaviour(5000)
+  const { onMouseMove, controlsVisible } = useMouseBehaviour(3000)
 
   return (
     <Center
