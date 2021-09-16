@@ -34,6 +34,7 @@ export const Select = styled.select`
   }
 
   & + svg {
+    box-sizing: content-box;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);

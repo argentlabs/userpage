@@ -12,16 +12,20 @@ export const Button = styled.button<ButtonProps>`
   background-color: #ff875b;
   color: white;
   border-radius: 100px;
-  padding: 16px 56px;
+  padding: 16px 32px;
   border: none;
   outline: none;
   cursor: pointer;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
   text-decoration: none;
   transition: all 200ms ease-in-out;
 
   width: ${ifProp("fullWidth", "100%", "auto")};
+
+  @media only screen and (min-width: 480px) {
+    font-size: 17px;
+  }
 
   :focus,
   :hover {
