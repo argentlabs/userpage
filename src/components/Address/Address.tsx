@@ -23,6 +23,7 @@ export const formatAddress = (
 export interface AddressProps extends FormatAddressOptions {
   address: string
   copyValue?: string
+  confirmationText?: string
 }
 
 const getConfirmationEmoji = (
@@ -48,6 +49,7 @@ export const Address: FC<AddressProps> = ({
   short,
   address,
   copyValue,
+  confirmationText,
   children,
   ...props
 }) => {
@@ -73,10 +75,12 @@ export const Address: FC<AddressProps> = ({
         {...props}
       >
         <p>
-          {formatAddress(checksumAddress, {
-            short,
-            zkSync,
-          })}
+          {confirmationText && clickFeedbackQueue.length
+            ? confirmationText
+            : formatAddress(checksumAddress, {
+                short,
+                zkSync,
+              })}
         </p>
         {children}
         {clickFeedbackQueue.map(({ id, arg }) => (

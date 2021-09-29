@@ -33,7 +33,12 @@ export const HomePage: FC = () => {
       <Center>
         <Avatar pubkey={walletAddress} />
         <Box title={`@${name}`}>
-          <SAddress address={walletAddress} short zkSync={hasZkSync} />
+          <SAddress
+            confirmationText="Copied!"
+            address={walletAddress}
+            short
+            zkSync={hasZkSync}
+          />
           <SecondaryButtonWithIcon onClick={() => send("PUSH_VAULT")}>
             <Qr /> View address
           </SecondaryButtonWithIcon>
