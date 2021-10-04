@@ -15,6 +15,7 @@ export const showRampPromise = ({
     new RampInstantSDK({
       hostAppName: "Argent Userpage",
       hostLogoUrl: `${window.location.protocol}//${window.location.host}/images/icons/argent-app-icon@8x.png`,
+      swapAsset: networkId === 1 ? "ETH,USDC,USDT,DAI" : "ETH",
       userAddress: walletAddress,
       ...(REACT_APP_RAMP_API_KEY && {
         hostApiKey: REACT_APP_RAMP_API_KEY,
