@@ -212,6 +212,32 @@ export const getNftMediaUrl = (
       nft?.image_thumbnail_url ||
       "error"
 
+export const getNftMediaBlob = async (
+  nft?: AssetElement,
+  _detailView: boolean = false,
+): Promise<string> => {
+  const imagesToTry = [
+    nft?.animation_url,
+    nft?.animation_original_url,
+    nft?.image_url,
+    nft?.image_original_url,
+    nft?.image_preview_url,
+    nft?.image_thumbnail_url,
+  ]
+  console.log(imagesToTry)
+
+  for (const file of imagesToTry) {
+    if (!file) continue
+    try {
+      const response = await fetch(file)
+      const blob = await response.blob()
+      return URL.createObjectURL(blob)
+    } catch {}
+  }
+
+  return imagesToTry.find((img) => Boolean(img))!
+}
+
 const {
   REACT_APP_OPENSEA_ENDPOINT = "https://api.opensea.io/api/v1/assets",
   REACT_APP_OPENSEA_API_KEY,

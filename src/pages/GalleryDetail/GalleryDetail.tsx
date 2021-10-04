@@ -1,12 +1,13 @@
 import { useAtom } from "jotai"
-import { FC, Suspense } from "react"
+import { FC, Suspense, useEffect } from "react"
 import { Helmet } from "react-helmet"
+import usePromise from "react-promise-suspense"
 import { useParams } from "react-router-dom"
 
 import Center from "../../components/Center"
 import { MoonButton, SunButton } from "../../components/DarkmodeSwitch"
 import { DelayedLoading as Loading } from "../../components/Loading"
-import { getNftMediaUrl } from "../../libs/opensea"
+import { fetchNft, getNftMediaBlob } from "../../libs/opensea"
 import { useGalleryMachine, useRouterMachine } from "../../states/hooks"
 import { themeAtom } from "../../themes"
 import { ImageProp } from "../Gallery/Grid"
@@ -132,7 +133,7 @@ const getNftNeighbours = (
   tokenId: string,
   assetContractAddress: string,
 ): [ImageProp, ImageProp] | false => {
-  if (nfts.length === 1) {
+  if (nfts.length <= 1) {
     return false
   }
   const currentIndex = nfts.findIndex(
@@ -163,7 +164,20 @@ export const GalleryDetail: FC = () => {
     },
   ] = useGalleryMachine()
 
+  const nftBlob = usePromise(getNftMediaBlob, [nft])
+
   const neighbours = getNftNeighbours(nfts, tokenId, assetContractAddress)
+
+  useEffect(() => {
+    window.requestIdleCallback(() => {
+      neighbours &&
+        neighbours.map(async (x) => {
+          console.log(x)
+          const nft = await fetchNft(x.id, x.assetContractAddress)
+          await getNftMediaBlob(nft)
+        })
+    })
+  }, [neighbours])
 
   return (
     <Center
@@ -190,7 +204,7 @@ export const GalleryDetail: FC = () => {
         infoLink={nft?.permalink || ""}
         visible={controlsVisible}
       />
-      <BigNftDisplay src={getNftMediaUrl(nft, true)} />
+      <BigNftDisplay src={nftBlob} />
     </Center>
   )
 }
