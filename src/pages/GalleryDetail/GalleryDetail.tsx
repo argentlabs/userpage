@@ -9,7 +9,7 @@ import { MoonButton, SunButton } from "../../components/DarkmodeSwitch"
 import { DelayedLoading as Loading } from "../../components/Loading"
 import BigCaretLeft from "../../components/Svgs/BigCaretLeft"
 import BigCaretRight from "../../components/Svgs/BigCaretRight"
-import { getNftMedia } from "../../libs/opensea"
+import { getBlobUrl, getNftMedia } from "../../libs/opensea"
 import { useGalleryMachine, useRouterMachine } from "../../states/hooks"
 import { isImageMime } from "../../states/nftGallery"
 import { themeAtom } from "../../themes"
@@ -181,7 +181,7 @@ export const GalleryDetail: FC = () => {
       />
       <BigNftDisplay
         type={isImageMime(nftBlob.type) ? "img" : "video"}
-        src={URL.createObjectURL(nftBlob)}
+        src={getBlobUrl(nftBlob)}
       />
     </Center>
   )

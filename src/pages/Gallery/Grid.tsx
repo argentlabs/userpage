@@ -5,6 +5,7 @@ import { prop } from "styled-tools"
 
 import Center from "../../components/Center"
 import CaretLeft from "../../components/Svgs/CaretLeft"
+import { getBlobUrl } from "../../libs/opensea"
 import { isImageMime } from "../../states/nftGallery"
 import { DisplayModeButton, DisplayModeWrapper } from "./Gallery.style"
 import { ImageFrame } from "./ImageFrame"
@@ -236,7 +237,7 @@ export const Grid: FC<{
                       <ImageFrame
                         key={id}
                         type={isImageMime(item.blob.type) ? "img" : "video"}
-                        url={URL.createObjectURL(item.blob)}
+                        url={getBlobUrl(item.blob)}
                         border={`${border}px`}
                         details={
                           displayMode === "collection"

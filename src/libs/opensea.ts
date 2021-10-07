@@ -1,3 +1,4 @@
+import { EMPTY, Observable, concat, defer, from, mergeMap } from "rxjs"
 import joinUrl from "url-join"
 
 export interface OpenSeaResponse {
@@ -212,27 +213,6 @@ export const getNftMediaUrl = (
       nft?.image_thumbnail_url ||
       "error"
 
-export const getNftMediaBlob = async (
-  nft?: AssetElement,
-  _detailView: boolean = false,
-): Promise<string> => {
-  const imagesToTry = [
-    nft?.animation_url,
-    nft?.animation_original_url,
-    nft?.image_url,
-    nft?.image_original_url,
-    nft?.image_preview_url,
-    nft?.image_thumbnail_url,
-  ]
-
-  try {
-    const blob = await getNftMedia(nft)
-    return URL.createObjectURL(blob)
-  } catch {
-    return imagesToTry.find((img) => Boolean(img))!
-  }
-}
-
 export const getNftMedia = async (nft?: AssetElement): Promise<Blob> => {
   const srcesToTry = [
     nft?.animation_url,
@@ -260,11 +240,37 @@ const {
   REACT_APP_OPENSEA_API_KEY,
 } = process.env
 
-export const fetchNfts = async (address: string): Promise<AssetElement[]> => {
+const urlCache = new WeakMap()
+export const getBlobUrl = (blob: Blob): string => {
+  if (urlCache.has(blob)) {
+    return urlCache.get(blob)
+  } else {
+    const url = URL.createObjectURL(blob)
+    urlCache.set(blob, url)
+    return url
+  }
+}
+
+export const fetchAllNfts = (account: string, offset: number = 0) =>
+  defer(() => fetchNfts(account, offset)).pipe(
+    mergeMap(({ items, limit, offset }) => {
+      const items$ = from(items)
+      const next$: Observable<AssetElement> =
+        items.length === limit ? fetchAllNfts(account, offset + limit) : EMPTY
+      if (items.length < limit) offset = 0
+      return concat(items$, next$)
+    }),
+  )
+
+export const fetchNfts = async (
+  address: string,
+  offset: number = 0,
+): Promise<{ items: AssetElement[]; offset: number; limit: number }> => {
+  const limit = 50
   const response = await fetch(
     joinUrl(
       REACT_APP_OPENSEA_ENDPOINT,
-      `?owner=${address}&order_direction=desc&offset=0&limit=50`,
+      `?owner=${address}&order_direction=desc&offset=${offset}&limit=${50}`,
     ),
     {
       headers: {
@@ -280,7 +286,7 @@ export const fetchNfts = async (address: string): Promise<AssetElement[]> => {
 
   const nfts = (await response.json()) as OpenSeaResponse
 
-  return nfts.assets
+  return { items: nfts.assets, offset, limit }
 }
 
 export const fetchNft = async (

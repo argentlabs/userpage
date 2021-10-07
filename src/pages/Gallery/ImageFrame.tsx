@@ -174,3 +174,4 @@ export const ImageFrame: FC<{
     </ImageWrapper>
   )
 }
+ImageFrame.whyDidYouRender = true

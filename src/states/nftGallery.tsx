@@ -1,9 +1,9 @@
 /** Visualization: https://xstate.js.org/viz/?gist=b8e9ec176bcdfb673d6e3d19d237803e */
 
-import { from, map, mergeMap } from "rxjs"
+import { map, mergeMap } from "rxjs"
 import { DoneInvokeEvent, assign, createMachine } from "xstate"
 
-import { AssetElement, fetchNfts, getNftMedia } from "../libs/opensea"
+import { fetchAllNfts, getBlobUrl, getNftMedia } from "../libs/opensea"
 import { ImageProp } from "../pages/Gallery/Grid"
 
 const imageMimes = ["image/png", "image/jpeg", "image/gif"]
@@ -42,49 +42,13 @@ export const galleryMachine = createMachine<
     states: {
       loading: {
         invoke: {
-          id: "loadNfts",
-          src: async (
-            context,
-          ): Promise<{
-            walletAddress: string
-            openseaNfts: AssetElement[]
-          }> => {
-            const openseaNfts = await fetchNfts(context.walletAddress)
-
-            return {
-              walletAddress: context.walletAddress,
-              openseaNfts,
-            }
-          },
-          onDone: [
-            {
-              target: "fetchImages",
-              actions: "assignContext",
-            },
-          ],
-          onError: [
-            {
-              target: "error",
-            },
-          ],
-        },
-      },
-      fetchImages: {
-        invoke: {
-          id: "fetchImages",
-          src: (_context, event) =>
-            from(
-              (
-                event as DoneInvokeEvent<{
-                  walletAddress: string
-                  openseaNfts: AssetElement[]
-                }>
-              ).data.openseaNfts,
-            ).pipe(
+          id: "loading",
+          src: (context, _event) =>
+            fetchAllNfts(context.walletAddress).pipe(
               mergeMap(async (nft) => {
                 try {
                   const nftBlob = await getNftMedia(nft)
-                  const nftSrc = URL.createObjectURL(nftBlob)
+                  const nftSrc = getBlobUrl(nftBlob)
                   const type = imageMimes.includes(nftBlob.type)
                     ? "img"
                     : "video"
