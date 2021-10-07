@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Tilt from "react-parallax-tilt"
-import styled, { withTheme } from "styled-components"
+import styled, { keyframes, withTheme } from "styled-components"
+import { theme } from "styled-tools"
 
 import Center from "../../components/Center"
 import IconButton from "../../components/IconButton"
@@ -22,7 +23,15 @@ const BigDisplayWrapper = styled.div`
 `
 
 export const BigNftDisplay = withTheme(
-  ({ src, theme }: { src: string; theme: Theme }) => {
+  ({
+    src,
+    theme,
+    type,
+  }: {
+    src: string
+    theme: Theme
+    type: "img" | "video"
+  }) => {
     const [dimensions, setDimensions] = useState<Dimensions>()
 
     return (
@@ -42,16 +51,15 @@ export const BigNftDisplay = withTheme(
         )}
         <Tilt gyroscope={false} tiltMaxAngleX={10} tiltMaxAngleY={10}>
           <ImageFrame
+            type={type}
             onDimensionsKnown={setDimensions}
             onDimensionsChange={setDimensions}
             border="min(6vh, 6vw)"
             url={src}
-            maxHeight="60vh"
             style={{
               opacity: dimensions ? 1 : 0,
               ...(!dimensions && { transform: "translateY(-200vh)" }),
               transition: "opacity 300ms ease-in-out",
-              width: "auto",
               backgroundColor: theme.colors.nftDetailFrame,
             }}
           />
@@ -141,3 +149,27 @@ export const PlayButton = styled(IconButton).attrs(
     "aria-label": "Play",
   }),
 )``
+
+const entryAnimation = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`
+
+export const BigCaretWrapper = styled.div`
+  animation: ${entryAnimation} 300ms ease-in-out;
+  width: 7vw;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 500ms ease-in-out;
+  padding: 1.5vw;
+  cursor: pointer;
+  color: ${theme("colors.bigCavets")};
+`

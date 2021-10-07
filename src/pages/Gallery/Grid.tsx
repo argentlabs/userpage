@@ -1,17 +1,24 @@
 import { useWindowResize } from "beautiful-react-hooks"
-import { FC, useEffect, useMemo, useState } from "react"
+import { FC, useMemo, useState } from "react"
 import styled, { keyframes } from "styled-components"
 import { prop } from "styled-tools"
 
 import Center from "../../components/Center"
-import { useDebounceUpdate } from "../../hooks/useDebounceUpdate"
-import { useDelayedLoading } from "../../hooks/useDelayedLoading"
-import { Dimensions, ImageFrame } from "./ImageFrame"
+import CaretLeft from "../../components/Svgs/CaretLeft"
+import { isImageMime } from "../../states/nftGallery"
+import { DisplayModeButton, DisplayModeWrapper } from "./Gallery.style"
+import { ImageFrame } from "./ImageFrame"
+
+type DisplayMode = "all" | "collection"
 
 export type ImageProp = {
-  url: string
+  blob: Blob
   id: string
   assetContractAddress: string
+  collectionName: string
+  collectionSlug: string
+  width: number
+  height: number
 }
 
 interface ColumnProps {
@@ -36,48 +43,6 @@ const WaitAndShowAnimation = keyframes`
   }
 `
 
-const loadingAnimation = keyframes`
-  0% {
-    left:0%;
-    right:100%;
-    width:0%;
-  }
-  20% {
-    left:0%;
-    right:50%;
-    width:50%;
-  }
-  80% {
-    right:0%;
-    left:50%;
-    width:50%;
-  }
-  100% {
-    left:100%;
-    right:0%;
-    width:0%;
-  }
-`
-
-const LoadingStrip = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 12px;
-
-  ::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 12px;
-    width: 0;
-    background: radial-gradient(#ff875b, transparent 50%);
-    animation: ${loadingAnimation} 2s linear infinite;
-  }
-`
-
 const NotFoundText = styled.h3`
   font-weight: bold;
   animation: ${WaitAndShowAnimation} 5s ease-in-out;
@@ -90,7 +55,6 @@ interface GridProps {
 }
 
 export const GridWrapper = styled.div<GridProps>`
-  margin: 100px 0;
   width: ${prop("width", "calc(100% - 512px)")};
 
   display: grid;
@@ -118,7 +82,6 @@ export const Grid: FC<{
     () => (width > 1000 ? 3 : width > 420 ? 2 : 1),
     [width],
   )
-  const [errorCount, setErrorCount] = useState(0)
 
   const gap = 16
   const border = 32
@@ -132,93 +95,123 @@ export const Grid: FC<{
     [width],
   )
 
-  const [dimensions, setDimensions] = useState<{ [i: string]: Dimensions }>({})
+  const [displayMode, setDisplayMode] = useState<DisplayMode>("all")
+  const [selectedCollection, setSelectedCollection] = useState("")
+  const selectCollection = (collection: string) => {
+    setSelectedCollection(collection)
+    setDisplayMode("all")
+  }
+  const exitCollection = () => {
+    setSelectedCollection("")
+    setDisplayMode("collection")
+  }
 
-  const setDimensionsDebounced = useDebounceUpdate(
-    setDimensions,
-    [100, 500, 1000],
-  )
+  const [columns, collectionsCount] = useMemo(() => {
+    const collectionsCount: { [collectionSlug: string]: number } = {}
 
-  const [prevColumns, setPrevColumns] = useState(
-    new Array(columnsCount).fill({ acc: 0, items: [] }) as Array<{
-      acc: number
-      items: {
-        [key: string]: { position?: number; aspectRatio: number }
-      }
-    }>,
-  )
+    return [
+      images.reduce(
+        (acc, nft) => {
+          const output = [...acc]
+          const tinyestIndex = acc.findIndex(
+            (kvs) => kvs.acc === Math.min(...acc.map((x) => x.acc)),
+          )
 
-  useEffect(() => {
-    setPrevColumns(
-      new Array(columnsCount).fill({ acc: 0, items: [] }) as Array<{
-        acc: number
-        items: {
-          [key: string]: { position?: number; aspectRatio: number }
-        }
-      }>,
-    )
-  }, [columnsCount])
+          if (displayMode === "all") {
+            if (
+              !selectedCollection ||
+              selectedCollection === nft.collectionSlug
+            )
+              output.splice(tinyestIndex, 1, {
+                ...output[tinyestIndex],
+                items: {
+                  ...output[tinyestIndex].items,
+                  [nft.id]: {
+                    aspectRatio: nft.height / nft.width || 0,
+                    position: Object.keys(output[tinyestIndex].items).length,
+                  },
+                },
+              })
+          } else {
+            const collectionCount = collectionsCount[nft.collectionSlug]
+            if (collectionCount) {
+              collectionsCount[nft.collectionSlug]++
+            } else {
+              collectionsCount[nft.collectionSlug] = 1
+              output.splice(tinyestIndex, 1, {
+                ...output[tinyestIndex],
+                items: {
+                  ...output[tinyestIndex].items,
+                  [nft.id]: {
+                    aspectRatio: nft.height / nft.width || 0,
+                    position: Object.keys(output[tinyestIndex].items).length,
+                  },
+                },
+              })
+            }
+          }
 
-  const columns = useMemo(() => {
-    const re = Object.entries(dimensions).reduce((acc, [k, v]) => {
-      const output = [...acc]
-
-      const tinyestIndex = acc.findIndex(
-        (kvs) => kvs.acc === Math.min(...acc.map((x) => x.acc)),
-      )
-      //check if already in there
-      const existingItem = output.find((x) => !!x.items[k])?.items[k]
-
-      if (!existingItem) {
-        output.splice(tinyestIndex, 1, {
-          ...output[tinyestIndex],
+          return output.map((col) => ({
+            ...col,
+            acc: Object.values(col.items).reduce(
+              (a, v) => a + v.aspectRatio,
+              0,
+            ),
+          }))
+        },
+        new Array(columnsCount).fill({ acc: 0, items: [] }) as Array<{
+          acc: number
           items: {
-            ...output[tinyestIndex].items,
-            [k]: {
-              aspectRatio: v.domHeight,
-              position: Object.keys(output[tinyestIndex].items).length,
-            },
-          },
-        })
-      } else if (existingItem.aspectRatio !== v.domHeight) {
-        const existingItemColIndex = output.findIndex((x) => !!x.items[k])
-
-        const newItems = {
-          ...output[existingItemColIndex].items,
-          [k]: {
-            ...existingItem,
-            aspectRatio: v.domHeight,
-          },
-        }
-
-        output.splice(existingItemColIndex, 1, {
-          ...output[existingItemColIndex],
-          items: newItems,
-        })
-      }
-
-      return output.map((col) => ({
-        ...col,
-        acc: Object.values(col.items).reduce(
-          (a, v, i) => a + v.aspectRatio + 2 * border + (i ? gap : 0),
-          0,
-        ),
-      }))
-    }, prevColumns)
-    setPrevColumns(re)
-    return re
-  }, [dimensions, columnsCount, border, gap])
+            [key: string]: { position?: number; aspectRatio: number }
+          }
+        }>,
+      ),
+      collectionsCount,
+    ]
+  }, [images, columnsCount, border, gap, displayMode, selectedCollection])
 
   const hasNoNfts = images.length === 0
-  const finishedLoading =
-    columns.reduce(
-      (acc, col) => acc + Object.keys(col.items).length,
-      errorCount,
-    ) === images.length || hasNoNfts
-  const showLoading = useDelayedLoading(finishedLoading, 1000)
 
   return (
     <>
+      <DisplayModeWrapper style={{ width: widthContainer }}>
+        {selectedCollection ? (
+          <>
+            <div
+              style={{ cursor: "pointer", marginBottom: "-2px" }}
+              onClick={() => exitCollection()}
+            >
+              <CaretLeft height="13px" />
+            </div>
+            <DisplayModeButton
+              style={{ marginLeft: "-18px" }}
+              onClick={() => exitCollection()}
+            >
+              {
+                images.find((img) => img.collectionSlug === selectedCollection)!
+                  .collectionName
+              }
+            </DisplayModeButton>
+          </>
+        ) : (
+          <>
+            <span>View by</span>
+            <DisplayModeButton
+              active={displayMode === "all"}
+              onClick={() => setDisplayMode("all")}
+            >
+              All
+            </DisplayModeButton>
+            <DisplayModeButton
+              active={displayMode === "collection"}
+              onClick={() => setDisplayMode("collection")}
+            >
+              Collection
+            </DisplayModeButton>
+          </>
+        )}
+      </DisplayModeWrapper>
+
       {hasNoNfts && (
         <Center
           direction="column"
@@ -227,28 +220,6 @@ export const Grid: FC<{
           <NotFoundText>You do not own any displayable NFTs</NotFoundText>
         </Center>
       )}
-      <PreloadContainer>
-        <GridWrapper gap={gap} columns={columnsCount} width={widthContainer}>
-          <Column gap={gap}>
-            {images.map((x, i) => {
-              return (
-                <ImageFrame
-                  key={"preload-" + x.id}
-                  url={x.url}
-                  border={`${border}px`}
-                  onError={() => setErrorCount((x) => ++x)}
-                  onDimensionsKnown={(h) => {
-                    setDimensionsDebounced((all) => ({ ...all, [x.id]: h }))
-                  }}
-                  onDimensionsChange={(h) => {
-                    setDimensionsDebounced((all) => ({ ...all, [x.id]: h }))
-                  }}
-                />
-              )
-            })}
-          </Column>
-        </GridWrapper>
-      </PreloadContainer>
       {!hasNoNfts && (
         <GridWrapper gap={gap} columns={columnsCount} width={widthContainer}>
           {columns.map((col, i) => {
@@ -264,11 +235,24 @@ export const Grid: FC<{
                     return (
                       <ImageFrame
                         key={id}
-                        url={item.url}
+                        type={isImageMime(item.blob.type) ? "img" : "video"}
+                        url={URL.createObjectURL(item.blob)}
                         border={`${border}px`}
+                        details={
+                          displayMode === "collection"
+                            ? {
+                                collectionName: item.collectionName,
+                                collectionSlug: item.collectionSlug,
+                                collectionAmount:
+                                  collectionsCount[item.collectionSlug],
+                              }
+                            : undefined
+                        }
                         clickable
                         onClick={() => {
-                          onImageClick?.(id, item.assetContractAddress)
+                          if (displayMode === "collection") {
+                            return selectCollection(item.collectionSlug)
+                          } else onImageClick?.(id, item.assetContractAddress)
                         }}
                       />
                     )
@@ -278,7 +262,6 @@ export const Grid: FC<{
           })}
         </GridWrapper>
       )}
-      {showLoading && <LoadingStrip />}
     </>
   )
 }

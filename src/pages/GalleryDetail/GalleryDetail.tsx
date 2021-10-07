@@ -1,5 +1,5 @@
 import { useAtom } from "jotai"
-import { FC, Suspense, useEffect } from "react"
+import { FC, Suspense } from "react"
 import { Helmet } from "react-helmet"
 import usePromise from "react-promise-suspense"
 import { useParams } from "react-router-dom"
@@ -7,11 +7,15 @@ import { useParams } from "react-router-dom"
 import Center from "../../components/Center"
 import { MoonButton, SunButton } from "../../components/DarkmodeSwitch"
 import { DelayedLoading as Loading } from "../../components/Loading"
-import { fetchNft, getNftMediaBlob } from "../../libs/opensea"
+import BigCaretLeft from "../../components/Svgs/BigCaretLeft"
+import BigCaretRight from "../../components/Svgs/BigCaretRight"
+import { getNftMedia } from "../../libs/opensea"
 import { useGalleryMachine, useRouterMachine } from "../../states/hooks"
+import { isImageMime } from "../../states/nftGallery"
 import { themeAtom } from "../../themes"
 import { ImageProp } from "../Gallery/Grid"
 import {
+  BigCaretWrapper,
   BigNftDisplay,
   CloseFullscreenButton,
   FullscreenButton,
@@ -88,40 +92,22 @@ const Controls: FC<{
 
       {navigation && (
         <>
-          <div
+          <BigCaretWrapper
             style={{
-              position: "fixed",
               left: visible ? 0 : -100,
-              top: 0,
-              bottom: 0,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              transition: "all 500ms ease-in-out",
-              padding: 24,
             }}
+            onClick={navigation[0]}
           >
-            <span onClick={navigation[0]} style={{ cursor: "pointer" }}>
-              {"<"}
-            </span>
-          </div>
-          <div
+            <BigCaretLeft style={{ width: "100%" }} />
+          </BigCaretWrapper>
+          <BigCaretWrapper
             style={{
-              position: "fixed",
               right: visible ? 0 : -100,
-              top: 0,
-              bottom: 0,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              transition: "all 500ms ease-in-out",
-              padding: 24,
             }}
+            onClick={navigation[1]}
           >
-            <span onClick={navigation[1]} style={{ cursor: "pointer" }}>
-              {">"}
-            </span>
-          </div>
+            <BigCaretRight style={{ width: "100%" }} />
+          </BigCaretWrapper>
         </>
       )}
     </>
@@ -164,20 +150,9 @@ export const GalleryDetail: FC = () => {
     },
   ] = useGalleryMachine()
 
-  const nftBlob = usePromise(getNftMediaBlob, [nft])
+  const nftBlob = usePromise(getNftMedia, [nft])
 
   const neighbours = getNftNeighbours(nfts, tokenId, assetContractAddress)
-
-  useEffect(() => {
-    window.requestIdleCallback(() => {
-      neighbours &&
-        neighbours.map(async (x) => {
-          console.log(x)
-          const nft = await fetchNft(x.id, x.assetContractAddress)
-          await getNftMediaBlob(nft)
-        })
-    })
-  }, [neighbours])
 
   return (
     <Center
@@ -204,7 +179,10 @@ export const GalleryDetail: FC = () => {
         infoLink={nft?.permalink || ""}
         visible={controlsVisible}
       />
-      <BigNftDisplay src={nftBlob} />
+      <BigNftDisplay
+        type={isImageMime(nftBlob.type) ? "img" : "video"}
+        src={URL.createObjectURL(nftBlob)}
+      />
     </Center>
   )
 }

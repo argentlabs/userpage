@@ -10,5 +10,7 @@ export interface Theme {
     iconBg: string
     nftDetailFrame: string
     iconButtonFont: string
+    btnBg: string
+    bigCavets: string
   }
 }

@@ -1,4 +1,4 @@
-import { useWindowResize } from "beautiful-react-hooks"
+import { usePreviousValue, useWindowResize } from "beautiful-react-hooks"
 import { FC, useRef } from "react"
 import styled, { CSSProperties, keyframes } from "styled-components"
 import { ifProp, prop, theme } from "styled-tools"
@@ -26,6 +26,31 @@ const ImageWrapper = styled.div<{
   ${shadowMixin}
 `
 
+const CollectionDetails = styled.div<{ show: boolean }>`
+  transition: all 400ms ease-in-out,
+    ${ifProp(
+      "show",
+      "opacity 100ms ease-in-out 300ms",
+      "opacity 100ms ease-in-out 0ms",
+    )};
+
+  opacity: ${ifProp("show", "1", "0")};
+  max-height: ${ifProp("show", "96px", "0px")};
+  padding-top: ${ifProp("show", "16px", "0px")};
+
+  overflow: hidden;
+  > h3 {
+    font-weight: 600;
+    font-size: 24px;
+  }
+  > p {
+    margin-top: 1em;
+    font-weight: 600;
+    color: #8f8e8c;
+    font-size: 14px;
+  }
+`
+
 export interface Dimensions {
   domHeight: number
   domWidth: number
@@ -33,29 +58,32 @@ export interface Dimensions {
   realWidth: number
 }
 
-const isVideoSrc = (url: string): boolean =>
-  [".mp4"].some((ext) => url.endsWith(ext))
-
 export const ImageFrame: FC<{
   url: string
   border: string
+  type: "img" | "video"
   clickable?: boolean
-  maxHeight?: string
   onDimensionsKnown?: (dimensions: Dimensions) => void
   onDimensionsChange?: (dimensions: Dimensions) => void
   style?: CSSProperties
   onClick?: () => void
   onError?: () => void
+  details?: {
+    collectionName: string
+    collectionSlug: string
+    collectionAmount: number
+  }
 }> = ({
   url,
+  type,
   onDimensionsKnown,
   onDimensionsChange,
   onClick,
   onError,
   border,
-  maxHeight = "1000px",
   clickable = false,
   style,
+  details,
   ...props
 }) => {
   const ref = useRef<HTMLVideoElement & HTMLImageElement>(null)
@@ -69,6 +97,9 @@ export const ImageFrame: FC<{
       })
     }
   })
+
+  const prevDetails = usePreviousValue(details)
+
   return (
     <ImageWrapper
       clickable={clickable}
@@ -76,7 +107,7 @@ export const ImageFrame: FC<{
       border={border}
       onClick={() => onClick?.()}
     >
-      {isVideoSrc(url) ? (
+      {type === "video" ? (
         <video
           autoPlay
           muted
@@ -97,10 +128,8 @@ export const ImageFrame: FC<{
             }
           }}
           style={{
-            maxWidth: `100%`,
+            maxWidth: "100%",
             boxSizing: "border-box",
-            maxHeight,
-            width: "100%",
             display: "block",
             margin: "auto",
           }}
@@ -123,16 +152,25 @@ export const ImageFrame: FC<{
             }
           }}
           style={{
-            maxWidth: `100%`,
+            maxWidth: "100%",
             boxSizing: "border-box",
-            maxHeight,
-            width: "100%",
             display: "block",
             margin: "auto",
           }}
           {...props}
         />
       )}
+
+      <CollectionDetails show={Boolean(details)}>
+        <>
+          <h3>{(details || prevDetails)?.collectionName}</h3>
+          <p>
+            {" "}
+            {(details || prevDetails)?.collectionAmount}{" "}
+            {(details || prevDetails)?.collectionAmount === 1 ? "NFT" : "NFTs"}
+          </p>
+        </>
+      </CollectionDetails>
     </ImageWrapper>
   )
 }

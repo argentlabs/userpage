@@ -224,18 +224,35 @@ export const getNftMediaBlob = async (
     nft?.image_preview_url,
     nft?.image_thumbnail_url,
   ]
-  console.log(imagesToTry)
 
-  for (const file of imagesToTry) {
+  try {
+    const blob = await getNftMedia(nft)
+    return URL.createObjectURL(blob)
+  } catch {
+    return imagesToTry.find((img) => Boolean(img))!
+  }
+}
+
+export const getNftMedia = async (nft?: AssetElement): Promise<Blob> => {
+  const srcesToTry = [
+    nft?.animation_url,
+    nft?.animation_original_url,
+    nft?.image_url,
+    nft?.image_original_url,
+    nft?.image_preview_url,
+    nft?.image_thumbnail_url,
+  ]
+
+  for (const file of srcesToTry) {
     if (!file) continue
     try {
       const response = await fetch(file)
       const blob = await response.blob()
-      return URL.createObjectURL(blob)
+      return blob
     } catch {}
   }
 
-  return imagesToTry.find((img) => Boolean(img))!
+  throw new Error("no src was valid")
 }
 
 const {

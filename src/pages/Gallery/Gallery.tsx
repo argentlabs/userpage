@@ -44,7 +44,7 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
         <Avatar
           pubkey={walletAddress}
           size="80px"
-          sizeMobile="80px"
+          sizemobile="80px"
           bw="10px"
         />
         <Box

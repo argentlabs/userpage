@@ -69,7 +69,7 @@ describe("[int] Opensea", () => {
     expect(fetchResponse.status).toBe(200)
     await expect(
       lastResponseClone?.json().then((x) => x.assets.length),
-    ).resolves.toBe(2)
+    ).resolves.toBe(3)
 
     fetchMock.disableMocks()
   })
