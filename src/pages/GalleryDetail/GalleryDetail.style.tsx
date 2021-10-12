@@ -172,13 +172,4 @@ export const BigCaretWrapper = styled.div`
   padding: 1.5vw;
   cursor: pointer;
   color: ${theme("colors.bigCavets")};
-  z-index: 1;
-
-  :nth-child(2) {
-    justify-content: left;
-  }
-
-  :nth-child(3) {
-    justify-content: right;
-  }
 `

@@ -98,7 +98,13 @@ const Controls: FC<{
             }}
             onClick={navigation[0]}
           >
-            <BigCaretLeft style={{ width: "100%", maxWidth: "30px" }} />
+            <BigCaretLeft
+              style={{
+                width: "100%",
+                maxWidth: "30px",
+                justifyContent: "left",
+              }}
+            />
           </BigCaretWrapper>
           <BigCaretWrapper
             style={{
@@ -106,7 +112,13 @@ const Controls: FC<{
             }}
             onClick={navigation[1]}
           >
-            <BigCaretRight style={{ width: "100%", maxWidth: "30px" }} />
+            <BigCaretRight
+              style={{
+                width: "100%",
+                maxWidth: "30px",
+                justifyContent: "right",
+              }}
+            />
           </BigCaretWrapper>
         </>
       )}
