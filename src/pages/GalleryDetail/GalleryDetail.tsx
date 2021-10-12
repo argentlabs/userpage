@@ -53,7 +53,7 @@ const Controls: FC<{
           justifyContent: "space-between",
           transition: "all 500ms ease-in-out",
           padding: 24,
-          zIndex: 1,
+          zIndex: 2,
         }}
       >
         <Helmet>
@@ -98,7 +98,13 @@ const Controls: FC<{
             }}
             onClick={navigation[0]}
           >
-            <BigCaretLeft style={{ width: "100%" }} />
+            <BigCaretLeft
+              style={{
+                width: "100%",
+                maxWidth: "30px",
+                justifyContent: "left",
+              }}
+            />
           </BigCaretWrapper>
           <BigCaretWrapper
             style={{
@@ -106,7 +112,13 @@ const Controls: FC<{
             }}
             onClick={navigation[1]}
           >
-            <BigCaretRight style={{ width: "100%" }} />
+            <BigCaretRight
+              style={{
+                width: "100%",
+                maxWidth: "30px",
+                justifyContent: "right",
+              }}
+            />
           </BigCaretWrapper>
         </>
       )}
