@@ -161,15 +161,24 @@ const entryAnimation = keyframes`
 
 export const BigCaretWrapper = styled.div`
   animation: ${entryAnimation} 300ms ease-in-out;
-  width: 7vw;
+  width: 15vw;
   position: fixed;
   top: 0;
   bottom: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   transition: all 500ms ease-in-out;
   padding: 1.5vw;
   cursor: pointer;
   color: ${theme("colors.bigCavets")};
+  z-index: 1;
+
+  :nth-child(2) {
+    justify-content: left;
+  }
+
+  :nth-child(3) {
+    justify-content: right;
+  }
 `
