@@ -4,18 +4,31 @@ import { networkId } from "./web3"
 
 export interface RampOptions {
   walletAddress: string
+  hasZkSync: boolean
 }
 
 const { REACT_APP_RAMP_API_KEY } = process.env
 
+const RAMP_ASSETS_MAINNET = "ETH,USDC,USDT,DAI"
+const RAMP_ASSETS_ZKSYNC =
+  "ZKSYNC_ETH,ZKSYNC_WBTC,ZKSYNC_USDT,ZKSYNC_USDC,ZKSYNC_DAI"
+
 export const showRampPromise = ({
   walletAddress,
+  hasZkSync,
 }: RampOptions): Promise<boolean> =>
   new Promise<boolean>((res, rej) => {
     new RampInstantSDK({
       hostAppName: "Argent Userpage",
       hostLogoUrl: `${window.location.protocol}//${window.location.host}/images/icons/argent-app-icon@8x.png`,
-      swapAsset: networkId === 1 ? "ETH,USDC,USDT,DAI" : "ETH",
+      swapAsset:
+        networkId === 1
+          ? hasZkSync
+            ? RAMP_ASSETS_ZKSYNC
+            : RAMP_ASSETS_MAINNET
+          : hasZkSync
+          ? "ZKSYNC_ETH"
+          : "ETH",
       userAddress: walletAddress,
       ...(REACT_APP_RAMP_API_KEY && {
         hostApiKey: REACT_APP_RAMP_API_KEY,
