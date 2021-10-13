@@ -129,6 +129,7 @@ export const ImageFrame: FC<{
           }}
           style={{
             maxWidth: "100%",
+            maxHeight: "100%",
             boxSizing: "border-box",
             display: "block",
             margin: "auto",
@@ -153,6 +154,7 @@ export const ImageFrame: FC<{
           }}
           style={{
             maxWidth: "100%",
+            maxHeight: "100%",
             boxSizing: "border-box",
             display: "block",
             margin: "auto",
