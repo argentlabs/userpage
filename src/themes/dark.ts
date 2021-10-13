@@ -10,5 +10,7 @@ export const darkTheme: Theme = {
     iconBg: "#333332",
     nftDetailFrame: "black",
     iconButtonFont: "white",
+    btnBg: "#333332",
+    bigCavets: "#333332",
   },
 }

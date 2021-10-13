@@ -19,9 +19,9 @@ describe("[unit] Opensea", () => {
     const expectedResult: AssetElement[] = []
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
-    const response = await fetchNfts("address")
+    const { items } = await fetchNfts("address")
 
-    expect(response).toStrictEqual(expectedResult)
+    expect(items).toStrictEqual(expectedResult)
   })
   it("throws on 404", async () => {
     fetchMock.mockOnce(async () => ({ status: 400, body: "" }))
@@ -53,11 +53,11 @@ describe("[int] Opensea", () => {
     )
     fetchMock.mockImplementation(fetchJestFn as any)
 
-    const response = await fetchNfts(
+    const { items } = await fetchNfts(
       "0xe75AFa985de4F013AccFc8b4Dd744551C6EEB5a9",
     )
 
-    expect(response.map((x) => x.id)).toMatchSnapshot("fetchNfts")
+    expect(items.map((x) => x.id)).toMatchSnapshot("fetchNfts")
     // fetch gets called once
     expect(fetchJestFn.mock.calls.length).toBe(1)
     // calls the right url
@@ -69,7 +69,7 @@ describe("[int] Opensea", () => {
     expect(fetchResponse.status).toBe(200)
     await expect(
       lastResponseClone?.json().then((x) => x.assets.length),
-    ).resolves.toBe(2)
+    ).resolves.toBe(3)
 
     fetchMock.disableMocks()
   })

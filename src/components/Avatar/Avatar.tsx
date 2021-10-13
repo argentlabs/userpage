@@ -5,7 +5,7 @@ import AvatarSvg from "../Svgs/Avatar"
 
 interface AvatarProps {
   size?: string
-  sizeMobile?: string
+  sizemobile?: string
   bw?: string
   pubkey: string
 }
@@ -13,8 +13,8 @@ interface AvatarProps {
 export const Avatar = styled(AvatarSvg)<AvatarProps>`
   box-sizing: content-box;
   z-index: 1;
-  max-width: ${prop<any>("sizeMobile", "120px")};
-  max-height: ${prop<any>("sizeMobile", "120px")};
+  max-width: ${prop<any>("sizemobile", "120px")};
+  max-height: ${prop<any>("sizemobile", "120px")};
   border-radius: 50%;
   border: ${prop<any>("bw", "12px")} solid ${theme("colors.bg", "white")};
   color: ${theme("colors.bg", "white")};
@@ -29,7 +29,7 @@ export const Avatar = styled(AvatarSvg)<AvatarProps>`
   );
 
   /* prettier-ignore */
-  margin-bottom: calc(${prop<any>("sizeMobile", "120px")} / -2 - ${prop<any>(
+  margin-bottom: calc(${prop<any>("sizemobile", "120px")} / -2 - ${prop<any>(
     "bw",
     "20px",
   )});

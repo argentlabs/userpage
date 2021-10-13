@@ -209,11 +209,7 @@ export const SendPage: FC = () => {
                       <Button fullWidth onClick={() => send("START_PAIR")}>
                         Connect a wallet
                       </Button>
-                      <Button
-                        fullWidth
-                        disabled={hasZkSync}
-                        onClick={() => send("START_RAMP")}
-                      >
+                      <Button fullWidth onClick={() => send("START_RAMP")}>
                         Pay with card/bank
                       </Button>
                       <MetaText red={!hasZkSync}>

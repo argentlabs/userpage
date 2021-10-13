@@ -1,11 +1,17 @@
 /** Visualization: https://xstate.js.org/viz/?gist=b8e9ec176bcdfb673d6e3d19d237803e */
 
+import { map, mergeMap } from "rxjs"
 import { DoneInvokeEvent, assign, createMachine } from "xstate"
 
-import { fetchNfts, getNftMediaUrl } from "../libs/opensea"
+import { fetchAllNfts, getBlobUrl, getNftMedia } from "../libs/opensea"
 import { ImageProp } from "../pages/Gallery/Grid"
 
-export type GalleryEvent = { type: "NOOP" }
+const imageMimes = ["image/png", "image/jpeg", "image/gif"]
+export const isImageMime = (mime: string) => imageMimes.includes(mime)
+
+export type GalleryEvent =
+  | { type: "NOOP" }
+  | { type: "ADD_NFT"; nft: ImageProp }
 
 export interface GalleryContext {
   nfts: ImageProp[]
@@ -36,28 +42,58 @@ export const galleryMachine = createMachine<
     states: {
       loading: {
         invoke: {
-          id: "loadNfts",
-          src: async (context): Promise<GalleryContext> => {
-            return fetchNfts(context.walletAddress).then((result) => ({
-              walletAddress: context.walletAddress,
-              nfts: result.map((x) => ({
-                url: getNftMediaUrl(x),
-                id: x.token_id,
-                assetContractAddress: x.asset_contract.address,
-              })),
-            }))
-          },
-          onDone: [
-            {
-              target: "success",
-              actions: "assignContext",
-            },
-          ],
-          onError: [
-            {
-              target: "error",
-            },
-          ],
+          id: "loading",
+          src: (context, _event) =>
+            fetchAllNfts(context.walletAddress).pipe(
+              mergeMap(async (nft) => {
+                try {
+                  const nftBlob = await getNftMedia(nft)
+                  const nftSrc = getBlobUrl(nftBlob)
+                  const type = imageMimes.includes(nftBlob.type)
+                    ? "img"
+                    : "video"
+                  const htmlEl = document.createElement(type)
+                  const dimensions = await new Promise<{
+                    width: number
+                    height: number
+                  }>((res, rej) => {
+                    if (type === "img")
+                      htmlEl.onload = () => {
+                        res({ width: htmlEl.width, height: htmlEl.height })
+                      }
+                    if (type === "video")
+                      htmlEl.onloadeddata = () => {
+                        res({ width: htmlEl.width, height: htmlEl.height })
+                      }
+                    htmlEl.onerror = () => {
+                      rej()
+                    }
+                    htmlEl.src = nftSrc
+                  })
+                  return {
+                    blob: nftBlob,
+                    id: nft.token_id,
+                    assetContractAddress: nft.asset_contract.address,
+                    collectionSlug: nft.collection.slug,
+                    collectionName: nft.collection.name,
+                    ...dimensions,
+                  }
+                } catch {
+                  return false
+                }
+              }),
+              map((nft) => {
+                if (nft) {
+                  return { type: "ADD_NFT", nft }
+                } else {
+                  return { type: "NOOP" }
+                }
+              }),
+            ),
+          onDone: "success",
+        },
+        on: {
+          ADD_NFT: { actions: "pushNft" },
         },
       },
       success: {},
@@ -71,6 +107,14 @@ export const galleryMachine = createMachine<
         if (promiseEvent?.data) {
           return {
             ...promiseEvent.data,
+          }
+        }
+        return {}
+      }),
+      pushNft: assign((context, event) => {
+        if (event.type === "ADD_NFT" && event.nft) {
+          return {
+            nfts: [...context.nfts, event.nft],
           }
         }
         return {}

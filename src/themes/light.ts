@@ -10,5 +10,7 @@ export const lightTheme: Theme = {
     iconBg: "rgba(0, 0, 0, 0.15)",
     nftDetailFrame: "white",
     iconButtonFont: "#5c5b59",
+    btnBg: "#ededed",
+    bigCavets: "#EDEDED",
   },
 }

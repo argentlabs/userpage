@@ -155,9 +155,18 @@ export const createRouterMachine = (history: {
         },
         gallery_detail: {
           entry: ["navigateGalleryDetail"],
+          invoke: {
+            id: "galleryMachine",
+            src: galleryMachine,
+            data: (context): GalleryContext => ({
+              ...galleryMachineDefaultContext,
+              walletAddress: context.walletAddress,
+            }),
+          },
           on: {
             PUSH_HOME: "home",
             PUSH_GALLERY: "gallery",
+            PUSH_GALLERY_DETAIL: "gallery_detail",
           },
           meta: {
             path: "/gallery/:id",

@@ -44,7 +44,7 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
         <Avatar
           pubkey={walletAddress}
           size="80px"
-          sizeMobile="80px"
+          sizemobile="80px"
           bw="10px"
         />
         <Box
@@ -53,7 +53,12 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
           pt="64px"
           title={`@${name}`}
         >
-          <SAddress address={walletAddress} short zkSync={hasZkSync} />
+          <SAddress
+            confirmationText="Copied!"
+            address={walletAddress}
+            short
+            zkSync={hasZkSync}
+          />
         </Box>
         <IconBar direction="row" gap="40px">
           <IconButton
