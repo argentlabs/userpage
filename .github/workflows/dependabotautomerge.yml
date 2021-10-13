@@ -2,6 +2,8 @@ name: "Dependabot Automerge - Action"
 
 on:
   pull_request:
+    branches:
+      - develop
 
 jobs:
   worker:
