@@ -49,7 +49,12 @@ export const BigNftDisplay = withTheme(
             <Loading />
           </Center>
         )}
-        <Tilt gyroscope={false} tiltMaxAngleX={10} tiltMaxAngleY={10}>
+        <Tilt
+          gyroscope={false}
+          tiltMaxAngleX={10}
+          tiltMaxAngleY={10}
+          style={{ maxHeight: "100%" }}
+        >
           <ImageFrame
             type={type}
             onDimensionsKnown={setDimensions}
@@ -60,6 +65,7 @@ export const BigNftDisplay = withTheme(
               opacity: dimensions ? 1 : 0,
               ...(!dimensions && { transform: "translateY(-200vh)" }),
               transition: "opacity 300ms ease-in-out",
+              height: "100%",
               backgroundColor: theme.colors.nftDetailFrame,
             }}
           />
