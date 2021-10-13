@@ -94,7 +94,7 @@ const Controls: FC<{
         <>
           <BigCaretWrapper
             style={{
-              left: visible ? 0 : -100,
+              left: visible ? 0 : "-20vw",
             }}
             onClick={navigation[0]}
           >
@@ -108,7 +108,7 @@ const Controls: FC<{
           </BigCaretWrapper>
           <BigCaretWrapper
             style={{
-              right: visible ? 0 : -100,
+              right: visible ? 0 : "-20vw",
             }}
             onClick={navigation[1]}
           >
