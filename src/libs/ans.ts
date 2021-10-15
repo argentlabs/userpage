@@ -32,6 +32,7 @@ interface L2 {
 interface WalletStatus {
   type: string
   hasWallet: boolean
+  isEnabled: boolean
 }
 
 // resolve name using argent backend
@@ -52,7 +53,7 @@ export const fetchAns = async (name: string): Promise<Ans> => {
     ...response,
     name,
     hasZkSync:
-      l2?.walletStatus?.find?.((w) => w.type === "ZK_SYNC")?.hasWallet ?? false,
+      l2?.walletStatus?.find?.((w) => w.type === "ZK_SYNC")?.isEnabled ?? false,
   }
 }
 
