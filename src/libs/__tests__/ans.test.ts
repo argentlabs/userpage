@@ -17,7 +17,9 @@ describe("[unit] ANS", () => {
       ens: "janek.argent.xyz",
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
-      l2: { walletStatus: [{ type: "ZK_SYNC", hasWallet: true }] },
+      l2: {
+        walletStatus: [{ type: "ZK_SYNC", isEnabled: true, hasWallet: true }],
+      },
     }
     const expectedResult: Ans = {
       ens: "janek.argent.xyz",
@@ -37,7 +39,9 @@ describe("[unit] ANS", () => {
       ens: "janek.argent.xyz",
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
-      l2: { walletStatus: [{ type: "ZK_SYNC", hasWallet: false }] },
+      l2: {
+        walletStatus: [{ type: "ZK_SYNC", isEnabled: false, hasWallet: true }],
+      },
     }
     const expectedResult: Ans = {
       ens: "janek.argent.xyz",
@@ -75,7 +79,7 @@ describe("[int] ANS", () => {
       name: "janek",
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
-      hasZkSync: true,
+      hasZkSync: false,
     }
 
     let lastResponseClone: Response | undefined

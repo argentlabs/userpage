@@ -9,7 +9,7 @@ import { MoonButton, SunButton } from "../../components/DarkmodeSwitch"
 import { DelayedLoading as Loading } from "../../components/Loading"
 import BigCaretLeft from "../../components/Svgs/BigCaretLeft"
 import BigCaretRight from "../../components/Svgs/BigCaretRight"
-import { getBlobUrl, getNftMedia } from "../../libs/opensea"
+import { getBlobUrl, getNftMedia, getNftMediaUrl } from "../../libs/opensea"
 import { useGalleryMachine, useRouterMachine } from "../../states/hooks"
 import { isImageMime } from "../../states/nftGallery"
 import { themeAtom } from "../../themes"
@@ -31,12 +31,7 @@ const Controls: FC<{
   infoLink: string
   navigation?: [() => void, () => void] | false
 }> = ({ visible, infoLink, navigation }) => {
-  const [
-    {
-      context: { name },
-    },
-    send,
-  ] = useRouterMachine()
+  const [, send] = useRouterMachine()
   const [theme, setTheme] = useAtom(themeAtom)
   const [isFullscreen, toggleFullscreen] = useFullscreen()
 
@@ -56,9 +51,6 @@ const Controls: FC<{
           zIndex: 2,
         }}
       >
-        <Helmet>
-          <title>Gallery - {name}</title>
-        </Helmet>
         <Center>
           {!isFullscreen && (
             <GoBackButton border="none" onClick={() => send("PUSH_GALLERY")} />
@@ -154,7 +146,12 @@ export const GalleryDetail: FC = () => {
   const nft = useNft(tokenId, assetContractAddress)
   const { onMouseMove, controlsVisible } = useMouseBehaviour(3000)
 
-  const [, send] = useRouterMachine()
+  const [
+    {
+      context: { name },
+    },
+    send,
+  ] = useRouterMachine()
 
   const [
     {
@@ -171,6 +168,37 @@ export const GalleryDetail: FC = () => {
       onMouseMove={onMouseMove}
       style={{ height: "100vh", cursor: controlsVisible ? "inherit" : "none" }}
     >
+      <Helmet>
+        <title>
+          {nft?.name} - {nft?.collection.name} owned by {name}
+        </title>
+        {/* <!-- Facebook Meta Tags --> */}
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content={`${nft?.name} - ${nft?.collection.name} owned by ${name}`}
+        />
+        <meta
+          property="og:description"
+          content={`Check out this NFT owned by ${name}`}
+        />
+        <meta property="og:image" content={getNftMediaUrl(nft)} />
+
+        {/* <!-- Twitter Meta Tags --> */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="" />
+        <meta property="twitter:url" content={window.location.href} />
+        <meta
+          name="twitter:title"
+          content={`${nft?.name} - ${nft?.collection.name} owned by ${name}`}
+        />
+        <meta
+          name="twitter:description"
+          content={`Check out this NFT owned by ${name}`}
+        />
+        <meta name="twitter:image" content={getNftMediaUrl(nft)} />
+      </Helmet>
       <Controls
         navigation={
           neighbours && [

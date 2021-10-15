@@ -14,6 +14,13 @@ exports[`[int] ZKSYNC Api [int] fetchTokenList fetches: fetchTokenList 1`] = `
 Object {
   "list": Array [
     Object {
+      "address": "0x4ec441e153047fd13ae26ec527abecf871ea6a3d",
+      "decimals": 18,
+      "enabledForFees": true,
+      "id": 19,
+      "symbol": "ERC20-19",
+    },
+    Object {
       "address": "0x59cee5c2522ebc0e786f08b517d2c462e8f88f6e",
       "decimals": 6,
       "enabledForFees": true,
@@ -106,9 +113,9 @@ Object {
     },
   ],
   "pagination": Object {
-    "count": 13,
+    "count": 14,
     "direction": "older",
-    "from": 13,
+    "from": 19,
     "limit": 100,
   },
 }
@@ -206,6 +213,13 @@ Set {
     "enabledForFees": true,
     "id": 13,
     "symbol": "ERC20-13",
+  },
+  Object {
+    "address": "0x4ec441e153047fd13ae26ec527abecf871ea6a3d",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 19,
+    "symbol": "ERC20-19",
   },
 }
 `;
