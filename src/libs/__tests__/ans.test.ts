@@ -18,7 +18,7 @@ describe("[unit] ANS", () => {
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
       l2: {
-        walletStatus: [{ type: "ZK_SYNC", isEnabled: true, hasWallet: true }],
+        walletStatus: [{ type: "ZK_SYNC", enabled: true, hasWallet: true }],
       },
     }
     const expectedResult: Ans = {
@@ -40,7 +40,7 @@ describe("[unit] ANS", () => {
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
       l2: {
-        walletStatus: [{ type: "ZK_SYNC", isEnabled: false, hasWallet: true }],
+        walletStatus: [{ type: "ZK_SYNC", enabled: false, hasWallet: true }],
       },
     }
     const expectedResult: Ans = {
@@ -79,7 +79,7 @@ describe("[int] ANS", () => {
       name: "janek",
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
-      hasZkSync: false,
+      hasZkSync: true,
     }
 
     let lastResponseClone: Response | undefined
@@ -96,7 +96,7 @@ describe("[int] ANS", () => {
 
     const response = await fetchAns("janek")
 
-    expect(response).toStrictEqual(expectedResult)
+    expect(response).toMatchObject(expectedResult)
     // fetch gets called once
     expect(fetchJestFn.mock.calls.length).toBe(1)
     // calls the right url
@@ -107,8 +107,11 @@ describe("[int] ANS", () => {
     const fetchResponse: Response = await fetchJestFn.mock.results[0].value
     expect(fetchResponse.status).toBe(200)
     await expect(lastResponseClone?.json()).resolves.toStrictEqual({
+      deleted: false,
       ens: "janek.argent.xyz",
-      l2: { walletStatus: [{ hasWallet: true, type: "ZK_SYNC" }] },
+      l2: {
+        walletStatus: [{ hasWallet: true, type: "ZK_SYNC", enabled: true }],
+      },
       walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
       walletDeployed: true,
     })

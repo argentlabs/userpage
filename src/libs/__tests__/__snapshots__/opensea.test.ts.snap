@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`[int] Opensea works with '0xe75AFa985de4F013AccFc8b4Dd744551C6EEB5a9': fetchNfts 1`] = `
-Array [
-  66884482,
-  25404240,
-  25226647,
-]
-`;

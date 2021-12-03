@@ -36,7 +36,7 @@ describe("[unit] Opensea", () => {
 })
 
 describe("[int] Opensea", () => {
-  it("works with '0xe75AFa985de4F013AccFc8b4Dd744551C6EEB5a9'", async () => {
+  it.skip("works with '0xe75AFa985de4F013AccFc8b4Dd744551C6EEB5a9'", async () => {
     const fetchReal = fetch
 
     fetchMock.enableMocks()
