@@ -4,6 +4,7 @@ import Address from "../../components/Address"
 import Center from "../../components/Center"
 
 export const IconBar = styled(Center)`
+  align-items: flex-start;
   margin-top: -45px;
   z-index: 1;
 `

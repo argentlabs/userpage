@@ -6,6 +6,7 @@ import Center from "../../components/Center"
 import { centerMixin } from "../../mixins.style"
 
 export const IconBar = styled(Center)`
+  align-items: flex-start;
   margin-top: -30px;
   z-index: 1;
   p {

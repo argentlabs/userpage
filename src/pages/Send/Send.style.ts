@@ -55,6 +55,7 @@ export const MetaText = styled.p<{ invisible?: boolean; red?: boolean }>`
   user-select: ${ifProp("invisible", "none", "auto")};
   font-size: 14px;
   text-align: center;
+  max-width: 350px;
 `
 
 export const NotMainnetDisclaimer = styled.div`

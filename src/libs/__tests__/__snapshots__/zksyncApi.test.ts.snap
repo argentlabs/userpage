@@ -14,6 +14,34 @@ exports[`[int] ZKSYNC Api [int] fetchTokenList fetches: fetchTokenList 1`] = `
 Object {
   "list": Array [
     Object {
+      "address": "0x4394be2135357833a9e18d5a73b2a0c629efe984",
+      "decimals": 18,
+      "enabledForFees": true,
+      "id": 23,
+      "symbol": "ERC20-23",
+    },
+    Object {
+      "address": "0xed395510b7a2299f8049bcacb6e9157213115564",
+      "decimals": 18,
+      "enabledForFees": true,
+      "id": 22,
+      "symbol": "ERC20-22",
+    },
+    Object {
+      "address": "0xa553cda420072a759ac352dca4cec70709829614",
+      "decimals": 6,
+      "enabledForFees": true,
+      "id": 21,
+      "symbol": "ERC20-21",
+    },
+    Object {
+      "address": "0xbad346b9d0f4272db9b01aa6f16761115b851277",
+      "decimals": 18,
+      "enabledForFees": true,
+      "id": 20,
+      "symbol": "ERC20-20",
+    },
+    Object {
       "address": "0x4ec441e153047fd13ae26ec527abecf871ea6a3d",
       "decimals": 18,
       "enabledForFees": true,
@@ -113,9 +141,9 @@ Object {
     },
   ],
   "pagination": Object {
-    "count": 14,
+    "count": 18,
     "direction": "older",
-    "from": 19,
+    "from": 23,
     "limit": 100,
   },
 }
@@ -220,6 +248,34 @@ Set {
     "enabledForFees": true,
     "id": 19,
     "symbol": "ERC20-19",
+  },
+  Object {
+    "address": "0xbad346b9d0f4272db9b01aa6f16761115b851277",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 20,
+    "symbol": "ERC20-20",
+  },
+  Object {
+    "address": "0xa553cda420072a759ac352dca4cec70709829614",
+    "decimals": 6,
+    "enabledForFees": true,
+    "id": 21,
+    "symbol": "ERC20-21",
+  },
+  Object {
+    "address": "0xed395510b7a2299f8049bcacb6e9157213115564",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 22,
+    "symbol": "ERC20-22",
+  },
+  Object {
+    "address": "0x4394be2135357833a9e18d5a73b2a0c629efe984",
+    "decimals": 18,
+    "enabledForFees": true,
+    "id": 23,
+    "symbol": "ERC20-23",
   },
 }
 `;
