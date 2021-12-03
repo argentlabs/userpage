@@ -86,7 +86,11 @@ export const SendPage: FC = () => {
   const textButton = state.matches("approve") ? "Pre-authorize tokens" : "Send"
 
   // title is shown when connecting the wallet
-  const title = stateMatches(connectScreens) ? "Add funds to" : undefined
+  const title = stateMatches(connectScreens)
+    ? hasZkSync // show different text for Vault and L2 account
+      ? "Add funds to"
+      : "Add funds to Argent Vault"
+    : undefined
 
   // subtitle and backButton are shown when there is no animation on screen
   const subTitle = loadingState === "idle" ? name : undefined
