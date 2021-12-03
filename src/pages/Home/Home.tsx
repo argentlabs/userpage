@@ -46,8 +46,8 @@ export const HomePage: FC = () => {
         <IconBar direction="row" gap="40px">
           <IconButton
             Icon={<Add />}
-            text="Add funds"
-            aria-label="Add funds"
+            text={hasZkSync ? "Add funds" : "Add funds to Vault"}
+            aria-label={hasZkSync ? "Add funds" : "Add funds to Vault"}
             onClick={() => send("PUSH_SEND")}
           />
           <IconButton

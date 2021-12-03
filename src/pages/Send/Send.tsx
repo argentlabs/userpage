@@ -212,11 +212,23 @@ export const SendPage: FC = () => {
                       <Button fullWidth onClick={() => send("START_RAMP")}>
                         Pay with card/bank
                       </Button>
-                      <MetaText red={!hasZkSync}>
-                        {hasZkSync
-                          ? "Funds are sent to their zkSync account"
-                          : "Funds are transferred on Ethereum Mainnet"}
-                      </MetaText>
+                      {hasZkSync ? (
+                        <MetaText>
+                          Funds are sent to their zkSync account
+                        </MetaText>
+                      ) : (
+                        <>
+                          <MetaText red>
+                            Funds are sent to an Argent Vault on Ethereum
+                            mainnet.
+                          </MetaText>
+                          <MetaText red>
+                            This will <b>NOT</b> send funds to zkSync. To send
+                            funds to zkSync, you must first{" "}
+                            <b>Claim your zkSync account</b> in-app.
+                          </MetaText>
+                        </>
+                      )}
                     </ButtonWrapper>
                   )
                 }

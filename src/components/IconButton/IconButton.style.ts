@@ -49,7 +49,14 @@ export const Clickable = styled.a`
   }
 `
 
-export const Text = styled.p`
+export const Text = styled.p<{ size?: number; mobileSize?: number }>`
   color: ${theme("colors.iconButtonFont", "#5c5b59")};
   font-size: 16px;
+  line-height: 1.2em;
+  text-align: center;
+
+  max-width: ${prop<any>("mobileSize", "64")}px;
+  @media only screen and (min-width: 480px) {
+    max-width: ${prop<any>("size", "80")}px;
+  }
 `
