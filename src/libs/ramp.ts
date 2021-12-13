@@ -10,8 +10,7 @@ export interface RampOptions {
 const { REACT_APP_RAMP_API_KEY } = process.env
 
 const RAMP_ASSETS_MAINNET = "ETH,USDC,USDT,DAI"
-const RAMP_ASSETS_ZKSYNC =
-  "ZKSYNC_ETH,ZKSYNC_WBTC,ZKSYNC_USDT,ZKSYNC_USDC,ZKSYNC_DAI"
+const RAMP_ASSETS_ZKSYNC = "ZKSYNC_ETH,ZKSYNC_WBTC,ZKSYNC_USDC,ZKSYNC_DAI"
 
 export const showRampPromise = ({
   walletAddress,
