@@ -27,7 +27,7 @@ export const showRampPromise = ({
             ? RAMP_ASSETS_ZKSYNC
             : RAMP_ASSETS_MAINNET
           : hasZkSync
-          ? "ZKSYNC_ETH"
+          ? "ZKSYNC_ETH,ZKSYNC_DAI,ZKSYNC_USDC,ZKSYNC_WBTC"
           : "ETH",
       userAddress: walletAddress,
       ...(REACT_APP_RAMP_API_KEY && {
