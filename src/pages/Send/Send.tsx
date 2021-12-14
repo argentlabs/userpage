@@ -9,10 +9,12 @@ import AmountInput from "../../components/AmountInput"
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
 import Button, { SecondaryButton } from "../../components/Button"
+import { SecondaryButtonWithIcon } from "../../components/Button/Button"
 import Center from "../../components/Center"
 import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
+import Qr from "../../components/Svgs/Qr"
 import TokenSelect from "../../containers/TokenSelect"
 import { getTransactionExplorerUrl, networkId } from "../../libs/web3"
 import { useRouterMachine, useSendMachine } from "../../states/hooks"
@@ -233,6 +235,11 @@ export const SendPage: FC = () => {
                           </MetaText>
                         </>
                       )}
+                      <SecondaryButtonWithIcon
+                        onClick={() => sendRouter("PUSH_VAULT")}
+                      >
+                        <Qr /> View address
+                      </SecondaryButtonWithIcon>
                     </ButtonWrapper>
                   )
                 }

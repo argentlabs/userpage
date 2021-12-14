@@ -125,7 +125,6 @@ export const createRouterMachine = (history: {
           entry: ["navigateHome"],
           on: {
             PUSH_SEND: "send",
-            PUSH_VAULT: "vault",
             PUSH_GALLERY: "gallery",
             PUSH_GALLERY_DETAIL: "gallery_detail",
           },
@@ -175,7 +174,7 @@ export const createRouterMachine = (history: {
         vault: {
           entry: ["navigateVault"],
           on: {
-            PUSH_HOME: "home",
+            PUSH_HOME: "send",
           },
           meta: {
             path: "/vault",
@@ -210,6 +209,7 @@ export const createRouterMachine = (history: {
             }),
           },
           on: {
+            PUSH_VAULT: "vault",
             PUSH_HOME: "home",
           },
           meta: {
