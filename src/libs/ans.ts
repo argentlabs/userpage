@@ -3,7 +3,8 @@ import chunk from "lodash.chunk"
 import joinUrl from "url-join"
 
 import { readProvider } from "./web3"
-import { AccountResult, fetchAccount } from "./zksyncApi"
+
+// import { AccountResult, fetchAccount } from "./zksyncApi"
 
 const {
   REACT_APP_ARGENT_API_ANS_WALLET_ENDPOINT,
@@ -69,9 +70,9 @@ export const getAddressFromEns = (name: string) =>
   readProvider.resolveName(name)
 const resultOrNull = <T extends any>(promise: Promise<T>): Promise<T | null> =>
   promise.catch(() => null)
-const zkAccountExists = (zkAccount: AccountResult | null): boolean =>
-  Boolean(zkAccount) &&
-  zkAccount!.pubKeyHash !== "sync:0000000000000000000000000000000000000000"
+// const zkAccountExists = (zkAccount: AccountResult | null): boolean =>
+//   Boolean(zkAccount) &&
+//   zkAccount!.pubKeyHash !== "sync:0000000000000000000000000000000000000000"
 
 /**
  * Resolves a given name to its address and additional info about the wallet
@@ -119,13 +120,16 @@ export const getUserInfo = async (name: string): Promise<Ans> => {
     throw new Error("Not found")
   }
 
-  // double check zkSync
-  if (!response.hasZkSync) {
-    const zkAccount = await resultOrNull(fetchAccount(response.walletAddress))
-    if (zkAccountExists(zkAccount)) {
-      response.hasZkSync = true
-    }
-  }
+  // always show zkSync status
+  response.hasZkSync = true
+
+  // // double check zkSync
+  // if (!response.hasZkSync) {
+  //   const zkAccount = await resultOrNull(fetchAccount(response.walletAddress))
+  //   if (zkAccountExists(zkAccount)) {
+  //     response.hasZkSync = true
+  //   }
+  // }
 
   return response
 }
