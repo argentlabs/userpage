@@ -20,11 +20,13 @@ export const SelectInput: FC<SelectInputProps> = ({
   return (
     <SelectInputWrapper>
       <Select {...props}>
-        {options.map(({ value, display, disabled }) => (
-          <option disabled={disabled} key={value} value={value}>
-            {display}
-          </option>
-        ))}
+        {options
+          .filter(({ disabled }) => !disabled)
+          .map(({ value, display, disabled }) => (
+            <option disabled={disabled} key={value} value={value}>
+              {display}
+            </option>
+          ))}
       </Select>
       <SExpand />
     </SelectInputWrapper>

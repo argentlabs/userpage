@@ -2,7 +2,6 @@ import joinUrl from "url-join"
 
 const { REACT_APP_ZKSYNC_API_BASE } = process.env
 
-const ZKSYNC_API_TOKENS_PATH = "tokens?limit=100&from=latest&direction=older"
 const ZKSYNC_API_CONFIG_PATH = "config"
 const ZKSYNC_API_ACCOUNTS_PATH = "accounts"
 
@@ -81,10 +80,12 @@ export interface AccountResult {
   mintedNfts: {}
 }
 
-const zkSyncApiTokensEndpoint = joinUrl(
-  REACT_APP_ZKSYNC_API_BASE,
-  ZKSYNC_API_TOKENS_PATH,
-)
+const getSyncApiTokensEndpoint = (from: number, limit: number): string =>
+  joinUrl(
+    REACT_APP_ZKSYNC_API_BASE,
+    `tokens?limit=${limit}&from=${from}&direction=newer`,
+  )
+
 const zkSyncApiConfigEndpoint = joinUrl(
   REACT_APP_ZKSYNC_API_BASE,
   ZKSYNC_API_CONFIG_PATH,
@@ -100,13 +101,33 @@ const getZkSyncApiAccountEndpoint = (
     stateType,
   )
 
+const LIMIT = 100
 export const fetchTokenList = async (): Promise<Token[]> => {
-  const response = await fetch(zkSyncApiTokensEndpoint)
-  const tokens = (await response.json()) as Tokens
+  const response = await fetch(getSyncApiTokensEndpoint(0, 100))
+  const initialRes = (await response.json()) as Tokens
 
-  if (!tokens?.result?.list) throw Error("No response included")
+  if (!initialRes?.result?.pagination?.count)
+    throw Error("No response included")
 
-  return tokens.result?.list?.sort?.((a, b) => a.id - b.id)
+  const pages = Math.ceil(initialRes.result.pagination.count / LIMIT) - 1
+
+  const allResults = await Promise.all(
+    Array.from({ length: pages }, (_, i) =>
+      fetch(getSyncApiTokensEndpoint((i + 1) * LIMIT, LIMIT)).then(
+        (res) => res.json() as Promise<Tokens>,
+      ),
+    ),
+  )
+
+  const allToken = allResults.reduce(
+    (acc, curr) => {
+      if (!curr?.result?.list) throw Error("No response included")
+      return [...acc, ...curr.result.list]
+    },
+    [...initialRes.result.list],
+  )
+
+  return allToken?.sort?.((a, b) => a.id - b.id)
 }
 
 export const fetchConfig = async (): Promise<ConfigResult> => {
