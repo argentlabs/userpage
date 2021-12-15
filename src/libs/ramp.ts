@@ -25,8 +25,8 @@ export const showRampPromise = ({
           ? hasZkSync
             ? RAMP_ASSETS_ZKSYNC
             : RAMP_ASSETS_MAINNET
-          : hasZkSync
-          ? "ZKSYNC_ETH,ZKSYNC_DAI,ZKSYNC_USDC,ZKSYNC_WBTC"
+          : hasZkSync // on non-mainnet networks ramp only supports ETH
+          ? "ZKSYNC_ETH"
           : "ETH",
       userAddress: walletAddress,
       ...(REACT_APP_RAMP_API_KEY && {
