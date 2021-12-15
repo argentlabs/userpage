@@ -67,7 +67,7 @@ describe("[unit] ZKSYNC Api", () => {
   })
 })
 
-describe("[int] ZKSYNC Api", () => {
+describe.skip("[int] ZKSYNC Api", () => {
   describe("[int] fetchConfig", () => {
     it("fetches", async () => {
       const fetchReal = fetch
