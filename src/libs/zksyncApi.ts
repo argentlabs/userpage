@@ -103,7 +103,7 @@ const getZkSyncApiAccountEndpoint = (
 
 const LIMIT = 100
 export const fetchTokenList = async (): Promise<Token[]> => {
-  const response = await fetch(getSyncApiTokensEndpoint(0, 100))
+  const response = await fetch(getSyncApiTokensEndpoint(0, LIMIT))
   const initialRes = (await response.json()) as Tokens
 
   if (!initialRes?.result?.pagination?.count)
