@@ -63,18 +63,20 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
         <IconBar direction="row" gap="40px">
           <IconButton
             Icon={<Add />}
-            text="Add funds"
+            text={hasZkSync ? "Add funds" : "Add funds to Vault"}
             size={48}
+            maxTextWidth={80}
             mobileSize={48}
             svgSize={24}
             mobileSvgSize={24}
-            aria-label="Add funds"
+            aria-label={hasZkSync ? "Add funds" : "Add funds to Vault"}
             onClick={() => send("PUSH_SEND")}
           />
           <IconButton
             Icon={<Gallery />}
             text="NFT Gallery"
             size={48}
+            maxTextWidth={80}
             mobileSize={48}
             svgSize={24}
             mobileSvgSize={24}

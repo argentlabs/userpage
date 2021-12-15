@@ -9,10 +9,12 @@ import AmountInput from "../../components/AmountInput"
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
 import Button, { SecondaryButton } from "../../components/Button"
+import { SecondaryButtonWithIcon } from "../../components/Button/Button"
 import Center from "../../components/Center"
 import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
+import Qr from "../../components/Svgs/Qr"
 import TokenSelect from "../../containers/TokenSelect"
 import { getTransactionExplorerUrl, networkId } from "../../libs/web3"
 import { useRouterMachine, useSendMachine } from "../../states/hooks"
@@ -86,7 +88,11 @@ export const SendPage: FC = () => {
   const textButton = state.matches("approve") ? "Pre-authorize tokens" : "Send"
 
   // title is shown when connecting the wallet
-  const title = stateMatches(connectScreens) ? "Add funds to" : undefined
+  const title = stateMatches(connectScreens)
+    ? hasZkSync // show different text for Vault and L2 account
+      ? "Add funds to"
+      : "Add funds to Argent Vault"
+    : undefined
 
   // subtitle and backButton are shown when there is no animation on screen
   const subTitle = loadingState === "idle" ? name : undefined
@@ -212,11 +218,28 @@ export const SendPage: FC = () => {
                       <Button fullWidth onClick={() => send("START_RAMP")}>
                         Pay with card/bank
                       </Button>
-                      <MetaText red={!hasZkSync}>
-                        {hasZkSync
-                          ? "Funds are sent to their zkSync account"
-                          : "Funds are transferred on Ethereum Mainnet"}
-                      </MetaText>
+                      {hasZkSync ? (
+                        <MetaText>
+                          Funds are sent to their zkSync account
+                        </MetaText>
+                      ) : (
+                        <>
+                          <MetaText red>
+                            Funds are sent to an Argent Vault on Ethereum
+                            mainnet.
+                          </MetaText>
+                          <MetaText red>
+                            This will <b>NOT</b> send funds to zkSync. To send
+                            funds to zkSync, you must first{" "}
+                            <b>Claim your zkSync account</b> in-app.
+                          </MetaText>
+                        </>
+                      )}
+                      <SecondaryButtonWithIcon
+                        onClick={() => sendRouter("PUSH_VAULT")}
+                      >
+                        <Qr /> View address
+                      </SecondaryButtonWithIcon>
                     </ButtonWrapper>
                   )
                 }

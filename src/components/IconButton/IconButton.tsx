@@ -9,6 +9,8 @@ interface IconButtonProps extends CircleProps {
   Icon: ReactNode
   "aria-label": string
   text?: string
+  maxTextWidth?: number
+  maxTextWidthMobile?: number
 }
 
 export const IconButton: FC<IconButtonProps> = ({
@@ -20,6 +22,8 @@ export const IconButton: FC<IconButtonProps> = ({
   mobileSvgSize,
   bgColor,
   border,
+  maxTextWidth,
+  maxTextWidthMobile,
   ...props
 }) => {
   return (
@@ -34,7 +38,14 @@ export const IconButton: FC<IconButtonProps> = ({
       >
         {Icon}
       </Circle>
-      {text && <Text>{text}</Text>}
+      {text && (
+        <Text
+          size={maxTextWidth ?? size}
+          mobileSize={maxTextWidthMobile ?? maxTextWidth ?? mobileSize}
+        >
+          {text}
+        </Text>
+      )}
     </Clickable>
   )
 }
