@@ -18,6 +18,7 @@ export const showRampPromise = ({
 }: RampOptions): Promise<boolean> =>
   new Promise<boolean>((res, rej) => {
     new RampInstantSDK({
+      variant: "auto",
       hostAppName: "Argent Userpage",
       hostLogoUrl: `${window.location.protocol}//${window.location.host}/images/icons/argent-app-icon@8x.png`,
       swapAsset:

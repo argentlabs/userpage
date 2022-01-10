@@ -213,7 +213,7 @@ export const SendPage: FC = () => {
                   stateMatches(connectScreens) && (
                     <ButtonWrapper>
                       <Button fullWidth onClick={() => send("START_PAIR")}>
-                        Connect a wallet
+                        Pay with MetaMask etc
                       </Button>
                       <Button fullWidth onClick={() => send("START_RAMP")}>
                         Pay with card/bank
