@@ -2,9 +2,11 @@ import styled, { keyframes } from "styled-components"
 import { prop } from "styled-tools"
 
 export const AddressBase = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
   text-align: center;
-  max-width: 220px;
   line-height: 1.3em;
   margin: 1.2em;
   font-size: 14px;
