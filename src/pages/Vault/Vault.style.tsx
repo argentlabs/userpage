@@ -1,7 +1,6 @@
 import styled from "styled-components"
 
 import Address from "../../components/Address"
-import { SecondaryButtonWithIcon } from "../../components/Button/Button"
 import Center from "../../components/Center"
 
 export const ErrorText = styled.p`
