@@ -1,25 +1,36 @@
 import styled from "styled-components"
 
 import Address from "../../components/Address"
-import { SecondaryButtonWithIcon } from "../../components/Button/Button"
 import Center from "../../components/Center"
 
 export const ErrorText = styled.p`
-  color: red;
+  display: block;
+  background-color: #c12026;
+  padding: 8px;
+  color: white;
   text-align: center;
-  font-size: 14px;
-  max-width: 300px;
+  font-size: 12px;
+  max-width: 100% !important;
+  border-radius: 4px;
 `
 
 export const SAddress = styled(Address)`
-  ${SecondaryButtonWithIcon} {
-    margin-top: 24px;
+  > * {
+    margin: 8px 0;
+  }
+
+  p {
+    max-width: 220px;
   }
 `
 
 export const SCenter = styled(Center)`
   width: 100%;
-  margin-top: 24px;
+
+  > .qrcode {
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
 
   > .qrcode canvas {
     max-width: 100%;
@@ -33,9 +44,5 @@ export const SCenter = styled(Center)`
 
   > ${SAddress} {
     margin: 24px 0 24px;
-  }
-
-  > ${ErrorText} {
-    margin-bottom: 40px;
   }
 `

@@ -32,13 +32,12 @@ export const VaultPage: FC = () => {
         <Box lean title={name} onBackButtonClick={() => send("PUSH_HOME")}>
           <SCenter>
             <QRCode size={280} data={walletAddress} />
-            <SAddress address={walletAddress} zkSync={hasZkSync}>
-              <Center>
-                <SecondaryButtonWithIcon>
-                  <Copy /> Copy address
-                </SecondaryButtonWithIcon>
-              </Center>
-            </SAddress>
+
+            {hasZkSync && (
+              <ErrorText>
+                Only send to this address from a zkSync wallet
+              </ErrorText>
+            )}
 
             {!hasZkSync && (
               <ErrorText>
@@ -46,6 +45,14 @@ export const VaultPage: FC = () => {
                 You will lose funds if you use any other chain.
               </ErrorText>
             )}
+
+            <SAddress address={walletAddress} zkSync={hasZkSync}>
+              <Center>
+                <SecondaryButtonWithIcon>
+                  <Copy /> Copy address
+                </SecondaryButtonWithIcon>
+              </Center>
+            </SAddress>
           </SCenter>
         </Box>
       </Center>
