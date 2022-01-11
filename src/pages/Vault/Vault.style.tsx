@@ -27,6 +27,11 @@ export const SAddress = styled(Address)`
 export const SCenter = styled(Center)`
   width: 100%;
 
+  > .qrcode {
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
   > .qrcode canvas {
     max-width: 100%;
   }
