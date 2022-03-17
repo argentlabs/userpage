@@ -152,7 +152,15 @@ export const FeedPage = withTheme(({ theme }: { theme: Theme }) => {
       </DisplayModeWrapper>
       {!Boolean(proposals.length) && (
         <p style={{ marginTop: 32 }}>
-          There are no {viewMode} government proposals for you :(
+          There are no {viewMode} government proposals for you
+          <i
+            style={{
+              fontSize: "1.2em",
+              marginLeft: 4,
+            }}
+          >
+            😔
+          </i>
         </p>
       )}
       <div
