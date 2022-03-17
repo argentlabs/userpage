@@ -292,7 +292,15 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
               WebkitBoxOrient: "vertical",
             }}
           >
-            {proposal.body}
+            {proposal.body
+              // replace all markdown headings and replace by nothing
+              .replaceAll(/#{1,3} /g, "")
+              // replace all markdown links and replace by text only
+              .replaceAll(/\[(.*?)\]\((.*?)\)/g, "$1")
+              // replace all markdown bold and replace by nothing
+              .replaceAll(/\*{1,2}(.*?)\*{1,2}/g, "$1")
+              // replace all markdown italic and replace by nothing
+              .replaceAll(/_{1,2}(.*?)_{1,2}/g, "$1")}
           </p>
         )}
         <div
