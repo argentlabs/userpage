@@ -38,7 +38,6 @@ const fetchRelevantProposals = async (
     Object.values(tokenAddressBySpace),
     "0xe79057088a15ac8c9c8bec3b90bd9891a1b3af51",
   )
-  console.log(balances)
   const relevantSpaces = Object.keys(tokenAddressBySpace)
     .map((x, i) => [x, balances[i].balance] as [string, BigNumber])
     .filter(([, balance]) => balance.gt(0))
