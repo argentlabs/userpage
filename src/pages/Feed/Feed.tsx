@@ -3,7 +3,7 @@ import { FC, useState } from "react"
 import { Helmet } from "react-helmet"
 import usePromise from "react-promise-suspense"
 import TimeAgo from "react-timeago"
-import { withTheme } from "styled-components"
+import styled, { withTheme } from "styled-components"
 
 import ArgentLogo from "../../components/ArgentLogo"
 import Avatar from "../../components/Avatar"
@@ -155,7 +155,6 @@ export const FeedPage = withTheme(({ theme }: { theme: Theme }) => {
           You dont own any gov tokens we support :(
         </p>
       )}
-      {/* flex vertical */}
       <div
         style={{
           width: "min(calc(100vw - 128px), 690px)",
@@ -179,16 +178,36 @@ export const FeedPage = withTheme(({ theme }: { theme: Theme }) => {
 const resolveIpfsLink = (link: string) =>
   link.replace("ipfs://", "https://ipfs.io/ipfs/")
 
-// render given proposal
+const ProposalWrapper = styled.a`
+  display: block;
+  padding: 32px;
+  display: flex;
+  background-color: white;
+  transition: all 0.2s ease-in-out;
+
+  :hover {
+    background-color: #fbfbfb;
+  }
+`
+
+const ViewButton = styled.a`
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  color: white;
+  background-color: #ff875b;
+  padding: 8px 24px;
+  border-radius: 24px;
+  transition: all 0.2s ease-in-out;
+
+  :hover {
+    background-color: #f36a3d;
+  }
+`
+
 const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
   return (
-    <div
-      style={{
-        padding: 32,
-        display: "flex",
-        backgroundColor: "white",
-      }}
-    >
+    <ProposalWrapper href={proposal.link}>
       <img
         src={resolveIpfsLink(proposal.space.avatar)}
         alt={proposal.space.id}
@@ -214,8 +233,7 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
           {proposal.space.name}
           <span
             style={{
-              fontSize: "12px",
-              color: "#8F8E8C",
+              color: "#C2C0BE",
             }}
           >
             {" "}
@@ -243,6 +261,7 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
               padding: "2px 8px",
               fontWeight: 600,
               fontSize: "13px",
+              lineHeight: "18px",
               background: "rgba(2, 187, 168, 0.15)",
               borderRadius: "8px",
               color: "#02A697",
@@ -252,20 +271,22 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
             {`${proposal.state[0].toUpperCase()}${proposal.state.slice(1)}`}
           </span>
         </h3>
-        <p
-          style={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            minHeight: "2em",
-            marginTop: "8px",
-            overflowWrap: "anywhere",
-            WebkitBoxOrient: "vertical",
-          }}
-        >
-          {proposal.body}
-        </p>
+        {proposal.body && (
+          <p
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              lineHeight: "21px",
+              marginTop: "8px",
+              overflowWrap: "anywhere",
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {proposal.body}
+          </p>
+        )}
         <div
           style={{
             display: "flex",
@@ -302,23 +323,10 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
             >
               Votes: {proposal.votes}
             </span>
-            <a
-              style={{
-                fontWeight: 600,
-                fontSize: "15px",
-                lineHeight: "20px",
-                color: "white",
-                backgroundColor: "#FF875B",
-                padding: "8px 24px",
-                borderRadius: "24px",
-              }}
-              href={proposal.link}
-            >
-              View
-            </a>
+            <ViewButton>View</ViewButton>
           </div>
         </div>
       </div>
-    </div>
+    </ProposalWrapper>
   )
 }
