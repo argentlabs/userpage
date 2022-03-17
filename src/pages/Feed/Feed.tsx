@@ -38,6 +38,7 @@ const fetchRelevantProposals = async (
     Object.values(tokenAddressBySpace),
     "0xe79057088a15ac8c9c8bec3b90bd9891a1b3af51",
   )
+  console.log(balances)
   const relevantSpaces = Object.keys(tokenAddressBySpace)
     .map((x, i) => [x, balances[i].balance] as [string, BigNumber])
     .filter(([, balance]) => balance.gt(0))
@@ -134,25 +135,24 @@ export const FeedPage = withTheme(({ theme }: { theme: Theme }) => {
           />
         </IconBar>
       </Center>
-      {proposals.length ? (
-        <DisplayModeWrapper>
-          <span>View by</span>
-          <DisplayModeButton
-            active={viewMode === "active"}
-            onClick={() => setViewMode("active")}
-          >
-            New
-          </DisplayModeButton>
-          <DisplayModeButton
-            active={viewMode === "closed"}
-            onClick={() => setViewMode("closed")}
-          >
-            History
-          </DisplayModeButton>
-        </DisplayModeWrapper>
-      ) : (
+      <DisplayModeWrapper>
+        <span>View by</span>
+        <DisplayModeButton
+          active={viewMode === "active"}
+          onClick={() => setViewMode("active")}
+        >
+          New
+        </DisplayModeButton>
+        <DisplayModeButton
+          active={viewMode === "closed"}
+          onClick={() => setViewMode("closed")}
+        >
+          History
+        </DisplayModeButton>
+      </DisplayModeWrapper>
+      {!Boolean(proposals.length) && (
         <p style={{ marginTop: 32 }}>
-          You dont own any gov tokens we support :(
+          There are no {viewMode} government proposals for you :(
         </p>
       )}
       <div
