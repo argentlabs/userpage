@@ -63,7 +63,6 @@ export const FeedPage = withTheme(({ theme }: { theme: Theme }) => {
     send,
   ] = useRouterMachine()
 
-  //   usestate to store the state of the gallery
   const [viewMode, setViewMode] = useState<"active" | "closed">("active")
   const proposals: Proposal[] = usePromise(fetchRelevantProposals, [
     walletAddress,
@@ -231,7 +230,7 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
             fontWeight: 700,
           }}
         >
-          {proposal.title}{" "}
+          {proposal.title}
           <span
             style={{
               padding: "2px 8px",
@@ -240,9 +239,10 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
               background: "rgba(2, 187, 168, 0.15)",
               borderRadius: "8px",
               color: "#02A697",
+              marginLeft: "8px",
             }}
           >
-            {proposal.state}
+            {`${proposal.state[0].toUpperCase()}${proposal.state.slice(1)}`}
           </span>
         </h3>
         <p
@@ -252,6 +252,7 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
             display: "-webkit-box",
             WebkitLineClamp: 2,
             minHeight: "2em",
+            marginTop: "8px",
             WebkitBoxOrient: "vertical",
           }}
         >
