@@ -190,7 +190,7 @@ const ProposalWrapper = styled.a`
   }
 `
 
-const ViewButton = styled.a`
+const ViewButton = styled.span`
   font-weight: 600;
   font-size: 15px;
   line-height: 20px;
@@ -207,7 +207,7 @@ const ViewButton = styled.a`
 
 const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
   return (
-    <ProposalWrapper href={proposal.link}>
+    <ProposalWrapper href={proposal.link} target="_blank">
       <img
         src={resolveIpfsLink(proposal.space.avatar)}
         alt={proposal.space.id}
