@@ -3,6 +3,7 @@ import { gql, request } from "graphql-request"
 export const tokenAddressBySpace = {
   "aave.eth": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
   "curve.eth": "0xD533a949740bb3306d119CC777fa900bA034cd52",
+  uniswap: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
 }
 
 type SupportedSpaces = keyof typeof tokenAddressBySpace

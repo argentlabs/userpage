@@ -200,7 +200,7 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
       <div
         style={{
           marginLeft: 32,
-          flex: 1,
+          flex: "auto",
         }}
       >
         <p
@@ -228,6 +228,13 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
             fontSize: "20px",
             lineHeight: "25px",
             fontWeight: 700,
+
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+
+            WebkitBoxOrient: "vertical",
           }}
         >
           {proposal.title}
@@ -253,6 +260,7 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
             WebkitLineClamp: 2,
             minHeight: "2em",
             marginTop: "8px",
+            overflowWrap: "anywhere",
             WebkitBoxOrient: "vertical",
           }}
         >
