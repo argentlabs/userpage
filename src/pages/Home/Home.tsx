@@ -9,6 +9,7 @@ import IconButton from "../../components/IconButton"
 import PageWrapper from "../../components/PageWrapper"
 import Box from "../../components/ProfileBox"
 import Add from "../../components/Svgs/Add"
+import Feed from "../../components/Svgs/Feed"
 import Gallery from "../../components/Svgs/Gallery"
 import { useRouterMachine } from "../../states/hooks"
 import { IconBar } from "./Home.style"
@@ -44,6 +45,13 @@ export const HomePage: FC = () => {
             aria-label="NFT Gallery"
             bgColor="#FFBF3D"
             onClick={() => send("PUSH_GALLERY")}
+          />
+          <IconButton
+            Icon={<Feed />}
+            text="Feed"
+            aria-label="Feed"
+            bgColor="#5CD3FF"
+            onClick={() => send("PUSH_FEED")}
           />
         </IconBar>
       </Center>

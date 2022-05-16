@@ -22,6 +22,7 @@ export type RouterEvent =
   | { type: "PUSH_HOME" }
   | { type: "PUSH_VAULT" }
   | { type: "PUSH_GALLERY" }
+  | { type: "PUSH_FEED" }
   | {
       type: "PUSH_GALLERY_DETAIL"
       tokenId: string
@@ -126,6 +127,7 @@ export const createRouterMachine = (history: {
           on: {
             PUSH_SEND: "send",
             PUSH_GALLERY: "gallery",
+            PUSH_FEED: "feed",
             PUSH_GALLERY_DETAIL: "gallery_detail",
           },
           meta: {
@@ -144,6 +146,7 @@ export const createRouterMachine = (history: {
           },
           on: {
             PUSH_HOME: "home",
+            PUSH_FEED: "feed",
             PUSH_SEND: "send",
             PUSH_VAULT: "vault",
             PUSH_GALLERY_DETAIL: "gallery_detail",
@@ -169,6 +172,17 @@ export const createRouterMachine = (history: {
           },
           meta: {
             path: "/gallery/:id",
+          },
+        },
+        feed: {
+          entry: ["navigateFeed"],
+          on: {
+            PUSH_HOME: "home",
+            PUSH_SEND: "send",
+            PUSH_GALLERY: "gallery",
+          },
+          meta: {
+            path: "/vault",
           },
         },
         vault: {
@@ -234,6 +248,10 @@ export const createRouterMachine = (history: {
             return {
               type: "PUSH_SEND",
             }
+          if (history.location.pathname === "/feed")
+            return {
+              type: "PUSH_FEED",
+            }
           if (history.location.pathname === "/vault")
             return {
               type: "PUSH_VAULT",
@@ -276,6 +294,9 @@ export const createRouterMachine = (history: {
         },
         navigateSend: (_context, _event) => {
           history?.push("/send")
+        },
+        navigateFeed: () => {
+          history?.push("/feed")
         },
         navigateVault: () => {
           history?.push("/vault")

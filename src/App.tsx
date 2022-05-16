@@ -10,6 +10,7 @@ import { identify } from "./libs/analytics"
 import Claim from "./pages/Claim"
 import NotFound from "./pages/Errors/404"
 import Error500Page from "./pages/Errors/500"
+import Feed from "./pages/Feed"
 import Gallery from "./pages/Gallery"
 import GalleryDetail from "./pages/GalleryDetail"
 import Home from "./pages/Home"
@@ -81,6 +82,9 @@ function RouterComponent() {
       </Route>
       <Route path="/gallery/:assetContractAddress/:tokenId">
         <GalleryDetail />
+      </Route>
+      <Route path="/feed">
+        <Feed />
       </Route>
       <Route path="/vault">
         <Vault />

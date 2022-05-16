@@ -6,7 +6,7 @@ import { ERC20__factory, Multicall__factory } from "../generated"
 const { REACT_APP_MULTICALL_CONTRACT_ADDRESS } = process.env
 
 export const getERC20BalancesAndAllowances = async (
-  provider: providers.JsonRpcProvider,
+  provider: providers.Provider,
   address: string,
   tokens: string[],
   spender: string,
