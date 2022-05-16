@@ -32,7 +32,7 @@ export interface Proposal {
   body: string
   start: number
   end: number
-  state: string
+  state: "active" | "closed"
   votes: number
   link: string
 }

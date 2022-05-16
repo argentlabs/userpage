@@ -269,9 +269,12 @@ const ProposalView: FC<{ proposal: Proposal }> = ({ proposal }) => {
               fontWeight: 600,
               fontSize: "13px",
               lineHeight: "18px",
-              background: "rgba(2, 187, 168, 0.15)",
+              background:
+                proposal.state === "active"
+                  ? "rgba(2, 187, 168, 0.15)"
+                  : "#EDEDED",
               borderRadius: "8px",
-              color: "#02A697",
+              color: proposal.state === "active" ? "#02A697" : "#8F8E8C",
               marginLeft: "8px",
             }}
           >
