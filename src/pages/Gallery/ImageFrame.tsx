@@ -3,7 +3,9 @@ import { FC, useRef } from "react"
 import styled, { CSSProperties, keyframes } from "styled-components"
 import { ifProp, prop, theme } from "styled-tools"
 
+import { SupportedNfts } from "../../libs/nft"
 import { shadowMixin } from "../../mixins.style"
+import NftModelViewer from "./ModelViewer"
 
 const ImageWrapper = styled.div<{
   border: string
@@ -61,7 +63,7 @@ export interface Dimensions {
 export const ImageFrame: FC<{
   url: string
   border: string
-  type: "img" | "video"
+  type: SupportedNfts
   clickable?: boolean
   onDimensionsKnown?: (dimensions: Dimensions) => void
   onDimensionsChange?: (dimensions: Dimensions) => void
@@ -135,6 +137,42 @@ export const ImageFrame: FC<{
             margin: "auto",
           }}
           {...props}
+        />
+      ) : type === "audio" ? (
+        <audio
+          controls
+          style={{
+            maxWidth: "100%",
+            maxHeight: "100%",
+            boxSizing: "border-box",
+            display: "block",
+            margin: "auto",
+          }}
+          onLoadedData={(img) => {
+            if (img?.currentTarget?.offsetHeight) {
+              onDimensionsKnown?.({
+                domHeight: img.currentTarget.offsetHeight,
+                domWidth: img.currentTarget.offsetWidth,
+                realHeight: 50,
+                realWidth: 200,
+              })
+            }
+          }}
+        >
+          <source src={url} />
+        </audio>
+      ) : type === "model" ? (
+        <NftModelViewer
+          src={url}
+          size={style?.height === "100%" ? "400px" : undefined}
+          onLoad={() =>
+            onDimensionsKnown?.({
+              domHeight: 400,
+              domWidth: 400,
+              realHeight: 400,
+              realWidth: 400,
+            })
+          }
         />
       ) : (
         <img

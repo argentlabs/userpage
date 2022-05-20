@@ -11,6 +11,7 @@ import CloseFullscreen from "../../components/Svgs/CloseFullscreen"
 import Fullscreen from "../../components/Svgs/Fullscreen"
 import Info from "../../components/Svgs/Info"
 import Play from "../../components/Svgs/Play"
+import { SupportedNfts } from "../../libs/nft"
 import { centerMixin } from "../../mixins.style"
 import { Theme } from "../../themes/theme"
 import { Dimensions, ImageFrame } from "../Gallery/ImageFrame"
@@ -30,7 +31,7 @@ export const BigNftDisplay = withTheme(
   }: {
     src: string
     theme: Theme
-    type: "img" | "video"
+    type: SupportedNfts
   }) => {
     const [dimensions, setDimensions] = useState<Dimensions>()
 

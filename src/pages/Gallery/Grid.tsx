@@ -5,8 +5,8 @@ import { prop } from "styled-tools"
 
 import Center from "../../components/Center"
 import CaretLeft from "../../components/Svgs/CaretLeft"
+import { determineNftType } from "../../libs/nft"
 import { getBlobUrl } from "../../libs/opensea"
-import { isImageMime } from "../../states/nftGallery"
 import { DisplayModeButton, DisplayModeWrapper } from "./Gallery.style"
 import { ImageFrame } from "./ImageFrame"
 
@@ -236,7 +236,7 @@ export const Grid: FC<{
                     return (
                       <ImageFrame
                         key={id}
-                        type={isImageMime(item.blob.type) ? "img" : "video"}
+                        type={determineNftType(item.blob.type)}
                         url={getBlobUrl(item.blob)}
                         border={`${border}px`}
                         details={

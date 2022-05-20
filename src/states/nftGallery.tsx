@@ -3,11 +3,9 @@
 import { map, mergeMap } from "rxjs"
 import { DoneInvokeEvent, assign, createMachine } from "xstate"
 
+import { determineNftType } from "../libs/nft"
 import { fetchAllNfts, getBlobUrl, getNftMedia } from "../libs/opensea"
 import { ImageProp } from "../pages/Gallery/Grid"
-
-const imageMimes = ["image/png", "image/jpeg", "image/gif"]
-export const isImageMime = (mime: string) => imageMimes.includes(mime)
 
 export type GalleryEvent =
   | { type: "NOOP" }
@@ -49,26 +47,41 @@ export const galleryMachine = createMachine<
                 try {
                   const nftBlob = await getNftMedia(nft)
                   const nftSrc = getBlobUrl(nftBlob)
-                  const type = imageMimes.includes(nftBlob.type)
-                    ? "img"
-                    : "video"
-                  const htmlEl = document.createElement(type)
+                  const type = determineNftType(nftBlob.type)
                   const dimensions = await new Promise<{
                     width: number
                     height: number
                   }>((res, rej) => {
-                    if (type === "img")
+                    if (type === "image") {
+                      const htmlEl = document.createElement("img")
                       htmlEl.onload = () => {
                         res({ width: htmlEl.width, height: htmlEl.height })
                       }
-                    if (type === "video")
+                      htmlEl.onerror = () => {
+                        rej()
+                      }
+                      htmlEl.src = nftSrc
+                    } else if (type === "video") {
+                      const htmlEl = document.createElement("video")
                       htmlEl.onloadeddata = () => {
                         res({ width: htmlEl.width, height: htmlEl.height })
                       }
-                    htmlEl.onerror = () => {
-                      rej()
+                      htmlEl.onerror = () => {
+                        rej()
+                      }
+                      htmlEl.src = nftSrc
+                    } else if (type === "audio") {
+                      const htmlEl = document.createElement("audio")
+                      htmlEl.onloadeddata = () => {
+                        res({ width: 200, height: 50 })
+                      }
+                      htmlEl.onerror = () => {
+                        rej()
+                      }
+                      htmlEl.src = nftSrc
+                    } else if (type === "model") {
+                      res({ width: 200, height: 200 })
                     }
-                    htmlEl.src = nftSrc
                   })
                   return {
                     blob: nftBlob,
@@ -78,7 +91,8 @@ export const galleryMachine = createMachine<
                     collectionName: nft.collection.name,
                     ...dimensions,
                   }
-                } catch {
+                } catch (e) {
+                  console.log(e)
                   return false
                 }
               }),

@@ -1,17 +1,17 @@
 import { useAtom } from "jotai"
 import { FC, Suspense } from "react"
 import { Helmet } from "react-helmet"
-import usePromise from "react-promise-suspense"
 import { useParams } from "react-router-dom"
+import useSwr from "swr/immutable"
 
 import Center from "../../components/Center"
 import { MoonButton, SunButton } from "../../components/DarkmodeSwitch"
 import { DelayedLoading as Loading } from "../../components/Loading"
 import BigCaretLeft from "../../components/Svgs/BigCaretLeft"
 import BigCaretRight from "../../components/Svgs/BigCaretRight"
+import { determineNftType } from "../../libs/nft"
 import { getBlobUrl, getNftMedia, getNftMediaUrl } from "../../libs/opensea"
 import { useGalleryMachine, useRouterMachine } from "../../states/hooks"
-import { isImageMime } from "../../states/nftGallery"
 import { themeAtom } from "../../themes"
 import { ImageProp } from "../Gallery/Grid"
 import {
@@ -159,7 +159,12 @@ export const GalleryDetail: FC = () => {
     },
   ] = useGalleryMachine()
 
-  const nftBlob = usePromise(getNftMedia, [nft])
+  const { data: nftBlob } = useSwr([nft], getNftMedia, { suspense: true })
+
+  if (!nftBlob) {
+    // does not happen as we use suspense
+    return null
+  }
 
   const neighbours = getNftNeighbours(nfts, tokenId, assetContractAddress)
 
@@ -220,7 +225,7 @@ export const GalleryDetail: FC = () => {
         visible={controlsVisible}
       />
       <BigNftDisplay
-        type={isImageMime(nftBlob.type) ? "img" : "video"}
+        type={determineNftType(nftBlob.type)}
         src={getBlobUrl(nftBlob)}
       />
     </Center>
