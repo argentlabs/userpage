@@ -178,37 +178,47 @@ export const ImageFrame: FC<{
               {...props}
             />
           )}
-          <audio
-            controls
+          <div
             style={{
-              maxWidth: "100%",
               width: "100%",
               boxSizing: "border-box",
-              display: "block",
-              margin: "auto",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              alignItems: "center",
               position: "absolute",
+              top: 0,
               bottom: 0,
               left: 0,
               right: 0,
               padding: "8px",
-              filter: "drop-shadow(0px 0px 8px rgba(0,0,0,0.5))",
-            }}
-            onClick={(e) => {
-              e.stopPropagation()
-            }}
-            onLoadedData={(img) => {
-              if (img?.currentTarget?.offsetHeight && !poster) {
-                onDimensionsKnown?.({
-                  domHeight: img.currentTarget.offsetHeight,
-                  domWidth: img.currentTarget.offsetWidth,
-                  realHeight: 50,
-                  realWidth: 200,
-                })
-              }
             }}
           >
-            <source src={url} />
-          </audio>
+            <audio
+              controls
+              style={{
+                width: "100%",
+                boxSizing: "border-box",
+                display: "block",
+                filter: "drop-shadow(0px 0px 8px rgba(0,0,0,0.5))",
+              }}
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+              onLoadedData={(img) => {
+                if (img?.currentTarget?.offsetHeight && !poster) {
+                  onDimensionsKnown?.({
+                    domHeight: img.currentTarget.offsetHeight,
+                    domWidth: img.currentTarget.offsetWidth,
+                    realHeight: 50,
+                    realWidth: 200,
+                  })
+                }
+              }}
+            >
+              <source src={url} />
+            </audio>
+          </div>
         </div>
       ) : type === "model" ? (
         <NftModelViewer
