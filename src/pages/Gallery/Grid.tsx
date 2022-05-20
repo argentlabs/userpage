@@ -14,6 +14,7 @@ type DisplayMode = "all" | "collection"
 
 export type ImageProp = {
   blob: Blob
+  poster?: string
   id: string
   assetContractAddress: string
   collectionName: string
@@ -238,6 +239,7 @@ export const Grid: FC<{
                         key={id}
                         type={determineNftType(item.blob.type)}
                         url={getBlobUrl(item.blob)}
+                        poster={item.poster}
                         border={`${border}px`}
                         details={
                           displayMode === "collection"

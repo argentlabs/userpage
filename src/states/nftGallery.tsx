@@ -4,7 +4,12 @@ import { map, mergeMap } from "rxjs"
 import { DoneInvokeEvent, assign, createMachine } from "xstate"
 
 import { determineNftType } from "../libs/nft"
-import { fetchAllNfts, getBlobUrl, getNftMedia } from "../libs/opensea"
+import {
+  fetchAllNfts,
+  getBlobUrl,
+  getNftMedia,
+  getPosterMedia,
+} from "../libs/opensea"
 import { ImageProp } from "../pages/Gallery/Grid"
 
 export type GalleryEvent =
@@ -83,8 +88,15 @@ export const galleryMachine = createMachine<
                       res({ width: 200, height: 200 })
                     }
                   })
+
+                  const poster =
+                    type === "audio"
+                      ? getBlobUrl(await getPosterMedia(nft))
+                      : undefined
+
                   return {
                     blob: nftBlob,
+                    poster,
                     id: nft.token_id,
                     assetContractAddress: nft.asset_contract.address,
                     collectionSlug: nft.collection.slug,

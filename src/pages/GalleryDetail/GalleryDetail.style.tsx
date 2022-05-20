@@ -26,10 +26,12 @@ const BigDisplayWrapper = styled.div`
 export const BigNftDisplay = withTheme(
   ({
     src,
+    poster,
     theme,
     type,
   }: {
     src: string
+    poster?: string
     theme: Theme
     type: SupportedNfts
   }) => {
@@ -58,6 +60,7 @@ export const BigNftDisplay = withTheme(
         >
           <ImageFrame
             type={type}
+            poster={poster}
             onDimensionsKnown={setDimensions}
             onDimensionsChange={setDimensions}
             border="min(6vh, 6vw)"

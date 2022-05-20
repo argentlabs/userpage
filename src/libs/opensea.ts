@@ -213,6 +213,21 @@ export const getNftMediaUrl = (
       nft?.image_thumbnail_url ||
       "error"
 
+const getFirstFetchUrl = async (
+  sourcesToTry: (string | null | undefined)[],
+): Promise<Blob> => {
+  for (const source of sourcesToTry) {
+    if (source) {
+      const response = await fetch(source)
+      if (response.ok) {
+        return response.blob()
+      }
+    }
+  }
+
+  throw new Error("no src was valid")
+}
+
 export const getNftMedia = async (nft?: AssetElement): Promise<Blob> => {
   const srcesToTry = [
     nft?.animation_url,
@@ -223,16 +238,18 @@ export const getNftMedia = async (nft?: AssetElement): Promise<Blob> => {
     nft?.image_thumbnail_url,
   ]
 
-  for (const file of srcesToTry) {
-    if (!file) continue
-    try {
-      const response = await fetch(file)
-      const blob = await response.blob()
-      return blob
-    } catch {}
-  }
+  return getFirstFetchUrl(srcesToTry)
+}
 
-  throw new Error("no src was valid")
+export const getPosterMedia = async (nft?: AssetElement): Promise<Blob> => {
+  const srcesToTry = [
+    nft?.image_url,
+    nft?.image_preview_url,
+    nft?.image_thumbnail_url,
+    nft?.image_original_url,
+  ]
+
+  return getFirstFetchUrl(srcesToTry)
 }
 
 const {

@@ -159,6 +159,11 @@ export const GalleryDetail: FC = () => {
     },
   ] = useGalleryMachine()
 
+  const nftFromList = nfts.find(
+    (nft) =>
+      nft.assetContractAddress === assetContractAddress && nft.id === tokenId,
+  )
+
   const { data: nftBlob } = useSwr([nft], getNftMedia, { suspense: true })
 
   if (!nftBlob) {
@@ -226,6 +231,7 @@ export const GalleryDetail: FC = () => {
       />
       <BigNftDisplay
         type={determineNftType(nftBlob.type)}
+        poster={nftFromList?.poster}
         src={getBlobUrl(nftBlob)}
       />
     </Center>
