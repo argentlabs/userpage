@@ -3,7 +3,9 @@ import { FC, useRef } from "react"
 import styled, { CSSProperties, keyframes } from "styled-components"
 import { ifProp, prop, theme } from "styled-tools"
 
+import { SupportedNfts } from "../../libs/nft"
 import { shadowMixin } from "../../mixins.style"
+import NftModelViewer from "./ModelViewer"
 
 const ImageWrapper = styled.div<{
   border: string
@@ -61,8 +63,9 @@ export interface Dimensions {
 export const ImageFrame: FC<{
   url: string
   border: string
-  type: "img" | "video"
+  type: SupportedNfts
   clickable?: boolean
+  poster?: string
   onDimensionsKnown?: (dimensions: Dimensions) => void
   onDimensionsChange?: (dimensions: Dimensions) => void
   style?: CSSProperties
@@ -84,6 +87,7 @@ export const ImageFrame: FC<{
   clickable = false,
   style,
   details,
+  poster,
   ...props
 }) => {
   const ref = useRef<HTMLVideoElement & HTMLImageElement>(null)
@@ -135,6 +139,99 @@ export const ImageFrame: FC<{
             margin: "auto",
           }}
           {...props}
+        />
+      ) : type === "audio" ? (
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            width: "100%",
+            flexDirection: "column",
+          }}
+        >
+          {poster && (
+            <img
+              alt=""
+              src={poster}
+              ref={ref}
+              onError={onError}
+              onLoad={(img) => {
+                if (img?.currentTarget?.offsetHeight) {
+                  onDimensionsKnown?.({
+                    domHeight: img.currentTarget.offsetHeight,
+                    domWidth: img.currentTarget.offsetWidth,
+                    realHeight: img.currentTarget.height,
+                    realWidth: img.currentTarget.offsetWidth,
+                  })
+                }
+              }}
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                boxSizing: "border-box",
+                display: "block",
+                margin: "auto",
+              }}
+              {...props}
+            />
+          )}
+          <div
+            style={{
+              width: "100%",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: "8px",
+            }}
+          >
+            <audio
+              controls
+              style={{
+                width: "100%",
+                boxSizing: "border-box",
+                display: "block",
+                filter: "drop-shadow(0px 0px 8px rgba(0,0,0,0.5))",
+              }}
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+              onLoadedData={(img) => {
+                if (img?.currentTarget?.offsetHeight && !poster) {
+                  onDimensionsKnown?.({
+                    domHeight: img.currentTarget.offsetHeight,
+                    domWidth: img.currentTarget.offsetWidth,
+                    realHeight: 50,
+                    realWidth: 200,
+                  })
+                }
+              }}
+            >
+              <source src={url} />
+            </audio>
+          </div>
+        </div>
+      ) : type === "model" ? (
+        <NftModelViewer
+          src={url}
+          size={style?.height === "100%" ? "400px" : undefined}
+          onLoad={() =>
+            onDimensionsKnown?.({
+              domHeight: 400,
+              domWidth: 400,
+              realHeight: 400,
+              realWidth: 400,
+            })
+          }
         />
       ) : (
         <img
