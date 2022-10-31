@@ -213,15 +213,13 @@ export const SendPage: FC = () => {
                   stateMatches(connectScreens) && (
                     <ButtonWrapper>
                       <Button fullWidth onClick={() => send("START_PAIR")}>
-                        Pay with MetaMask etc
+                        Connect wallet
                       </Button>
                       <Button fullWidth onClick={() => send("START_RAMP")}>
-                        Pay with card/bank
+                        Use a card/bank transfer
                       </Button>
                       {hasZkSync ? (
-                        <MetaText>
-                          Funds are sent to their zkSync account
-                        </MetaText>
+                        <MetaText>Funds are bridged to zkSync</MetaText>
                       ) : (
                         <>
                           <MetaText red>

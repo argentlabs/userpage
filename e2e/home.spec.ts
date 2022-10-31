@@ -17,10 +17,12 @@ test("homepage test and navigation", async ({ page }) => {
   expect(page.url()).toBe(`${HOST}/send`)
   await expect(page.isVisible("text=Add funds to")).resolves.toBe(true)
   await expect(page.isVisible("text=janek")).resolves.toBe(true)
-  await expect(page.isVisible("text=Pay with MetaMask etc")).resolves.toBe(true)
-  await expect(page.isVisible("text=Pay with card/bank")).resolves.toBe(true)
+  await expect(page.isVisible("text=Connect wallet")).resolves.toBe(true)
+  await expect(page.isVisible("text=Use a card/bank transfer")).resolves.toBe(
+    true,
+  )
   await expect(
-    page.isVisible("text=Funds are sent to their zkSync account"),
+    page.isVisible("text=Funds are bridged to zkSync"),
   ).resolves.toBe(true)
 
   // Click [aria-label="Go back"]
