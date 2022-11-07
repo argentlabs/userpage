@@ -26,12 +26,16 @@ describe("[unit] Opensea", () => {
   it("throws on 404", async () => {
     fetchMock.mockOnce(async () => ({ status: 400, body: "" }))
 
-    await expect(fetchNfts("janek")).rejects.toThrowError("Wrong address")
+    await expect(fetchNfts("graeme-goerli1")).rejects.toThrowError(
+      "Wrong address",
+    )
   })
   it("throws on 500", async () => {
     fetchMock.mockOnce(async () => ({ status: 500, body: "" }))
 
-    await expect(fetchNfts("janek")).rejects.toThrowError("Request failed")
+    await expect(fetchNfts("graeme-goerli1")).rejects.toThrowError(
+      "Request failed",
+    )
   })
 })
 
