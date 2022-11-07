@@ -7,7 +7,6 @@ import successAnimation from "../../animations/success.json"
 import errorAnimation from "../../animations/transaction-fail.json"
 import AmountInput from "../../components/AmountInput"
 import ArgentLogo from "../../components/ArgentLogo"
-import Avatar from "../../components/Avatar"
 import Button, { SecondaryButton } from "../../components/Button"
 import { SecondaryButtonWithIcon } from "../../components/Button/Button"
 import Center from "../../components/Center"
@@ -44,7 +43,7 @@ export const SendPage: FC = () => {
   /** STATE MACHINES */
   // Router Machine
   const [stateRouter, sendRouter] = useRouterMachine()
-  const { name, walletAddress } = stateRouter.context
+  const { name } = stateRouter.context
   // Send Machine
   const [state, send] = useSendMachine()
   const { amount, contract, tokens, transactionHash, hasZkSync } = state.context

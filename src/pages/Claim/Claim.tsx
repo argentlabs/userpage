@@ -2,7 +2,6 @@ import { FC } from "react"
 import { Helmet } from "react-helmet"
 
 import ArgentLogo from "../../components/ArgentLogo"
-import Avatar from "../../components/Avatar"
 import Center from "../../components/Center"
 import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import PageWrapper from "../../components/PageWrapper"
@@ -13,7 +12,7 @@ import { useRouterContextSelector } from "../../states/hooks"
 import { AppButtonWrapper, ClaimWrapper, InvisibleLink } from "./Claim.style"
 
 export const ClaimPage: FC = () => {
-  const { name, walletAddress } = useRouterContextSelector()
+  const { name } = useRouterContextSelector()
 
   return (
     <PageWrapper>
@@ -23,7 +22,6 @@ export const ClaimPage: FC = () => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        {/*<Avatar pubkey={walletAddress} />*/}
         <Box lean title={`${name}.argent.xyz`}>
           <ClaimWrapper direction="column">
             <p>This address is not yet registered.</p>

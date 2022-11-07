@@ -2,7 +2,6 @@ import { FC } from "react"
 import { Helmet } from "react-helmet"
 
 import ArgentLogo from "../../components/ArgentLogo"
-import Avatar from "../../components/Avatar"
 import Center from "../../components/Center"
 import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import IconButton from "../../components/IconButton"
@@ -16,7 +15,7 @@ import { IconBar } from "./Home.style"
 export const HomePage: FC = () => {
   const [
     {
-      context: { name, walletAddress, hasZkSync },
+      context: { name, hasZkSync },
     },
     send,
   ] = useRouterMachine()
@@ -29,7 +28,6 @@ export const HomePage: FC = () => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        {/*<Avatar pubkey={walletAddress} />*/}
         <Box title={`@${name}`} />
         <IconBar direction="row" gap="40px">
           <IconButton
