@@ -28,7 +28,7 @@ export const VaultPage: FC = () => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar pubkey={walletAddress} />
+        {/*<Avatar pubkey={walletAddress} />*/}
         <Box lean title={name} onBackButtonClick={() => send("PUSH_HOME")}>
           <SCenter>
             <QRCode size={280} data={walletAddress} />

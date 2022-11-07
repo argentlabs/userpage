@@ -23,7 +23,7 @@ export const ClaimPage: FC = () => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar pubkey={walletAddress} />
+        {/*<Avatar pubkey={walletAddress} />*/}
         <Box lean title={`${name}.argent.xyz`}>
           <ClaimWrapper direction="column">
             <p>This address is not yet registered.</p>

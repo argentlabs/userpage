@@ -41,12 +41,12 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar
+        {/*<Avatar
           pubkey={walletAddress}
           size="80px"
           sizemobile="80px"
           bw="10px"
-        />
+        />*/}
         <Box
           onBackButtonClick={() => send("PUSH_HOME")}
           lean

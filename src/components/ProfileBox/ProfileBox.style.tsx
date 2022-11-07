@@ -22,7 +22,7 @@ export const Box = styled.div<BoxProps>`
     width: auto;
     border-radius: 48px;
     min-width: 480px;
-    padding: ${prop<any>("pt", "100px")} 16px ${ifProp("lean", "64px", "84px")};
+    padding: ${prop<any>("pt", "100px")} 64px ${ifProp("lean", "64px", "84px")};
   }
 
   @media only screen and (min-height: 600px) {

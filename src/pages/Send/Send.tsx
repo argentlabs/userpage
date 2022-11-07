@@ -138,7 +138,7 @@ export const SendPage: FC = () => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar pubkey={walletAddress} />
+        {/*<Avatar pubkey={walletAddress} />*/}
         <Box
           lean
           onBackButtonClick={onBackButtonClick}

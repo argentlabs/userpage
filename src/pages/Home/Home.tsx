@@ -29,7 +29,7 @@ export const HomePage: FC = () => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar pubkey={walletAddress} />
+        {/*<Avatar pubkey={walletAddress} />*/}
         <Box title={`@${name}`} />
         <IconBar direction="row" gap="40px">
           <IconButton
