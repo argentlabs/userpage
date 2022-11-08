@@ -2,7 +2,6 @@ import { FC } from "react"
 import { Helmet } from "react-helmet"
 
 import ArgentLogo from "../../components/ArgentLogo"
-import Avatar from "../../components/Avatar"
 import { SecondaryButtonWithIcon } from "../../components/Button/Button"
 import Center from "../../components/Center"
 import DarkmodeSwitch from "../../components/DarkmodeSwitch"
@@ -28,7 +27,6 @@ export const VaultPage: FC = () => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar pubkey={walletAddress} />
         <Box lean title={name} onBackButtonClick={() => send("PUSH_HOME")}>
           <SCenter>
             <QRCode size={280} data={walletAddress} />

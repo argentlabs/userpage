@@ -14,70 +14,72 @@ describe("[unit] ANS", () => {
   })
   it("transforms 200 with zksync", async () => {
     const mockResponse: AnsResponse = {
-      ens: "janek.argent.xyz",
-      walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
+      ens: "graeme-goerli1.argent.xyz",
+      walletAddress: "0x3ea72d4967Bbcf2385D879D4FFeD51D9DDF5eD06",
       walletDeployed: true,
       l2: {
         walletStatus: [{ type: "ZK_SYNC", enabled: true, hasWallet: true }],
       },
     }
     const expectedResult: Ans = {
-      ens: "janek.argent.xyz",
-      walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
+      ens: "graeme-goerli1.argent.xyz",
+      walletAddress: "0x3ea72d4967Bbcf2385D879D4FFeD51D9DDF5eD06",
       walletDeployed: true,
       hasZkSync: true,
-      name: "janek",
+      name: "graeme-goerli1",
     }
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
-    const response = await fetchAns("janek")
+    const response = await fetchAns("graeme-goerli1")
 
     expect(response).toStrictEqual(expectedResult)
   })
   it("transforms 200 without zksync", async () => {
     const mockResponse: AnsResponse = {
-      ens: "janek.argent.xyz",
-      walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
+      ens: "graeme-goerli1.argent.xyz",
+      walletAddress: "0x3ea72d4967Bbcf2385D879D4FFeD51D9DDF5eD06",
       walletDeployed: true,
       l2: {
         walletStatus: [{ type: "ZK_SYNC", enabled: false, hasWallet: true }],
       },
     }
     const expectedResult: Ans = {
-      ens: "janek.argent.xyz",
-      walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
+      ens: "graeme-goerli1.argent.xyz",
+      walletAddress: "0x3ea72d4967Bbcf2385D879D4FFeD51D9DDF5eD06",
       walletDeployed: true,
       hasZkSync: false,
-      name: "janek",
+      name: "graeme-goerli1",
     }
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
-    const response = await fetchAns("janek")
+    const response = await fetchAns("graeme-goerli1")
 
     expect(response).toStrictEqual(expectedResult)
   })
   it("throws on 404", async () => {
     fetchMock.mockOnce(async () => ({ status: 404, body: "" }))
 
-    await expect(fetchAns("janek")).rejects.toThrowError("Not found")
+    await expect(fetchAns("graeme-goerli1")).rejects.toThrowError("Not found")
   })
   it("throws on 500", async () => {
     fetchMock.mockOnce(async () => ({ status: 500, body: "" }))
 
-    await expect(fetchAns("janek")).rejects.toThrowError("Request failed")
+    await expect(fetchAns("graeme-goerli1")).rejects.toThrowError(
+      "Request failed",
+    )
   })
 })
 
 describe("[int] ANS", () => {
-  it("works with 'janek'", async () => {
+  it("works with 'graeme-goerli1'", async () => {
     const fetchReal = fetch
 
     fetchMock.enableMocks()
 
     const expectedResult: Ans = {
-      ens: "janek.argent.xyz",
-      name: "janek",
-      walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
+      ens: "graeme-goerli1.argent.xyz",
+      name: "graeme-goerli1",
+      walletAddress: "0x3ea72d4967Bbcf2385D879D4FFeD51D9DDF5eD06",
       walletDeployed: true,
       hasZkSync: true,
     }
@@ -94,25 +96,25 @@ describe("[int] ANS", () => {
     )
     fetchMock.mockImplementation(fetchJestFn as any)
 
-    const response = await fetchAns("janek")
+    const response = await fetchAns("graeme-goerli1")
 
     expect(response).toMatchObject(expectedResult)
     // fetch gets called once
     expect(fetchJestFn.mock.calls.length).toBe(1)
     // calls the right url
     expect(fetchJestFn.mock.calls[0]).toEqual([
-      "https://cloud-test.argent-api.com/v1/wallet?ens=janek.argent.xyz",
+      "https://cloud-test.argent-api.com/v1/wallet?ens=graeme-goerli1.argent.xyz",
     ])
     // gets correct api response
     const fetchResponse: Response = await fetchJestFn.mock.results[0].value
     expect(fetchResponse.status).toBe(200)
     await expect(lastResponseClone?.json()).resolves.toStrictEqual({
       deleted: false,
-      ens: "janek.argent.xyz",
+      ens: "graeme-goerli1.argent.xyz",
       l2: {
         walletStatus: [{ hasWallet: true, type: "ZK_SYNC", enabled: true }],
       },
-      walletAddress: "0x80c94441e9b3afc072c9a73d9a1db86fa0da7071",
+      walletAddress: "0x3ea72d4967Bbcf2385D879D4FFeD51D9DDF5eD06",
       walletDeployed: true,
     })
 

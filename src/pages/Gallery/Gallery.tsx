@@ -2,7 +2,6 @@ import { Helmet } from "react-helmet"
 import { withTheme } from "styled-components"
 
 import ArgentLogo from "../../components/ArgentLogo"
-import Avatar from "../../components/Avatar"
 import Center from "../../components/Center"
 import DarkmodeSwitch from "../../components/DarkmodeSwitch"
 import IconButton from "../../components/IconButton"
@@ -41,12 +40,6 @@ export const GalleryPage = withTheme(({ theme }: { theme: Theme }) => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar
-          pubkey={walletAddress}
-          size="80px"
-          sizemobile="80px"
-          bw="10px"
-        />
         <Box
           onBackButtonClick={() => send("PUSH_HOME")}
           lean

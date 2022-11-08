@@ -7,7 +7,6 @@ import successAnimation from "../../animations/success.json"
 import errorAnimation from "../../animations/transaction-fail.json"
 import AmountInput from "../../components/AmountInput"
 import ArgentLogo from "../../components/ArgentLogo"
-import Avatar from "../../components/Avatar"
 import Button, { SecondaryButton } from "../../components/Button"
 import { SecondaryButtonWithIcon } from "../../components/Button/Button"
 import Center from "../../components/Center"
@@ -44,7 +43,7 @@ export const SendPage: FC = () => {
   /** STATE MACHINES */
   // Router Machine
   const [stateRouter, sendRouter] = useRouterMachine()
-  const { name, walletAddress } = stateRouter.context
+  const { name } = stateRouter.context
   // Send Machine
   const [state, send] = useSendMachine()
   const { amount, contract, tokens, transactionHash, hasZkSync } = state.context
@@ -138,7 +137,7 @@ export const SendPage: FC = () => {
       </Helmet>
       <ArgentLogo />
       <Center>
-        <Avatar pubkey={walletAddress} />
+        {/*<Avatar pubkey={walletAddress} />*/}
         <Box
           lean
           onBackButtonClick={onBackButtonClick}
@@ -213,15 +212,13 @@ export const SendPage: FC = () => {
                   stateMatches(connectScreens) && (
                     <ButtonWrapper>
                       <Button fullWidth onClick={() => send("START_PAIR")}>
-                        Pay with MetaMask etc
+                        Connect wallet
                       </Button>
                       <Button fullWidth onClick={() => send("START_RAMP")}>
-                        Pay with card/bank
+                        Use a card/bank transfer
                       </Button>
                       {hasZkSync ? (
-                        <MetaText>
-                          Funds are sent to their zkSync account
-                        </MetaText>
+                        <MetaText>Funds are bridged to zkSync</MetaText>
                       ) : (
                         <>
                           <MetaText red>
