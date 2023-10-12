@@ -33,8 +33,10 @@ export const showRampPromise = ({
       ...(REACT_APP_RAMP_API_KEY && {
         hostApiKey: REACT_APP_RAMP_API_KEY,
       }),
+      defaultFlow: "ONRAMP",
+      enabledFlows: ["ONRAMP"],
       ...(networkId === 3 && {
-        url: "https://ri-widget-staging-ropsten.firebaseapp.com/",
+        url: "https://app.demo.ramp.network/",
       }),
     })
       /** Possible Events (for more info see https://docs.ramp.network/events)
@@ -55,10 +57,9 @@ export const showRampPromise = ({
               ?.classList.remove("ramp--loading-overwrite")
           case "WIDGET_CLOSE":
             return res(false)
-          case "PURCHASE_FAILED":
           case "WIDGET_CONFIG_FAILED":
             return rej(event.type)
-          case "PURCHASE_SUCCESSFUL":
+          case "PURCHASE_CREATED":
             return res(true)
         }
       })
